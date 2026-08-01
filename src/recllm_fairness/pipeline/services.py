@@ -806,7 +806,9 @@ def bootstrap_item_metric_deltas(
     seed: int,
 ) -> pd.DataFrame:
     """Paired persona bootstrap CIs for sensitive-minus-neutral aggregate shifts."""
-    family = ["model", "domain", "trait", "phrasing_variant"]
+    # Neutral rows use trait="neutral", so trait cannot be part of the family key;
+    # otherwise every sensitive-trait group has an empty neutral baseline.
+    family = ["model", "domain", "phrasing_variant"]
     catalog_size = len(catalog)
     popularity = {
         item.item_id: float(item.interaction_count or (1 / item.popularity_rank))

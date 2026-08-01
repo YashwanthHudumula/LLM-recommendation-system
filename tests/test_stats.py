@@ -4,6 +4,10 @@ import numpy as np
 import pandas as pd
 import pytest
 
+from recllm_fairness.pipeline.services import (
+    bootstrap_item_metric_deltas,
+    synthetic_catalog,
+)
 from recllm_fairness.stats.bootstrap import persona_bootstrap
 from recllm_fairness.stats.correlation import classify_scenario, spearman_fairness_scenario
 from recllm_fairness.stats.mixed_effects import fit_mixed_effects
@@ -57,3 +61,47 @@ def test_mixed_effects_wrapper_fits_persona_random_intercepts() -> None:
     )
     assert result.converged
     assert any("trait_level" in term for term in result.params.index)
+
+
+def test_paired_item_bootstrap_joins_sensitive_traits_to_neutral_rows() -> None:
+    catalog = synthetic_catalog(size=12)
+    rows = []
+    for persona_index in range(3):
+        persona = f"p{persona_index}"
+        rows.append(
+            {
+                "model": "model",
+                "domain": "movie",
+                "trait": "neutral",
+                "trait_level": "neutral",
+                "phrasing_variant": "direct",
+                "persona_id": persona,
+                "matched_item_ids": ["movie-0001", "movie-0002"],
+            }
+        )
+        for level, items in (
+            ("low", ["movie-0002", "movie-0003"]),
+            ("high", ["movie-0003", "movie-0004"]),
+        ):
+            rows.append(
+                {
+                    "model": "model",
+                    "domain": "movie",
+                    "trait": "openness",
+                    "trait_level": level,
+                    "phrasing_variant": "direct",
+                    "persona_id": persona,
+                    "matched_item_ids": items,
+                }
+            )
+    result = bootstrap_item_metric_deltas(
+        pd.DataFrame(rows),
+        catalog,
+        k=2,
+        n_resamples=20,
+        confidence_level=0.95,
+        seed=4,
+    )
+    assert len(result) == 6
+    assert set(result["metric"]) == {"gini", "hhi", "arp"}
+    assert set(result["trait_level"]) == {"low", "high"}

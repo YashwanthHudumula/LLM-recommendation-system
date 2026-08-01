@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "audit_date": "2026-08-01",
+  "collection_protocol": "closed-catalog-v2",
+  "model_snapshot": "qwen3:8b@500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41",
+  "domain": "movie",
+  "source_root": "outputs/queries/pilot/closed-catalog-v2/ollama_qwen3_8b/movie",
+  "integrity": {
+    "records": 264,
+    "unique_query_ids": 264,
+    "unique_resumability_keys": 264,
+    "condition_cells": 44,
+    "records_per_cell_minimum": 6,
+    "records_per_cell_maximum": 6,
+    "candidate_pool_variants_per_persona_maximum": 1
+  },
+  "grounding": {
+    "parsed_count_distribution": {
+      "8": 3,
+      "9": 7,
+      "10": 254
+    },
+    "matched_count_distribution": {
+      "8": 3,
+      "9": 11,
+      "10": 250
+    },
+    "mean_matched_items": 9.9356060606,
+    "at_least_8_matched_rate": 1.0,
+    "exactly_10_matched_rate": 0.946969697,
+    "empty_responses": 0,
+    "off_list_titles": 0,
+    "matcher_hallucination_flags": 4,
+    "flagged_items_with_valid_candidate_codes": 4,
+    "flag_interpretation": "Conservative fuzzy-title ambiguity on valid coded entries; the four exposures remain excluded by the immutable stored match result.",
+    "flagged_item_fraction_of_requested_exposure": 0.0015151515
+  },
+  "relevance_control": {
+    "mean_precision_at_10": 0.5784090909,
+    "mean_ndcg_at_10": 0.6550683462
+  },
+  "runtime": {
+    "elapsed_minutes": 35.8147,
+    "mean_prompt_tokens": 1444.2197,
+    "mean_completion_tokens": 100.4659,
+    "total_tokens": 407797,
+    "cost_usd": 0.0
+  },
+  "analysis_replay": {
+    "tables_produced": 12,
+    "paired_item_delta_bootstrap_rows": 120,
+    "user_side_mixed_effects_converged": true,
+    "item_outcome_mixed_effects_converged": false,
+    "item_outcome_note": "Expected pilot limitation with only six base personas; full-scale convergence remains a gate."
+  },
+  "gate_decision": "passed",
+  "next_domain_technical_check": {
+    "domain": "music",
+    "queries": 6,
+    "matched_items": 60,
+    "expected_items": 60,
+    "hallucinated_titles": 0,
+    "off_list_titles": 0,
+    "passed": true
+  }
+}

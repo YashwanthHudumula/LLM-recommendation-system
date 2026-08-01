@@ -5,7 +5,7 @@ from __future__ import annotations
 import asyncio
 from collections.abc import Sequence
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal, cast
 
 import typer
 
@@ -28,10 +28,12 @@ DEFAULT_MODELS = "ollama_qwen3_8b,ollama_gemma3_12b,ollama_llama3_1_8b"
 MINIMUM_PARSE_YIELD = 0.8
 
 
-async def benchmark(config: dict[str, Any], model_names: list[str]) -> dict[str, Any]:
-    catalog = load_configured_catalog(config, domain="movie", stage="pilot")
+async def benchmark(
+    config: dict[str, Any], model_names: list[str], domain: Literal["movie", "music"]
+) -> dict[str, Any]:
+    catalog = load_configured_catalog(config, domain=domain, stage="pilot")
     pool_config = config["candidate_pool"]
-    labels = load_label_preferences(config["relevance_labels"]["pilot"]["movie"])
+    labels = load_label_preferences(config["relevance_labels"]["pilot"][domain])
     conditions: list[PersonaCondition] = []
     for preference in labels:
         raw_relevant = preference["relevant_item_ids"]
@@ -40,7 +42,7 @@ async def benchmark(config: dict[str, Any], model_names: list[str]) -> dict[str,
         conditions.append(
             PersonaCondition(
                 persona_id=f"compatibility-{preference['id']}",
-                domain="movie",
+                domain=domain,
                 stated_preferences=str(preference["text"]),
                 relevant_item_ids=tuple(str(value) for value in raw_relevant),
                 trait="neutral",
@@ -128,6 +130,7 @@ async def benchmark(config: dict[str, Any], model_names: list[str]) -> dict[str,
     return {
         "schema_version": 2,
         "collection_protocol": config["collection_protocol"],
+        "domain": domain,
         "purpose": "technical compatibility only; not a scientific result",
         "candidate_pool_size": int(pool_config["size"]),
         "preferences_tested": len(conditions),
@@ -147,11 +150,16 @@ async def benchmark(config: dict[str, Any], model_names: list[str]) -> dict[str,
 def main(
     config_dir: Path = Path("config"),
     models: str = typer.Option(DEFAULT_MODELS, help="Comma-separated enabled Ollama keys"),
+    domain: str = typer.Option("movie", help="movie or music"),
     output: Path = Path("data/audits/ollama_closed_catalog_compatibility_v2.json"),
 ) -> None:
     config = load_config(config_dir)
+    if domain not in {"movie", "music"}:
+        raise typer.BadParameter("domain must be movie or music")
     model_names = [value.strip() for value in models.split(",") if value.strip()]
-    report = asyncio.run(benchmark(config, model_names))
+    report = asyncio.run(
+        benchmark(config, model_names, cast(Literal["movie", "music"], domain))
+    )
     write_json(output, report)
     for result in report["models"]:
         queries = result["queries"]

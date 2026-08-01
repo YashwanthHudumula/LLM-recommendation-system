@@ -30,7 +30,7 @@ Last updated: 2026-08-01
 ## Verification status
 
 - [x] Dependency lock is current: 90 resolved packages.
-- [x] Unit/integration suite: 31 tests passed.
+- [x] Unit/integration suite: 32 tests passed.
 - [x] Lint: zero findings.
 - [x] Strict typing: zero issues across 54 source files.
 - [x] No-cost end-to-end pilot: 120 query records and 12 derived analysis tables.
@@ -48,8 +48,7 @@ Last updated: 2026-08-01
 - [x] Run the sentence-transformer phrasing gate and no-cost technical compatibility check.
 - [ ] Run the scientific pilot for every model/domain pair; inspect repeated-query parse yield,
   hallucination/off-list rates, relevance, run time, and projected full-collection duration.
-  The first Qwen/movie protocol-v1 run completed but failed this gate and must be rerun under
-  `closed-catalog-v2`.
+  Qwen/movie has passed under `closed-catalog-v2`; five model/domain pairs remain.
 - [ ] Run full collection only after every matching pilot passes the hard budget gate.
 - [ ] Perform confirmatory analysis, diagnose model convergence, and freeze result tables.
 - [ ] Run mitigation only after RQ1-RQ4 results are reviewed.
@@ -102,8 +101,18 @@ Last updated: 2026-08-01
   shuffles display order deterministically, uses coded `C### | title` entries, and versions the
   output path so protocol-v1 records cannot be silently reused.
 - A six-preference Qwen technical check of protocol-v2 matched 58/60 requested items with zero
-  hallucinated or off-list titles. The full 264-query corrected pilot remains the scientific
-  gate.
+  hallucinated or off-list titles and preceded the successful full 264-query corrected pilot.
+- The corrected Qwen/movie scientific pilot passed: 264 unique records, all responses with at
+  least 8 matched items, 250/264 with exactly 10, no off-list titles, mean Precision@10 0.5784,
+  mean NDCG@10 0.6551, zero cost, and 35.8 minutes elapsed. Four conservative fuzzy-title flags
+  (0.15% of requested exposure) all carried valid candidate codes and remain excluded in the
+  immutable stored matches.
+- Provider-free analysis replay produced all 12 tables. A neutral-baseline grouping bug found
+  because the paired delta-bootstrap table was empty was fixed and regression-tested; the table
+  now has all 120 expected rows. User-side mixed models converged. Item-outcome mixed models did
+  not converge with only six pilot personas, so full-scale convergence remains a gate.
+- The six-preference Qwen/music protocol-v2 check matched 60/60 items with zero hallucinated or
+  off-list titles, clearing the way for the Qwen/music scientific pilot.
 
 ## Verification log
 
@@ -144,4 +153,7 @@ Last updated: 2026-08-01
 | 2026-08-01 | Protocol-v2 candidate opportunity | M1–M6 contain 30–36 relevant items; 50/25/25 tier mix retained — Passed |
 | 2026-08-01 | Protocol-v2 semantic phrasing gate | Movie minimum 0.8834; music minimum 0.9033; threshold 0.82 — Passed |
 | 2026-08-01 | Protocol-v2 Qwen six-preference check | 58/60 matched; zero hallucinated/off-list titles — Passed |
-| 2026-08-01 | Protocol-v2 verification suite | 31 tests; lint and strict typing passed |
+| 2026-08-01 | Qwen/movie protocol-v2 pilot | 264/264 unique; mean 9.936/10 matched; 0 off-list; 4 conservative flags — Passed |
+| 2026-08-01 | Qwen/movie analysis replay | 12 tables; paired bootstrap 120 rows; user-side models converged — Passed with item-model pilot caveat |
+| 2026-08-01 | Qwen/music six-preference check | 60/60 matched; zero hallucinated/off-list titles — Passed |
+| 2026-08-01 | Protocol-v2 verification suite | 32 tests; lint and strict typing passed |
