@@ -60,5 +60,6 @@ def test_generator_has_exactly_eleven_trait_framings_per_preference() -> None:
 
 def test_instruction_requires_verbatim_candidate_names() -> None:
     instruction = render_instruction("direct", "movie", 10)
-    assert "exactly as written" in instruction
-    assert "do not abbreviate, shorten, or rename" in instruction
+    assert "catalog as closed" in instruction
+    assert "C### | exact candidate name" in instruction
+    assert "do not recommend anything from memory" in instruction

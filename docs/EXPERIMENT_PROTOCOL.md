@@ -42,6 +42,15 @@ This produces a model/domain-specific cost estimate. Inspect parse yield, halluc
 off-list rate, list length, token counts, and cost. Fix parsing or prompt defects before full
 collection; do not silently mix pre-fix and post-fix records under one run identity.
 
+Protocol `closed-catalog-v2` was registered after the first Qwen/movie pilot exposed a failed
+grounding gate and before any fairness-result analysis or other model/domain pilot. Its audit is
+`data/audits/pilot_protocol_amendment_v2.json`. It fixes one deterministic 120-item candidate
+pool per base preference across all personality/phrasing counterfactuals, guarantees at least
+30 independently relevant candidates where available, retains the 50/25/25 popularity-tier
+opportunity mix, shuffles display order deterministically, and uses coded `C### | title`
+entries. Every output root contains the protocol version; protocol-v1 diagnostic rows are never
+combined with protocol-v2 results.
+
 ## 5. Full collection
 
 ```powershell
@@ -62,7 +71,7 @@ Analysis reads only immutable Parquet records; it imports no provider client. To
 models for one domain, point `--query-root` to their common ancestor and select `--domain`.
 
 ```powershell
-uv run recllm-analyze --query-root outputs/queries/full --domain movie
+uv run recllm-analyze --stage full --domain movie
 ```
 
 Review, in order: collection diagnostics, relevance availability, published user-side sanity

@@ -9,7 +9,6 @@ from typing import Literal, cast
 
 import typer
 
-from recllm_fairness.data.candidate_pool import build_candidate_pool
 from recllm_fairness.personas.generator import generate_personas
 from recllm_fairness.personas.relevance_labels import load_label_preferences
 from recllm_fairness.personas.semantic_check import (
@@ -17,6 +16,7 @@ from recllm_fairness.personas.semantic_check import (
     load_sentence_transformer,
 )
 from recllm_fairness.pipeline.services import (
+    build_persona_candidate_pools,
     collect_queries,
     load_configured_catalog,
     make_specs,
@@ -61,14 +61,6 @@ def main(
 
     catalog = load_configured_catalog(config, domain=domain, stage=stage)
     pool_config = config["candidate_pool"]
-    pool = build_candidate_pool(
-        catalog,
-        size=int(pool_config["size"]),
-        head_fraction=float(pool_config["head_fraction"]),
-        mid_fraction=float(pool_config["mid_fraction"]),
-        tail_fraction=float(pool_config["tail_fraction"]),
-        seed=int(config["seed"]),
-    )
     label_path = Path(config["relevance_labels"][stage][domain])
     if not label_path.exists():
         raise typer.BadParameter(
@@ -85,14 +77,29 @@ def main(
         phrasing_variants=config["phrasing_variants"],
         domains=(domain_literal,),
     )
+    pools = build_persona_candidate_pools(
+        conditions,
+        catalog,
+        size=int(pool_config["size"]),
+        head_fraction=float(pool_config["head_fraction"]),
+        mid_fraction=float(pool_config["mid_fraction"]),
+        tail_fraction=float(pool_config["tail_fraction"]),
+        relevant_fraction=float(pool_config["relevant_fraction"]),
+        top_k=int(config["top_k"]),
+        seed=int(config["seed"]),
+        shuffle_items=bool(pool_config["shuffle_items"]),
+    )
     specs = make_specs(
         conditions,
-        pool,
+        pools,
         model_name=model,
         repeats=repeats,
         top_k=int(config["top_k"]),
     )
-    estimate_path = Path("outputs/tables") / f"pilot_cost_estimate_{model}_{domain}.json"
+    protocol = str(config["collection_protocol"])
+    estimate_path = (
+        Path("outputs/tables") / f"pilot_cost_estimate_{protocol}_{model}_{domain}.json"
+    )
     unique_calls = len({(spec.prompt_sha256, spec.repeat_idx) for spec in specs})
     if stage == "full" and model_config["provider"] != "mock":
         if not estimate_path.exists():
@@ -105,14 +112,13 @@ def main(
         BudgetGuard(float(config["budget"]["hard_cap_usd"])).preflight(projected)
         typer.echo(f"Budget gate passed: projected full cost ${projected:.2f}")
 
-    root = Path(config["storage"]["root"]) / stage / model / domain
+    root = Path(config["storage"]["root"]) / stage / protocol / model / domain
     queries = asyncio.run(
         collect_queries(
             specs,
             model_name=model,
             model_config=model_config,
             catalog=catalog,
-            pool=pool,
             output_root=root,
             temperature=float(config["temperature"]),
             max_tokens=int(config["max_tokens"]),

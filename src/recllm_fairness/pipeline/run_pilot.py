@@ -79,7 +79,6 @@ def main(config_dir: Path = Path("config")) -> None:
             model_name="mock",
             model_config=config["models"]["mock"],
             catalog=catalog,
-            pool=pool,
             output_root=output_root,
             temperature=float(config["temperature"]),
             max_tokens=int(config["max_tokens"]),

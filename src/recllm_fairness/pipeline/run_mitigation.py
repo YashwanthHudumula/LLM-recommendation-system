@@ -9,14 +9,18 @@ from typing import Literal, cast
 
 import typer
 
-from recllm_fairness.data.candidate_pool import build_candidate_pool
 from recllm_fairness.personas.generator import generate_personas
 from recllm_fairness.personas.relevance_labels import load_label_preferences
 from recllm_fairness.personas.semantic_check import (
     check_phrasing_equivalence,
     load_sentence_transformer,
 )
-from recllm_fairness.pipeline.services import collect_queries, load_configured_catalog, make_specs
+from recllm_fairness.pipeline.services import (
+    build_persona_candidate_pools,
+    collect_queries,
+    load_configured_catalog,
+    make_specs,
+)
 from recllm_fairness.storage.io import read_records
 from recllm_fairness.utils.config import load_config
 from recllm_fairness.utils.costs import BudgetGuard
@@ -50,14 +54,6 @@ def main(
         )
     catalog = load_configured_catalog(config, domain=domain, stage="full")
     pool_config = config["candidate_pool"]
-    pool = build_candidate_pool(
-        catalog,
-        size=int(pool_config["size"]),
-        head_fraction=float(pool_config["head_fraction"]),
-        mid_fraction=float(pool_config["mid_fraction"]),
-        tail_fraction=float(pool_config["tail_fraction"]),
-        seed=int(config["seed"]),
-    )
     label_path = Path(config["relevance_labels"]["full"][domain])
     if not label_path.exists():
         raise typer.BadParameter(f"Missing fixed full-scale relevance labels: {label_path}")
@@ -70,21 +66,36 @@ def main(
         phrasing_variants=config["phrasing_variants"],
         domains=(domain_literal,),
     )
+    pools = build_persona_candidate_pools(
+        conditions,
+        catalog,
+        size=int(pool_config["size"]),
+        head_fraction=float(pool_config["head_fraction"]),
+        mid_fraction=float(pool_config["mid_fraction"]),
+        tail_fraction=float(pool_config["tail_fraction"]),
+        relevant_fraction=float(pool_config["relevant_fraction"]),
+        top_k=int(config["top_k"]),
+        seed=int(config["seed"]),
+        shuffle_items=bool(pool_config["shuffle_items"]),
+    )
     specs = make_specs(
         conditions,
-        pool,
+        pools,
         model_name=model,
         repeats=int(config["repeats"]),
         top_k=int(config["top_k"]),
         fairness_instruction=True,
     )
-    prior = read_records(Path(config["storage"]["root"]) / "full")
+    protocol = str(config["collection_protocol"])
+    prior = read_records(Path(config["storage"]["root"]) / "full" / protocol)
     prior_spend = (
         float(prior["cost_usd"].sum())
         if not prior.empty and "cost_usd" in prior
         else 0.0
     )
-    estimate_path = Path("outputs/tables") / f"pilot_cost_estimate_{model}_{domain}.json"
+    estimate_path = (
+        Path("outputs/tables") / f"pilot_cost_estimate_{protocol}_{model}_{domain}.json"
+    )
     if model_config["provider"] != "mock":
         if not estimate_path.exists():
             raise typer.BadParameter(f"Missing pilot cost estimate: {estimate_path}")
@@ -92,14 +103,15 @@ def main(
         unique_calls = len({(spec.prompt_sha256, spec.repeat_idx) for spec in specs})
         projected = prior_spend + float(estimate["average_cost_per_unique_call_usd"]) * unique_calls
         BudgetGuard(float(config["budget"]["hard_cap_usd"])).preflight(projected)
-    root = Path(config["storage"]["root"]) / "mitigation" / model / domain
+    root = (
+        Path(config["storage"]["root"]) / "mitigation" / protocol / model / domain
+    )
     queries = asyncio.run(
         collect_queries(
             specs,
             model_name=model,
             model_config=model_config,
             catalog=catalog,
-            pool=pool,
             output_root=root,
             temperature=float(config["temperature"]),
             max_tokens=int(config["max_tokens"]),

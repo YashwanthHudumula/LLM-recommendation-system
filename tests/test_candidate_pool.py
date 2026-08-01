@@ -36,3 +36,25 @@ def test_candidate_pool_rejects_invalid_fractions() -> None:
             seed=1,
         )
 
+
+def test_candidate_pool_guarantees_required_opportunity_and_can_shuffle() -> None:
+    catalog = synthetic_catalog(size=60)
+    required = {item.item_id for item in catalog if item.popularity_rank % 2 == 0}
+    pool = build_candidate_pool(
+        catalog,
+        size=24,
+        head_fraction=0.5,
+        mid_fraction=0.25,
+        tail_fraction=0.25,
+        seed=7,
+        required_item_ids=required,
+        minimum_required=10,
+        shuffle_items=True,
+    )
+    assert len(pool.items) == 24
+    assert len(pool.item_ids.intersection(required)) >= 10
+    assert sum(item.popularity_tier == "head" for item in pool.items) == 12
+    assert sum(item.popularity_tier == "mid" for item in pool.items) == 6
+    assert sum(item.popularity_tier == "tail" for item in pool.items) == 6
+    assert [item.popularity_rank for item in pool.items[:12]] != list(range(1, 13))
+    assert pool.prompt_block().splitlines()[0].startswith("C001 | ")

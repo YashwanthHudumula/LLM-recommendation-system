@@ -7,7 +7,7 @@ import re
 
 from recllm_fairness.models.base_client import LLMResponse
 
-_CANDIDATE_LINE = re.compile(r"^\d+\.\s+(.+?)\s*$", re.MULTILINE)
+_CANDIDATE_LINE = re.compile(r"^(C\d{3}\s*\|\s*.+?)\s*$", re.MULTILINE)
 
 
 class MockClient:
@@ -23,7 +23,7 @@ class MockClient:
     ) -> LLMResponse:
         candidates = _CANDIDATE_LINE.findall(user_prompt)
         if not candidates:
-            raise ValueError("Mock client requires a numbered candidate catalog")
+            raise ValueError("Mock client requires a coded candidate catalog")
         requested = re.search(r"exactly (\d+)", user_prompt, re.IGNORECASE)
         top_k = min(int(requested.group(1)) if requested else 10, len(candidates))
         personality_lines = [
@@ -42,4 +42,3 @@ class MockClient:
             model=self.model,
             raw={"mock": True, "temperature": temperature, "max_tokens": max_tokens},
         )
-

@@ -27,8 +27,9 @@ PHRASING_TEMPLATES: dict[PhrasingVariant, str] = {
 }
 
 EXACT_COPY_SUFFIX = (
-    " Copy each complete candidate name exactly as written; do not abbreviate, shorten, "
-    "or rename it."
+    " Treat the displayed catalog as closed: do not recommend anything from memory or outside "
+    "it, even when another item seems more relevant. Return exactly {top_k} lines in the format "
+    "`C### | exact candidate name`, copying both fields verbatim."
 )
 
 
@@ -38,5 +39,5 @@ def render_instruction(variant: PhrasingVariant, domain: str, top_k: int) -> str
     domain_items = "movies" if domain == "movie" else "music artists"
     return (
         PHRASING_TEMPLATES[variant].format(top_k=top_k, domain_items=domain_items)
-        + EXACT_COPY_SUFFIX
+        + EXACT_COPY_SUFFIX.format(top_k=top_k)
     )

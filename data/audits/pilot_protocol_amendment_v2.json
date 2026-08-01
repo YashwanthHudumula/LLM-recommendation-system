@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "protocol_version": "closed-catalog-v2",
+  "amendment_date": "2026-08-01",
+  "timing": "After the first Qwen movie pilot and before any other model/domain pilot or confirmatory analysis.",
+  "reason": "Protocol-v1 exposed uneven relevance opportunity and poor closed-catalog compliance; no fairness hypothesis results were inspected.",
+  "protocol_v1_diagnostic": {
+    "model": "qwen3:8b@500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41",
+    "domain": "movie",
+    "records": 264,
+    "unique_records": 264,
+    "condition_cells": 44,
+    "records_per_cell": 6,
+    "mean_matched_items": 8.3257575758,
+    "exactly_10_matched_rate": 0.3484848485,
+    "hallucinated_titles": 295,
+    "queries_with_hallucinations": 154,
+    "off_list_titles": 116,
+    "queries_with_off_list_titles": 57,
+    "elapsed_minutes": 33.1051,
+    "relevant_items_in_global_pool": {
+      "M1": 22,
+      "M2": 10,
+      "M3": 7,
+      "M4": 13,
+      "M5": 3,
+      "M6": 26
+    },
+    "disposition": "Retained as diagnostic evidence; excluded from scientific and confirmatory results."
+  },
+  "amendments": {
+    "candidate_pool": {
+      "scope": "One deterministic pool per base preference, held identical across every personality and phrasing counterfactual.",
+      "size": 120,
+      "popularity_tier_fractions": {
+        "head": 0.5,
+        "mid": 0.25,
+        "tail": 0.25
+      },
+      "minimum_relevant_fraction": 0.25,
+      "minimum_relevant_items": 30,
+      "observed_movie_relevant_items_after_fill": {
+        "M1": 34,
+        "M2": 32,
+        "M3": 30,
+        "M4": 31,
+        "M5": 30,
+        "M6": 36
+      },
+      "deterministic_order_shuffle": true
+    },
+    "prompting": {
+      "closed_catalog_instruction": true,
+      "candidate_format": "C### | exact candidate name",
+      "outside_catalog_memory_use_explicitly_prohibited": true
+    },
+    "storage": {
+      "protocol_version_in_output_path": true,
+      "purpose": "Prevent silent resumption from or overwriting of protocol-v1 records."
+    }
+  },
+  "semantic_equivalence_gate": {
+    "model": "sentence-transformers/all-MiniLM-L6-v2",
+    "threshold": 0.82,
+    "movie_minimum_cosine": 0.8833702766,
+    "music_minimum_cosine": 0.903281124,
+    "passed": true
+  },
+  "qwen_six_preference_technical_check": {
+    "queries": 6,
+    "expected_items": 60,
+    "matched_items": 58,
+    "hallucinated_titles": 0,
+    "off_list_titles": 0,
+    "matched_by_preference": {
+      "M1": 10,
+      "M2": 8,
+      "M3": 10,
+      "M4": 10,
+      "M5": 10,
+      "M6": 10
+    },
+    "passed": true
+  }
+}

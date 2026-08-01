@@ -53,7 +53,6 @@ def test_collection_is_append_only_resumable_and_relevance_ready(tmp_path: Path)
             "output_cost_per_million": 0.0,
         },
         catalog=catalog,
-        pool=pool,
         output_root=tmp_path,
         temperature=0.7,
         max_tokens=100,

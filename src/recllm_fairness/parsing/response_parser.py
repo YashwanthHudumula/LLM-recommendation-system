@@ -6,11 +6,13 @@ import json
 import re
 
 _PREFIX = re.compile(r"^\s*(?:[-*•]|\d+[.)]|\[\d+\])\s*")
+_CANDIDATE_CODE = re.compile(r"^C\d{3}\s*[|:.-]\s*", re.IGNORECASE)
 _LABEL = re.compile(r"^(?:title|movie|artist|song)\s*:\s*", re.IGNORECASE)
 
 
 def _clean_title(value: str) -> str:
     value = _PREFIX.sub("", value.strip())
+    value = _CANDIDATE_CODE.sub("", value)
     value = _LABEL.sub("", value)
     value = value.strip().strip('"“”\'`')
     # Do not strip hyphen-delimited suffixes: they are frequently part of canonical titles
@@ -37,7 +39,9 @@ def parse_response(text: str, *, top_k: int | None = None) -> list[str]:
     except json.JSONDecodeError:
         for line in text.splitlines():
             cleaned = _clean_title(line)
-            if cleaned and (_PREFIX.match(line) or len(text.splitlines()) == 1):
+            without_rank = _PREFIX.sub("", line.strip())
+            recognized_prefix = _PREFIX.match(line) or _CANDIDATE_CODE.match(without_rank)
+            if cleaned and (recognized_prefix or len(text.splitlines()) == 1):
                 titles.append(cleaned)
     unique: list[str] = []
     seen: set[str] = set()

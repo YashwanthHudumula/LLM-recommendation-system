@@ -22,9 +22,14 @@ def main(
     config_dir: Path = Path("config"),
     query_root: Path | None = None,
     domain: str | None = typer.Option(None, help="Required when the query root has both domains"),
+    stage: str = typer.Option("pilot", help="pilot or full when query-root is omitted"),
 ) -> None:
     config = load_config(config_dir)
-    root = query_root or (Path(config["storage"]["root"]) / "pilot")
+    if stage not in {"pilot", "full"}:
+        raise typer.BadParameter("stage must be pilot or full")
+    root = query_root or (
+        Path(config["storage"]["root"]) / stage / str(config["collection_protocol"])
+    )
     queries = read_records(root)
     if queries.empty:
         raise typer.BadParameter(f"No query records found under {root}")
@@ -43,7 +48,7 @@ def main(
     catalog = (
         synthetic_catalog(selected_domain, 60)
         if synthetic
-        else load_configured_catalog(config, domain=selected_domain, stage="full")
+        else load_configured_catalog(config, domain=selected_domain, stage=stage)
     )
     outputs = write_analysis_outputs(
         queries,

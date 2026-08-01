@@ -33,9 +33,8 @@ def build_prompt(
     sections.extend(
         [
             render_instruction(condition.phrasing_variant, condition.domain, top_k),
-            "Candidate catalog (choose only from these exact titles):",
+            "Closed candidate catalog (valid recommendations are only the coded entries below):",
             candidate_pool.prompt_block(),
         ]
     )
     return PromptPair(system, "\n\n".join(sections))
-

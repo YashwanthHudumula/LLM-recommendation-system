@@ -43,6 +43,12 @@ def test_parser_handles_numbered_and_json_outputs() -> None:
     assert parse_response("1. Star Wars: Episode IV - A New Hope") == [
         "Star Wars: Episode IV - A New Hope"
     ]
+    assert parse_response("1. C042 | Star Wars: Episode IV - A New Hope") == [
+        "Star Wars: Episode IV - A New Hope"
+    ]
+    assert parse_response("C042 | Star Wars: Episode IV - A New Hope") == [
+        "Star Wars: Episode IV - A New Hope"
+    ]
 
 
 def test_matcher_separates_hallucinated_and_off_list_titles() -> None:

@@ -8,7 +8,8 @@ Last updated: 2026-08-01
 - [x] Scaffold the package, configuration, outputs, CI, and locked `uv` environment.
 - [x] Record publisher URLs, versions, checksums, citations, and license restrictions.
 - [x] Implement MovieLens 1M/25M and LastFM-1K/360K artist-level loaders.
-- [x] Implement deterministic stratified candidate pools and full-catalog grounding.
+- [x] Implement deterministic, preference-aware stratified candidate pools, closed-catalog
+  prompting, coded entries, deterministic order shuffling, and full-catalog grounding.
 - [x] Implement IPIP-style Big-Five markers, counterfactual persona controls, four phrasing
   variants, and the pre-spend semantic-equivalence gate.
 - [x] Implement mock, Ollama, OpenAI, Anthropic, Google, and Hugging Face clients behind one
@@ -29,7 +30,7 @@ Last updated: 2026-08-01
 ## Verification status
 
 - [x] Dependency lock is current: 90 resolved packages.
-- [x] Unit/integration suite: 30 tests passed.
+- [x] Unit/integration suite: 31 tests passed.
 - [x] Lint: zero findings.
 - [x] Strict typing: zero issues across 54 source files.
 - [x] No-cost end-to-end pilot: 120 query records and 12 derived analysis tables.
@@ -47,6 +48,8 @@ Last updated: 2026-08-01
 - [x] Run the sentence-transformer phrasing gate and no-cost technical compatibility check.
 - [ ] Run the scientific pilot for every model/domain pair; inspect repeated-query parse yield,
   hallucination/off-list rates, relevance, run time, and projected full-collection duration.
+  The first Qwen/movie protocol-v1 run completed but failed this gate and must be rerun under
+  `closed-catalog-v2`.
 - [ ] Run full collection only after every matching pilot passes the hard budget gate.
 - [ ] Perform confirmatory analysis, diagnose model convergence, and freeze result tables.
 - [ ] Run mitigation only after RQ1-RQ4 results are reviewed.
@@ -90,6 +93,17 @@ Last updated: 2026-08-01
   off-list titles. Parse yield was 9/10 for Qwen and 10/10 for Gemma and Llama in this single
   stochastic smoke query. This is not a scientific result; repeated-query rates remain a pilot
   gate.
+- The first 264-record Qwen/movie pilot is retained as protocol-v1 diagnostic evidence but is
+  excluded from scientific results. It exposed a global-pool relevance imbalance (only 3–26
+  relevant items per preference), 295 hallucinated titles, and 116 catalog-valid/off-list
+  titles. No fairness hypothesis results were inspected before amending the protocol.
+- `closed-catalog-v2` fixes one 120-item pool per base preference, guarantees at least 30
+  independently relevant items where available, preserves the 50/25/25 popularity-tier mix,
+  shuffles display order deterministically, uses coded `C### | title` entries, and versions the
+  output path so protocol-v1 records cannot be silently reused.
+- A six-preference Qwen technical check of protocol-v2 matched 58/60 requested items with zero
+  hallucinated or off-list titles. The full 264-query corrected pilot remains the scientific
+  gate.
 
 ## Verification log
 
@@ -126,3 +140,8 @@ Last updated: 2026-08-01
 | 2026-08-01 | Ollama technical compatibility | Qwen 9/10, Gemma 10/10, Llama 10/10; zero hallucinated/off-list titles — Passed |
 | 2026-08-01 | Final unit/integration suite | 30 passed |
 | 2026-08-01 | Final lint and strict typing | Passed; 54 source files |
+| 2026-08-01 | Qwen/movie protocol-v1 pilot | 264/264 immutable records; failed grounding gate and excluded from scientific results |
+| 2026-08-01 | Protocol-v2 candidate opportunity | M1–M6 contain 30–36 relevant items; 50/25/25 tier mix retained — Passed |
+| 2026-08-01 | Protocol-v2 semantic phrasing gate | Movie minimum 0.8834; music minimum 0.9033; threshold 0.82 — Passed |
+| 2026-08-01 | Protocol-v2 Qwen six-preference check | 58/60 matched; zero hallucinated/off-list titles — Passed |
+| 2026-08-01 | Protocol-v2 verification suite | 31 tests; lint and strict typing passed |

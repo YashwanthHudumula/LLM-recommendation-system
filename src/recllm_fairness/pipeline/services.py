@@ -9,6 +9,7 @@ import logging
 import time
 import warnings
 from collections import Counter, defaultdict
+from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Literal, cast
@@ -16,7 +17,7 @@ from typing import Any, Literal, cast
 import numpy as np
 import pandas as pd
 
-from recllm_fairness.data.candidate_pool import CandidatePool
+from recllm_fairness.data.candidate_pool import CandidatePool, build_candidate_pool
 from recllm_fairness.data.catalog import Item
 from recllm_fairness.data.lastfm import load_lastfm
 from recllm_fairness.data.movielens import load_movielens
@@ -61,6 +62,7 @@ class QuerySpec:
     prompt: PromptPair
     prompt_sha256: str
     query_id: str
+    candidate_pool: CandidatePool
 
     @property
     def identity(self) -> tuple[object, ...]:
@@ -143,9 +145,46 @@ def synthetic_catalog(domain: str = "movie", size: int = 60) -> list[Item]:
     return catalog
 
 
+def build_persona_candidate_pools(
+    conditions: list[PersonaCondition],
+    catalog: list[Item],
+    *,
+    size: int,
+    head_fraction: float,
+    mid_fraction: float,
+    tail_fraction: float,
+    relevant_fraction: float,
+    top_k: int,
+    seed: int,
+    shuffle_items: bool,
+) -> dict[str, CandidatePool]:
+    """Fix one relevance-aware opportunity pool per base persona across counterfactuals."""
+    if not 0 <= relevant_fraction <= 1:
+        raise ValueError("relevant_fraction must be between zero and one")
+    assert_counterfactual_control(conditions)
+    relevant_by_persona = {
+        condition.persona_id: condition.relevant_item_ids for condition in conditions
+    }
+    required = max(top_k, round(size * relevant_fraction))
+    return {
+        persona_id: build_candidate_pool(
+            catalog,
+            size=size,
+            head_fraction=head_fraction,
+            mid_fraction=mid_fraction,
+            tail_fraction=tail_fraction,
+            seed=seed,
+            required_item_ids=relevant_ids,
+            minimum_required=required,
+            shuffle_items=shuffle_items,
+        )
+        for persona_id, relevant_ids in relevant_by_persona.items()
+    }
+
+
 def make_specs(
     conditions: list[PersonaCondition],
-    pool: CandidatePool,
+    pool: CandidatePool | Mapping[str, CandidatePool],
     *,
     model_name: str,
     repeats: int,
@@ -155,8 +194,12 @@ def make_specs(
     assert_counterfactual_control(conditions)
     specs: list[QuerySpec] = []
     for condition in conditions:
+        condition_pool = pool[condition.persona_id] if isinstance(pool, Mapping) else pool
         prompt = build_prompt(
-            condition, pool, top_k=top_k, fairness_instruction=fairness_instruction
+            condition,
+            condition_pool,
+            top_k=top_k,
+            fairness_instruction=fairness_instruction,
         )
         digest = hashlib.sha256(
             (prompt.system_prompt + "\0" + prompt.user_prompt).encode()
@@ -174,7 +217,9 @@ def make_specs(
                 ]
             )
             query_id = hashlib.sha256(identity.encode()).hexdigest()[:24]
-            specs.append(QuerySpec(condition, repeat_idx, prompt, digest, query_id))
+            specs.append(
+                QuerySpec(condition, repeat_idx, prompt, digest, query_id, condition_pool)
+            )
     return specs
 
 
@@ -184,7 +229,6 @@ async def collect_queries(
     model_name: str,
     model_config: dict[str, Any],
     catalog: list[Item],
-    pool: CandidatePool,
     output_root: str | Path,
     temperature: float,
     max_tokens: int,
@@ -255,7 +299,7 @@ async def collect_queries(
             matched = match_titles(
                 parsed,
                 catalog,
-                allowed_item_ids=pool.item_ids,
+                allowed_item_ids=representative.candidate_pool.item_ids,
                 threshold=fuzzy_threshold,
                 ambiguity_margin=ambiguity_margin,
             )
@@ -275,7 +319,9 @@ async def collect_queries(
                     system_prompt=spec.prompt.system_prompt,
                     user_prompt=spec.prompt.user_prompt,
                     prompt_sha256=spec.prompt_sha256,
-                    candidate_item_ids=[item.item_id for item in pool.items],
+                      candidate_item_ids=[
+                          item.item_id for item in representative.candidate_pool.items
+                      ],
                     raw_response_text=response.text,
                     parsed_titles=parsed,
                     matched_item_ids=matched.matched_item_ids,
