@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "audit_date": "2026-08-02",
+  "collection_protocol": "closed-catalog-v2",
+  "model_snapshot": "qwen3:8b@500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41",
+  "domain": "music",
+  "source_root": "outputs/queries/pilot/closed-catalog-v2/ollama_qwen3_8b/music",
+  "integrity": {
+    "records": 264,
+    "unique_query_ids": 264,
+    "unique_resumability_keys": 264,
+    "condition_cells": 44,
+    "records_per_cell_minimum": 6,
+    "records_per_cell_maximum": 6,
+    "candidate_pool_variants_per_persona_maximum": 1
+  },
+  "grounding": {
+    "parsed_count_distribution": {
+      "10": 263,
+      "11": 1
+    },
+    "matched_count_distribution": {
+      "9": 12,
+      "10": 251,
+      "11": 1
+    },
+    "mean_matched_items": 9.9583333333,
+    "at_least_8_matched_rate": 1.0,
+    "exactly_10_matched_rate": 0.9507575758,
+    "empty_responses": 0,
+    "off_list_flags": 6,
+    "matcher_hallucination_flags": 6,
+    "flagged_items_with_valid_candidate_codes": 12,
+    "flag_interpretation": "Conservative duplicate-artist-name resolution on valid coded entries; the twelve exposures remain excluded by the immutable stored match result.",
+    "flagged_item_fraction_of_requested_exposure": 0.0045454545
+  },
+  "relevance_control": {
+    "mean_precision_at_10": 0.6151515152,
+    "mean_ndcg_at_10": 0.6396577774
+  },
+  "runtime": {
+    "elapsed_minutes": 57.3618,
+    "mean_prompt_tokens": 1396.053,
+    "mean_completion_tokens": 97.4962,
+    "total_tokens": 394297,
+    "cost_usd": 0.0
+  },
+  "analysis_replay": {
+    "tables_produced": 12,
+    "paired_item_delta_bootstrap_rows": 120,
+    "undefined_rq3_correlations": 6,
+    "user_side_mixed_effects_converged": true,
+    "item_outcome_mixed_effects_converged": false,
+    "pilot_limitation_note": "Undefined correlations and item-model non-convergence are expected with only six base personas; full-scale convergence remains a gate."
+  },
+  "gate_decision": "passed",
+  "next_model_technical_check": {
+    "model": "gemma3:12b",
+    "domain": "movie",
+    "queries": 6,
+    "matched_items": 60,
+    "expected_items": 60,
+    "hallucinated_titles": 0,
+    "off_list_titles": 0,
+    "elapsed_seconds": 195.7,
+    "passed": true
+  }
+}

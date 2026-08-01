@@ -48,7 +48,7 @@ Last updated: 2026-08-01
 - [x] Run the sentence-transformer phrasing gate and no-cost technical compatibility check.
 - [ ] Run the scientific pilot for every model/domain pair; inspect repeated-query parse yield,
   hallucination/off-list rates, relevance, run time, and projected full-collection duration.
-  Qwen/movie has passed under `closed-catalog-v2`; five model/domain pairs remain.
+  Both Qwen domains have passed under `closed-catalog-v2`; four model/domain pairs remain.
 - [ ] Run full collection only after every matching pilot passes the hard budget gate.
 - [ ] Perform confirmatory analysis, diagnose model convergence, and freeze result tables.
 - [ ] Run mitigation only after RQ1-RQ4 results are reviewed.
@@ -113,6 +113,17 @@ Last updated: 2026-08-01
   not converge with only six pilot personas, so full-scale convergence remains a gate.
 - The six-preference Qwen/music protocol-v2 check matched 60/60 items with zero hallucinated or
   off-list titles, clearing the way for the Qwen/music scientific pilot.
+- The Qwen/music scientific pilot passed: 264 unique records, all responses with at least 9
+  matched artists, 251/264 with exactly 10, mean Precision@10 0.6152, mean NDCG@10 0.6397,
+  zero cost, and 57.4 minutes elapsed. Twelve conservative duplicate-artist-name flags (0.45%
+  of requested exposure) carried valid candidate codes and remain excluded from stored matches.
+- Qwen/music analysis produced all 12 tables and all 120 paired delta-bootstrap intervals.
+  Six pilot RQ3 correlations were undefined because an input rank was constant, and the three
+  item-outcome mixed models did not converge with six base personas; these are pilot sample-size
+  limitations, not paper findings.
+- Gemma/movie passed its six-preference protocol-v2 preflight with 60/60 matches and zero
+  hallucinated/off-list titles. The 195.7-second preflight projects roughly 2.4 hours for 264
+  queries before allowing for longer responses and loading overhead.
 
 ## Verification log
 
@@ -157,3 +168,6 @@ Last updated: 2026-08-01
 | 2026-08-01 | Qwen/movie analysis replay | 12 tables; paired bootstrap 120 rows; user-side models converged — Passed with item-model pilot caveat |
 | 2026-08-01 | Qwen/music six-preference check | 60/60 matched; zero hallucinated/off-list titles — Passed |
 | 2026-08-01 | Protocol-v2 verification suite | 32 tests; lint and strict typing passed |
+| 2026-08-02 | Qwen/music protocol-v2 pilot | 264/264 unique; mean 9.958/10 matched; 12 conservative duplicate-name flags — Passed |
+| 2026-08-02 | Qwen/music analysis replay | 12 tables; paired bootstrap 120 rows — Passed with pilot sample-size caveats |
+| 2026-08-02 | Gemma/movie six-preference check | 60/60 matched; zero hallucinated/off-list titles; 195.7 seconds — Passed |
