@@ -1,0 +1,23 @@
+.venv/
+.uv-cache/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.env
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+outputs/figures/*
+outputs/tables/*
+outputs/manuscript_assets/*
+!outputs/figures/.gitkeep
+!outputs/tables/.gitkeep
+!outputs/manuscript_assets/.gitkeep
+wandb/
+*.parquet
+Blind Wording Audit — Form Content (Responses) (1).xlsx

@@ -1,0 +1,18 @@
+movielens:
+  pilot:
+    version: 1m
+    root: data/raw/ml-1m/ml-1m
+  full:
+    version: 25m
+    root: data/raw/ml-25m/ml-25m
+lastfm:
+  pilot:
+    version: 1k
+    root: data/raw/lastfm-dataset-1K/lastfm-dataset-1K
+  full:
+    version: 360k
+    root: data/raw/lastfm-dataset-360K/lastfm-dataset-360K
+popularity_tiers:
+  method: item_count_tertiles
+  head_quantile: 0.3333333333
+  mid_quantile: 0.6666666667

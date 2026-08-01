@@ -1,0 +1,123 @@
+schema_version: 1
+design_version: persona-relevance-v1
+status: frozen
+frozen_date: "2026-08-01"
+construct_sources:
+  - "John & Srivastava (1999), The Big Five trait taxonomy"
+  - "Costa & McCrae (1992), Revised NEO Personality Inventory"
+trait_framings:
+  source: src/recllm_fairness/personas/traits.py
+  neutral_code: NEU
+  neutral_definition: no personality sentence; base preference only
+  max_pole_word_count_difference: 3
+movie_preferences:
+  - id: M1
+    text: I enjoy science fiction movies that explore future technology and space.
+    genre_rule:
+      any_of: [Sci-Fi]
+  - id: M2
+    text: I like romantic comedies with lighthearted, feel-good storylines.
+    genre_rule:
+      all_of: [Romance, Comedy]
+  - id: M3
+    text: I'm drawn to war dramas that portray historical conflicts.
+    genre_rule:
+      all_of: [War, Drama]
+  - id: M4
+    text: I enjoy classic film noir and crime mysteries with morally ambiguous characters.
+    genre_rule:
+      any_of: [Film-Noir, Crime, Mystery]
+  - id: M5
+    text: I like animated family films.
+    genre_rule:
+      all_of: [Animation, "Children's"]
+  - id: M6
+    text: I enjoy horror and thriller movies that build suspense.
+    genre_rule:
+      any_of: [Horror, Thriller]
+music_preferences:
+  - id: S1
+    text: I love atmospheric, experimental artists like Radiohead and Björk.
+    seed_artists: [Radiohead, Björk]
+  - id: S2
+    text: I'm into classic hip-hop, artists like Nas and Wu-Tang Clan.
+    seed_artists: [Nas, Wu-Tang Clan]
+  - id: S3
+    text: I listen to a lot of electronic and dance music, like Daft Punk and Aphex Twin.
+    seed_artists: [Daft Punk, Aphex Twin]
+  - id: S4
+    text: I enjoy singer-songwriter folk, artists like Bon Iver and Fleet Foxes.
+    seed_artists: [Bon Iver, Fleet Foxes]
+  - id: S5
+    text: I'm a fan of heavier rock and metal, bands like Metallica and Tool.
+    seed_artists: [Metallica, Tool]
+  - id: S6
+    text: I like classic soul and R&B, artists like Stevie Wonder and Aretha Franklin.
+    seed_artists: [Stevie Wonder, Aretha Franklin]
+relevance_parameters:
+  movie:
+    min_ratings: 20
+    truncate: false
+  music:
+    binary_listener_vectors: true
+    min_seed_listeners: 30
+    min_candidate_listeners: 30
+    cosine_threshold: 0.5
+    acceptable_relevant_set_size: [10, 500]
+    threshold_selection:
+      timing: selected before any real model output was collected
+      rationale: lowest tested grid value for which all six pilot sets were within 10–500
+      pilot_sensitivity_counts:
+        "0.25": [2760, 1766, 2806, 2070, 2200, 2842]
+        "0.30": [1767, 1021, 1771, 1301, 1386, 1857]
+        "0.35": [1208, 557, 1187, 790, 884, 1171]
+        "0.40": [835, 287, 787, 471, 551, 732]
+        "0.45": [543, 120, 505, 273, 342, 461]
+        "0.50": [381, 33, 334, 119, 195, 258]
+freeze_requirements:
+  cooling_off_review_completed: true
+  cooling_off_review:
+    completed_date: "2026-08-01"
+    outcome: passed; no wording changes required
+    confirmation_source: researcher confirmation in project task
+  independent_blind_spot_check_completed: true
+  independent_blind_spot_check:
+    completed_date: "2026-08-01"
+    source_workbook_sha256: 01fd119a76c55d121f1ff9b73a7e4c783015b62ab65cb5a7312897538ce25111
+    aggregate_report: data/audits/blind_wording_audit_v1.json
+    responses: 34
+    total_classifications: 340
+    correct_classifications: 293
+    overall_accuracy: 0.8617647059
+    item_accuracy_range: [0.7647058824, 0.9411764706]
+    respondents_10_of_10: 20
+    respondents_at_least_8_of_10: 26
+    interpretation: passed the qualitative requirement that poles be reliably distinguishable
+    preregistration_note: no numeric pass threshold was specified before responses were viewed
+    qualitative_caveat:
+      explicit_movie_music_book_film_art_mentions: 4
+      other_activity_associations: 6
+      confusion_nudge_or_bias_concerns: 10
+      note: most comments did not identify the statement responsible, so no wording was changed
+  automated_length_parity_passed: true
+  semantic_phrasing_gate_passed: true
+  semantic_phrasing_gate:
+    model: sentence-transformers/all-MiniLM-L6-v2
+    threshold: 0.82
+    movie_minimum_cosine: 0.8719061214
+    music_minimum_cosine: 0.8827007891
+    movie_pairwise:
+      formal__casual: 0.9282815529
+      formal__direct: 0.9060167463
+      formal__indirect: 0.9526708030
+      casual__direct: 0.8719061214
+      casual__indirect: 0.9420461182
+      direct__indirect: 0.8891086043
+    music_pairwise:
+      formal__casual: 0.9265548594
+      formal__direct: 0.9097308475
+      formal__indirect: 0.9569785658
+      casual__direct: 0.8827007891
+      casual__indirect: 0.9480904687
+      direct__indirect: 0.8987676644
+  labels_generated_and_audited: true

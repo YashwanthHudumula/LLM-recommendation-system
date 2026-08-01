@@ -1,0 +1,74 @@
+[build-system]
+requires = ["hatchling==1.27.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "recllm-item-fairness"
+version = "0.1.0"
+description = "Reproducible audit of item-side exposure fairness in personality-conditioned RecLLMs"
+readme = "README.md"
+requires-python = ">=3.11,<3.14"
+license = { text = "MIT" }
+authors = [{ name = "Research project contributors" }]
+dependencies = [
+  "httpx==0.28.1",
+  "numpy==2.3.2",
+  "pandas==2.3.1",
+  "pyarrow==21.0.0",
+  "pydantic==2.11.7",
+  "PyYAML==6.0.2",
+  "rapidfuzz==3.13.0",
+  "scipy==1.16.1",
+  "sentence-transformers==5.0.0",
+  "statsmodels==0.14.5",
+  "typer==0.16.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "mypy==1.17.0",
+  "pandas-stubs==2.3.0.250703",
+  "pytest==8.4.1",
+  "pytest-asyncio==1.1.0",
+  "pytest-cov==6.2.1",
+  "ruff==0.12.7",
+]
+
+[project.scripts]
+recllm-pilot = "recllm_fairness.pipeline.run_pilot:app"
+recllm-collect = "recllm_fairness.pipeline.run_collection:app"
+recllm-analyze = "recllm_fairness.pipeline.run_analysis:app"
+recllm-mitigate = "recllm_fairness.pipeline.run_mitigation:app"
+recllm-build-labels = "recllm_fairness.pipeline.build_relevance_labels:app"
+recllm-check-ollama = "recllm_fairness.pipeline.check_ollama:app"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/recllm_fairness"]
+
+[tool.pytest.ini_options]
+addopts = "-ra --strict-markers --strict-config"
+testpaths = ["tests"]
+markers = [
+  "integration: tests requiring optional heavyweight dependencies or external services",
+  "published_ballpark: checks against published benchmark ranges",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+extend-exclude = [".uv-cache"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM", "RUF"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+packages = ["recllm_fairness"]
+warn_unreachable = true
+follow_imports = "normal"
+
+[[tool.mypy.overrides]]
+module = ["yaml", "scipy.*", "statsmodels.*", "sentence_transformers.*"]
+ignore_missing_imports = true
+follow_imports = "skip"

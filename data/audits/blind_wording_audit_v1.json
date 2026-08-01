@@ -1,0 +1,187 @@
+{
+  "schema_version": 1,
+  "audit": "independent_blind_trait_wording_review",
+  "source_workbook": {
+    "filename": "Blind Wording Audit — Form Content (Responses) (1).xlsx",
+    "sha256": "01fd119a76c55d121f1ff9b73a7e4c783015b62ab65cb5a7312897538ce25111",
+    "sheet": "Form Responses 1",
+    "source_range": "A1:O35"
+  },
+  "privacy": "Aggregate-only report; optional respondent names were not copied.",
+  "scoring_rule": "Exact High/Low match to the predeclared Big-Five pole.",
+  "sample": {
+    "responses": 34,
+    "classifications_per_response": 10,
+    "total_classifications": 340
+  },
+  "overall": {
+    "correct": 293,
+    "incorrect": 47,
+    "accuracy": 0.861764705882353,
+    "respondent_mean_correct_out_of_10": 8.617647058823529,
+    "respondent_median_correct_out_of_10": 10,
+    "respondents_10_of_10": 20,
+    "respondents_at_least_8_of_10": 26
+  },
+  "items": [
+    {
+      "code": "A-",
+      "trait": "agreeableness",
+      "level": "low",
+      "expected": "Low",
+      "prompt": "\"I tend to be skeptical and blunt with others, and I don't usually accommodate people.\"\nDo you think this person is HIGH or LOW on agreeableness?",
+      "n": 34,
+      "correct": 27,
+      "incorrect": 7,
+      "accuracy": 0.7941176470588235,
+      "wilson_95_ci": [
+        0.632016119488364,
+        0.8965047310096808
+      ]
+    },
+    {
+      "code": "C+",
+      "trait": "conscientiousness",
+      "level": "high",
+      "expected": "High",
+      "prompt": "\"I like being organized, planning ahead, and following through carefully on things I start.\"\nDo you think this person is HIGH or LOW on conscientiousness?",
+      "n": 34,
+      "correct": 32,
+      "incorrect": 2,
+      "accuracy": 0.9411764705882353,
+      "wilson_95_ci": [
+        0.80906393095719,
+        0.9837173447898772
+      ]
+    },
+    {
+      "code": "N-",
+      "trait": "neuroticism",
+      "level": "low",
+      "expected": "Low",
+      "prompt": "\"I'm generally calm, emotionally stable, and don't get rattled easily.\"\nDo you think this person is HIGH or LOW on neuroticism?",
+      "n": 34,
+      "correct": 29,
+      "incorrect": 5,
+      "accuracy": 0.8529411764705882,
+      "wilson_95_ci": [
+        0.6987194350454783,
+        0.9355055855521753
+      ]
+    },
+    {
+      "code": "E+",
+      "trait": "extraversion",
+      "level": "high",
+      "expected": "High",
+      "prompt": "\"I'm energized by being around people and I really enjoy lively, sociable situations with others.\"\nDo you think this person is HIGH or LOW on extraversion?",
+      "n": 34,
+      "correct": 31,
+      "incorrect": 3,
+      "accuracy": 0.9117647058823529,
+      "wilson_95_ci": [
+        0.7703951343719113,
+        0.9695340563253514
+      ]
+    },
+    {
+      "code": "O+",
+      "trait": "openness",
+      "level": "high",
+      "expected": "High",
+      "prompt": "\"I love discovering new ideas and experiences that challenge how I usually see things. I get restless with the same old routines.\"\nDo you think this person is HIGH or LOW on openness?",
+      "n": 34,
+      "correct": 32,
+      "incorrect": 2,
+      "accuracy": 0.9411764705882353,
+      "wilson_95_ci": [
+        0.80906393095719,
+        0.9837173447898772
+      ]
+    },
+    {
+      "code": "A+",
+      "trait": "agreeableness",
+      "level": "high",
+      "expected": "High",
+      "prompt": "\"I try to be warm, cooperative, and considerate of other people's feelings and needs.\"\nDo you think this person is HIGH or LOW on agreeableness?",
+      "n": 34,
+      "correct": 32,
+      "incorrect": 2,
+      "accuracy": 0.9411764705882353,
+      "wilson_95_ci": [
+        0.80906393095719,
+        0.9837173447898772
+      ]
+    },
+    {
+      "code": "C-",
+      "trait": "conscientiousness",
+      "level": "low",
+      "expected": "Low",
+      "prompt": "\"I tend to be spontaneous and easygoing, and I don't worry about planning things out in detail.\"\nDo you think this person is HIGH or LOW on conscientiousness?",
+      "n": 34,
+      "correct": 27,
+      "incorrect": 7,
+      "accuracy": 0.7941176470588235,
+      "wilson_95_ci": [
+        0.632016119488364,
+        0.8965047310096808
+      ]
+    },
+    {
+      "code": "N+",
+      "trait": "neuroticism",
+      "level": "high",
+      "expected": "High",
+      "prompt": "\"I tend to worry a lot and get stressed or anxious fairly easily.\"\nDo you think this person is HIGH or LOW on neuroticism?",
+      "n": 34,
+      "correct": 26,
+      "incorrect": 8,
+      "accuracy": 0.7647058823529411,
+      "wilson_95_ci": [
+        0.6000386207746361,
+        0.8756301446736042
+      ]
+    },
+    {
+      "code": "E-",
+      "trait": "extraversion",
+      "level": "low",
+      "expected": "Low",
+      "prompt": "\"I'm more reserved and quiet, and I prefer calm, low-key situations over big social gatherings.\"\nDo you think this person is HIGH or LOW on extraversion?",
+      "n": 34,
+      "correct": 29,
+      "incorrect": 5,
+      "accuracy": 0.8529411764705882,
+      "wilson_95_ci": [
+        0.6987194350454783,
+        0.9355055855521753
+      ]
+    },
+    {
+      "code": "O-",
+      "trait": "openness",
+      "level": "low",
+      "expected": "Low",
+      "prompt": "\"I prefer familiar routines and practical, down-to-earth things. Abstract or experimental ideas don't really appeal to me in general.\"\nDo you think this person is HIGH or LOW on openness?",
+      "n": 34,
+      "correct": 28,
+      "incorrect": 6,
+      "accuracy": 0.8235294117647058,
+      "wilson_95_ci": [
+        0.6648626260015724,
+        0.9165103095462768
+      ]
+    }
+  ],
+  "qualitative_screen": {
+    "coding_note": "Transparent keyword screen only; comments do not identify which statement caused an association in most cases.",
+    "explicit_movie_music_book_film_art_mentions": 4,
+    "travel_exploration_gym_sport_workshop_route_mentions": 6,
+    "confusion_nudge_or_bias_concerns": 10,
+    "clear_no_concern_responses": 22,
+    "cue_comments_nonempty": 34,
+    "concern_comments_nonempty": 34
+  }
+}

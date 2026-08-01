@@ -1,0 +1,34 @@
+traits:
+  - openness
+  - conscientiousness
+  - extraversion
+  - agreeableness
+  - neuroticism
+levels:
+  - low
+  - neutral
+  - high
+phrasing_variants:
+  - formal
+  - casual
+  - direct
+  - indirect
+base_preferences_per_domain: 6
+relevance_labels:
+  pilot:
+    movie: data/relevance_labels/relevance_labels_movies_pilot_v1.json
+    music: data/relevance_labels/relevance_labels_music_pilot_v1.json
+  full:
+    movie: data/relevance_labels/relevance_labels_movies_full_v1.json
+    music: data/relevance_labels/relevance_labels_music_full_v1.json
+preferences:
+  movie:
+    - "character-driven dramas and imaginative science-fiction films"
+    - "clever comedies and suspenseful mystery films"
+    - "historical stories and visually inventive animation"
+    - "thoughtful documentaries and emotionally rich dramas"
+  music:
+    - "melodic indie music and expressive singer-songwriter tracks"
+    - "rhythmic electronic music and energetic alternative rock"
+    - "jazz, soul, and carefully produced contemporary pop"
+    - "acoustic folk and atmospheric instrumental music"
