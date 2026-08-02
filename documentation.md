@@ -5,8 +5,8 @@
 Personality-Conditioned Prompting in LLM-Based Recommender Systems*  
 **Document status:** Living technical and scientific overview  
 **Last updated:** 2026-08-02  
-**Current execution status:** Five of six scientific pilot model/domain pairs audited;
-Llama 3.1 8B/music is the final pending pilot. No full-scale collection has started.
+**Current execution status:** All six scientific pilot model/domain pairs are complete and
+audited. No full-scale collection has started.
 
 This file is the central documentation index for the project. It consolidates the design,
 architecture, implementation, operational workflow, audit history, pilot diagnostics,
@@ -52,7 +52,7 @@ The research proposal is the scientific rationale and literature starting point:
 - The complete data, persona, prompting, model, parsing, storage, metric, statistical, and
   orchestration layers are implemented.
 - Python dependencies are pinned with `uv`; Python 3.11 through 3.13 is supported.
-- The last verified suite has 34 passing tests, zero lint findings, and zero strict typing
+- The last verified suite has 35 passing tests, zero lint findings, and zero strict typing
   errors across 54 source files.
 - Synthetic end-to-end collection, resumability, provider-free analysis, bootstrap output,
   and published-metric normalization have been tested.
@@ -66,7 +66,7 @@ The research proposal is the scientific rationale and literature starting point:
   accuracy was 86.2%.
 - Semantic-equivalence validation passed for all four phrasing variants in both domains.
 - Qwen 3 8B and Gemma 3 12B pilots are complete for movies and music.
-- Llama 3.1 8B/movie is complete; Llama 3.1 8B/music is the last pending pilot.
+- Llama 3.1 8B is complete for both domains; all six model/domain pilots are audited.
 - Full collection, confirmatory analysis, mitigation, manuscript figures, and journal
   submission packaging have not started.
 
@@ -304,6 +304,13 @@ The Gemma/music pilot exposed the earlier duplicate-name resolution defect. The 
 recovered 82 valid coded exposures from immutable responses without changing source files or
 making a model call. This is an example of why collection and analysis are separated.
 
+The Llama/music pilot exposed a second formatting pattern: a valid allowed artist name copied
+verbatim and followed by explanatory text. Grounding version `allowed-title-annotation-v3`
+accepts only a verbatim allowed title followed by an explicit annotation delimiter. It does not
+automatically accept invalid codes, truncated catalog names, replacement lines, or code/title
+mismatches. This correction is also derived solely from immutable records and is regression
+tested.
+
 ## 13. Analysis architecture
 
 `recllm-analyze` reads Parquet records, optionally filters to one domain, loads the matching
@@ -392,20 +399,24 @@ structure. They are **not publishable fairness findings**.
 
 | Model | Domain | Records | Grounding/list diagnostic | Precision@10 | NDCG@10 | Runtime | Gate |
 |---|---|---:|---|---:|---:|---:|---|
-| Qwen 3 8B | Movie | 264 | Mean 9.936 matches; 4 valid-code conservative flags; no genuine off-list escape | 0.5784 | 0.6551 | 35.8 min | Passed |
-| Qwen 3 8B | Music | 264 | Mean 9.958 matches; 12 valid-code duplicate-name flags | 0.6152 | 0.6397 | 57.4 min | Passed |
-| Gemma 3 12B | Movie | 264 | Mean 9.989 matches; zero hallucinated/off-list | 0.7678 | 0.7945 | 113.3 min | Passed |
-| Gemma 3 12B | Music | 264 | Provider-free re-grounding gives exactly 10/10; zero derived hallucinated/off-list | 0.7402 | 0.7186 | 129.1 min | Passed after re-grounding |
-| Llama 3.1 8B | Movie | 264 | 97.27% top-10 exposure yield; 4 annotated valid-code flags; zero off-list | 0.5133 | 0.5733 | 26.1 min | Passed with format/list caveat |
-| Llama 3.1 8B | Music | Pending | Six-query preflight: 60 matches across 60 requested, 9-11/query, one annotated valid code, zero off-list | - | - | - | Final pilot pending |
+| Qwen 3 8B | Movie | 264 | 99.43% top-10 yield; 2 hallucination flags; zero off-list | 0.5792 | 0.6557 | 35.8 min | Passed |
+| Qwen 3 8B | Music | 264 | 100% top-10 yield; zero derived hallucinated/off-list | 0.6152 | 0.6392 | 57.4 min | Passed |
+| Gemma 3 12B | Movie | 264 | 99.89% top-10 yield; zero hallucinated/off-list | 0.7678 | 0.7945 | 113.3 min | Passed |
+| Gemma 3 12B | Music | 264 | 100% top-10 yield; zero derived hallucinated/off-list | 0.7402 | 0.7186 | 129.1 min | Passed after re-grounding |
+| Llama 3.1 8B | Movie | 264 | 97.39% top-10 yield; 1 hallucination flag; zero off-list | 0.5133 | 0.5731 | 26.1 min | Passed with format/list caveat |
+| Llama 3.1 8B | Music | 264 | 97.88% derived top-10 yield; 4 hallucination and 2 conservative off-list flags | 0.5735 | 0.5924 | 30.3 min | Passed after re-grounding, with format caveat |
 
 Every completed pilot has 264 unique query IDs and resumability keys, 44 condition cells with
 six records per cell, one candidate pool per base persona, and zero monetary cost.
 
 Analysis replays produced all 12 tables and all 120 paired delta-bootstrap rows. Some pilot
 mixed-effects models were singular and some RQ3 correlations were undefined because only six
-independent personas were available. The Llama/movie replay returned 27 Independent scenarios,
-but those classifications must not be interpreted as paper results.
+independent personas were available. The current Llama/music replay returned 21 Independent
+and 6 undefined scenarios; those classifications must not be interpreted as paper results.
+
+The table above uses the consistent provider-free v3 replay recorded in
+[the combined grounding audit](data/audits/pilot_regrounding_v3.json). Earlier per-pilot audit
+files preserve the matcher diagnostics available when each pilot was first reviewed.
 
 Detailed audit files:
 
@@ -414,6 +425,7 @@ Detailed audit files:
 - [Gemma/movie](data/audits/gemma_movie_pilot_closed_catalog_v2.json)
 - [Gemma/music](data/audits/gemma_music_pilot_closed_catalog_v2.json)
 - [Llama/movie](data/audits/llama_movie_pilot_closed_catalog_v2.json)
+- [Llama/music](data/audits/llama_music_pilot_closed_catalog_v2.json)
 
 ## 18. Reproducible commands
 
@@ -478,34 +490,33 @@ KV cache, and working buffers as needed. Low instantaneous GPU utilization betwe
 normal because prompt preparation, sampling synchronization, storage, and model load/unload are
 not continuously compute-bound.
 
-Pilot runtime is model/domain-specific and cannot be scaled solely by parameter count. Full
-runs use three repeats and larger MovieLens/LastFM catalogs, although the injected candidate
-pool remains 120 items. A final runtime projection should be recorded after the Llama/music
-pilot audit.
+Pilot runtime is model/domain-specific and cannot be scaled solely by parameter count. The six
+pilots took approximately 6.54 hours in total on the current machine. At the present six-persona
+configuration, three full repeats give a simple generation-time projection of about 19.6 hours,
+excluding larger-catalog loading, analysis, thermal throttling, interruption, and storage
+overhead. This projection becomes invalid if the independent persona population is expanded.
 
 ## 20. Remaining gates before a publishable full run
 
-1. **Finish and audit Llama/music.** Verify 264 unique records, grounding/list yield,
-   relevance, runtime, all 12 analysis tables, bootstrap rows, and convergence diagnostics.
-2. **Resolve independent-population size.** The present full configuration has six persona
+1. **Resolve independent-population size.** The present full configuration has six persona
    clusters. Repeats are not independent users. Conduct a power/precision analysis and either:
    expand the fixed, independently labeled persona population under a new frozen design version,
    or narrow and justify the study as a six-preference controlled benchmark. The former is
    closer to the proposal's stated population-scale contribution.
-3. **Freeze the confirmatory sampling plan.** Record persona count, repeats, exclusion rules for
+2. **Freeze the confirmatory sampling plan.** Record persona count, repeats, exclusion rules for
    short lists, handling of annotated valid-code entries, and primary versus sensitivity views.
-4. **Version analysis outputs.** Prevent movie/music or per-model replays from overwriting the
+3. **Version analysis outputs.** Prevent movie/music or per-model replays from overwriting the
    derived tables used in the manuscript.
-5. **Run same-model/domain budget and duration checks.** Local cost is zero, but elapsed time,
+4. **Run same-model/domain budget and duration checks.** Local cost is zero, but elapsed time,
    thermals, storage, and crash-resume behavior still require planning.
-6. **Run full collection serially by model/domain.** Retain exact snapshots and timestamps.
-7. **Perform confirmatory analysis.** Require mixed-model convergence or document/use a
+5. **Run full collection serially by model/domain.** Retain exact snapshots and timestamps.
+6. **Perform confirmatory analysis.** Require mixed-model convergence or document/use a
    defensible alternative; freeze corrected result tables before narrative interpretation.
-8. **Create figures and manuscript.** Separate confirmatory results, sensitivity analyses, and
+7. **Create figures and manuscript.** Separate confirmatory results, sensitivity analyses, and
    exploratory genre/provider slices.
-9. **Select and verify a journal.** Check current scope, formatting, word limits, data/code
+8. **Select and verify a journal.** Check current scope, formatting, word limits, data/code
    policy, ethics statement, and submission checklist at submission time.
-10. **Archive reproducibility materials.** Add a repository URL/DOI, environment lock, frozen
+9. **Archive reproducibility materials.** Add a repository URL/DOI, environment lock, frozen
     configuration, de-identified outputs permitted by provider/dataset terms, and a data
     availability statement.
 

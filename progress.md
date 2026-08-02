@@ -32,7 +32,7 @@ Last updated: 2026-08-02
 ## Verification status
 
 - [x] Dependency lock is current: 90 resolved packages.
-- [x] Unit/integration suite: 34 tests passed.
+- [x] Unit/integration suite: 35 tests passed.
 - [x] Lint: zero findings.
 - [x] Strict typing: zero issues across 54 source files.
 - [x] No-cost end-to-end pilot: 120 query records and 12 derived analysis tables.
@@ -48,10 +48,10 @@ Last updated: 2026-08-02
 - [x] Select and verify three accessible immutable local model snapshots in
   `config/models.yaml`; local inference price is USD 0 and no API credentials are needed.
 - [x] Run the sentence-transformer phrasing gate and no-cost technical compatibility check.
-- [ ] Run the scientific pilot for every model/domain pair; inspect repeated-query parse yield,
+- [x] Run the scientific pilot for every model/domain pair; inspect repeated-query parse yield,
   hallucination/off-list rates, relevance, run time, and projected full-collection duration.
-  Both Qwen and Gemma domains and Llama/movie have passed under `closed-catalog-v2`; only
-  Llama/music remains.
+  All six Qwen, Gemma, and Llama model/domain pairs passed under `closed-catalog-v2`, with
+  provider-free grounding and documented format caveats where required.
 - [ ] Run full collection only after every matching pilot passes the hard budget gate.
 - [ ] Perform confirmatory analysis, diagnose model convergence, and freeze result tables.
 - [ ] Run mitigation only after RQ1-RQ4 results are reviewed.
@@ -158,6 +158,19 @@ Last updated: 2026-08-02
   9-11 per query, and zero off-list titles. Its strict automated gate failed because one valid
   coded artist had a parenthetical model annotation; the domain is cleared for the scientific
   pilot with the same predeclared format/list-length diagnostic.
+- The Llama/music scientific pilot passed after provider-free annotation-aware re-grounding:
+  264 unique records, every response with at least 8 derived matches, 97.88% top-10 exposure
+  yield, 4 remaining hallucination flags, 2 conservative off-list flags, mean Precision@10
+  0.5735, mean NDCG@10 0.5924, zero cost, and 30.3 minutes elapsed. The immutable source records
+  were not modified and the model was not re-queried.
+- Annotation-aware grounding accepts only a verbatim allowed catalog title followed by an
+  explicit annotation delimiter. Invalid codes, truncated names, replacements, and code/title
+  mismatches are not automatically accepted. The full suite now has 35 passing tests.
+- A consistent provider-free v3 replay of all six pilots gives top-10 exposure yields of 99.43%
+  and 100% for Qwen movie/music, 99.89% and 100% for Gemma movie/music, and 97.39% and 97.88%
+  for Llama movie/music. The combined audit is `data/audits/pilot_regrounding_v3.json`.
+- All six scientific pilot pairs are complete. Full collection remains blocked on the
+  independent-persona population/power decision and confirmatory sampling-plan freeze.
 - The root `documentation.md` is the consolidated project overview. It explicitly distinguishes
   the six independent pilot personas from repeated model draws and records independent-persona
   sample size as a mandatory scientific decision before full collection.
@@ -219,3 +232,9 @@ Last updated: 2026-08-02
 | 2026-08-02 | Llama/movie analysis replay | 12 tables; paired bootstrap 120 rows; 3 singular pilot fits — Passed with pilot sample-size caveat |
 | 2026-08-02 | Llama/music six-preference check | 60 matches/60 requested; 9–11 per query; one annotated valid-code flag; zero off-list — Cleared with format/length caveat |
 | 2026-08-02 | Consolidated project documentation | Architecture, protocol, datasets, storage, metrics, pilot audits, limitations, commands, and publication gates recorded in `documentation.md` |
+| 2026-08-02 | Annotation-aware grounding v3 | Verbatim allowed-title prefixes with annotation delimiters recovered provider-free; invalid/truncated/mismatched lines remain flagged |
+| 2026-08-02 | Final verification suite | 35 tests; lint and strict typing passed |
+| 2026-08-02 | Llama/music protocol-v2 pilot | 264/264 unique; derived top-10 yield 97.88%; 4 hallucination and 2 off-list flags — Passed with format caveat |
+| 2026-08-02 | Llama/music analysis replay | 12 tables; paired bootstrap 120 rows; 21 Independent and 6 undefined RQ3 diagnostics; 3 singular pilot fits |
+| 2026-08-02 | Scientific pilot phase | All 6 model/domain pairs completed and audited |
+| 2026-08-02 | Six-pilot grounding v3 replay | All immutable pilots re-grounded consistently; no model calls or source-record changes |

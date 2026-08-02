@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "audit_date": "2026-08-02",
+  "collection_protocol": "closed-catalog-v2",
+  "model_snapshot": "llama3.1:8b@46e0c10c039e019119339687c3c1757cc81b9da49709a3b3924863ba87ca666e",
+  "domain": "music",
+  "source_root": "outputs/queries/pilot/closed-catalog-v2/ollama_llama3_1_8b/music",
+  "integrity": {
+    "records": 264,
+    "unique_query_ids": 264,
+    "unique_resumability_keys": 264,
+    "condition_cells": 44,
+    "records_per_cell_minimum": 6,
+    "records_per_cell_maximum": 6,
+    "candidate_pool_variants_per_persona_maximum": 1
+  },
+  "stored_grounding_diagnostic": {
+    "parsed_count_distribution": {
+      "8": 3,
+      "9": 45,
+      "10": 191,
+      "11": 20,
+      "12": 4,
+      "14": 1
+    },
+    "matched_count_distribution": {
+      "2": 2,
+      "3": 1,
+      "4": 1,
+      "5": 1,
+      "6": 4,
+      "7": 1,
+      "8": 11,
+      "9": 53,
+      "10": 168,
+      "11": 17,
+      "12": 4,
+      "14": 1
+    },
+    "matcher_hallucination_flags": 73,
+    "off_list_flags": 7,
+    "diagnosis": "Most stored flags were valid allowed artist names copied verbatim and followed by model-added explanatory text. The title-only matcher treated the annotations as part of the artist name."
+  },
+  "derived_grounding": {
+    "grounding_version": "allowed-title-annotation-v3",
+    "source": "Immutable raw_response_text plus immutable candidate_item_ids",
+    "matched_count_distribution": {
+      "8": 4,
+      "9": 48,
+      "10": 188,
+      "11": 19,
+      "12": 4,
+      "14": 1
+    },
+    "mean_matched_items": 9.9053030303,
+    "at_least_8_matched_rate": 1.0,
+    "exactly_10_matched_rate": 0.7121212121,
+    "effective_top_10_exposure_yield": 0.9787878788,
+    "responses_below_10_items": 52,
+    "responses_above_10_items": 24,
+    "empty_responses": 0,
+    "hallucinated_titles": 4,
+    "off_list_titles": 2,
+    "flagged_queries": 6,
+    "remaining_flag_interpretation": "Three invalid-code/meta lines, one replacement line containing two choices, and two truncated catalog names remain conservatively excluded.",
+    "model_requeries": 0,
+    "source_records_modified": false
+  },
+  "relevance_control_after_regrounding": {
+    "mean_precision_at_10": 0.5734848485,
+    "mean_ndcg_at_10": 0.5924000345
+  },
+  "runtime": {
+    "first_record_utc": "2026-08-02T10:08:26.142234+00:00",
+    "last_record_utc": "2026-08-02T10:38:45.604377+00:00",
+    "elapsed_minutes": 30.3244,
+    "mean_prompt_tokens": 1146.053,
+    "mean_completion_tokens": 92.1136,
+    "total_tokens": 326876,
+    "cost_usd": 0.0
+  },
+  "analysis_replay": {
+    "tables_produced": 12,
+    "paired_item_delta_bootstrap_rows": 120,
+    "rq3_correlations": 27,
+    "rq3_scenarios": {
+      "independent": 21,
+      "undefined": 6
+    },
+    "converged_mixed_effect_rows": 30,
+    "failed_mixed_effect_rows": 3,
+    "pilot_limitation_note": "The query-ARP, head-share, and tail-share fits were singular and six correlations had a constant input with only six base personas; full-scale convergence remains a gate."
+  },
+  "gate_decision": "passed_after_provider_free_annotation_regrounding_with_format_caveat",
+  "next_gate": "resolve_independent_persona_population_and_freeze_confirmatory_sampling_plan"
+}

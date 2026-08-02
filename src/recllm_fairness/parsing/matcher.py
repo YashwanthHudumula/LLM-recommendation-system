@@ -12,6 +12,7 @@ from recllm_fairness.data.catalog import Item
 
 _YEAR = re.compile(r"\s*\(\d{4}\)\s*$")
 _PUNCT = re.compile(r"[^\w\s]")
+_ANNOTATION_PREFIXES = ("(", "[", "{", "->", "-", "\u2013", "\u2014", ":")
 
 
 def normalize_title(value: str) -> str:
@@ -19,6 +20,16 @@ def normalize_title(value: str) -> str:
     value = _YEAR.sub("", value)
     value = _PUNCT.sub(" ", value)
     return " ".join(value.split())
+
+
+def _is_annotated_extension(raw_title: str, catalog_title: str) -> bool:
+    """Accept only a verbatim catalog title followed by an obvious annotation delimiter."""
+    raw = " ".join(unicodedata.normalize("NFKC", raw_title).casefold().split())
+    catalog = " ".join(unicodedata.normalize("NFKC", catalog_title).casefold().split())
+    if not raw.startswith(catalog) or len(raw) == len(catalog):
+        return False
+    suffix = raw[len(catalog) :].lstrip()
+    return suffix.startswith(_ANNOTATION_PREFIXES)
 
 
 @dataclass(frozen=True)
@@ -37,6 +48,9 @@ class TitleMatcher:
             raise ValueError("Cannot match against an empty catalog")
         self.ordered = sorted(catalog, key=lambda item: (item.popularity_rank, item.item_id))
         self.choices = [normalize_title(item.title) for item in self.ordered]
+        self.index_by_item_id = {
+            item.item_id: index for index, item in enumerate(self.ordered)
+        }
         self.exact_indices: dict[str, list[int]] = {}
         for index, choice in enumerate(self.choices):
             self.exact_indices.setdefault(choice, []).append(index)
@@ -74,6 +88,28 @@ class TitleMatcher:
                     scores.append(100.0)
                     used.add(item.item_id)
                 continue
+            if allowed_item_ids is not None:
+                annotated = [
+                    index
+                    for item_id in allowed_item_ids
+                    if (index := self.index_by_item_id.get(item_id)) is not None
+                    and _is_annotated_extension(raw_title, self.ordered[index].title)
+                ]
+                if annotated:
+                    index = min(
+                        annotated,
+                        key=lambda candidate: (
+                            -len(self.ordered[candidate].title),
+                            self.ordered[candidate].popularity_rank,
+                            self.ordered[candidate].item_id,
+                        ),
+                    )
+                    item = self.ordered[index]
+                    if item.item_id not in used:
+                        matched.append(item.item_id)
+                        scores.append(100.0)
+                        used.add(item.item_id)
+                    continue
             candidates = process.extract(query, self.choices, scorer=fuzz.WRatio, limit=2)
             if not candidates or candidates[0][1] < threshold:
                 hallucinated.append(raw_title)

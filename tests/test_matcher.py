@@ -84,6 +84,26 @@ def test_matcher_prefers_allowed_id_for_exact_duplicate_title() -> None:
     assert result.off_list_titles == []
 
 
+def test_matcher_accepts_only_verbatim_allowed_title_with_annotation_suffix() -> None:
+    annotated = match_titles(
+        ["Spirited Away (Note: selected for its atmosphere)"],
+        _catalog(),
+        allowed_item_ids={"1"},
+    )
+    assert annotated.matched_item_ids == ["1"]
+    assert annotated.hallucinated_titles == []
+    assert annotated.off_list_titles == []
+
+    not_a_prefix = match_titles(
+        ["Spirited Awayward"],
+        _catalog(),
+        allowed_item_ids={"1"},
+        threshold=100.0,
+    )
+    assert not_a_prefix.matched_item_ids == []
+    assert not_a_prefix.hallucinated_titles == ["Spirited Awayward"]
+
+
 def test_reground_queries_rebuilds_derived_matches_from_immutable_raw_text() -> None:
     catalog = _catalog()
     duplicate = catalog[0].model_copy(update={"item_id": "4", "popularity_rank": 4})
@@ -107,4 +127,4 @@ def test_reground_queries_rebuilds_derived_matches_from_immutable_raw_text() -> 
     )
     assert result.loc[0, "matched_item_ids"] == ["4"]
     assert result.loc[0, "hallucinated_titles"] == []
-    assert result.loc[0, "grounding_version"] == "exact-title-allowed-first-v2"
+    assert result.loc[0, "grounding_version"] == "allowed-title-annotation-v3"

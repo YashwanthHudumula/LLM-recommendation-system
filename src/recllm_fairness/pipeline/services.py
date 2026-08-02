@@ -544,7 +544,7 @@ def reground_queries(
         result.at[index, "matched_item_ids"] = matched.matched_item_ids
         result.at[index, "hallucinated_titles"] = matched.hallucinated_titles
         result.at[index, "off_list_titles"] = matched.off_list_titles
-    result["grounding_version"] = "exact-title-allowed-first-v2"
+    result["grounding_version"] = "allowed-title-annotation-v3"
     return result
 
 
