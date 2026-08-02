@@ -30,7 +30,7 @@ Last updated: 2026-08-01
 ## Verification status
 
 - [x] Dependency lock is current: 90 resolved packages.
-- [x] Unit/integration suite: 32 tests passed.
+- [x] Unit/integration suite: 34 tests passed.
 - [x] Lint: zero findings.
 - [x] Strict typing: zero issues across 54 source files.
 - [x] No-cost end-to-end pilot: 120 query records and 12 derived analysis tables.
@@ -48,7 +48,7 @@ Last updated: 2026-08-01
 - [x] Run the sentence-transformer phrasing gate and no-cost technical compatibility check.
 - [ ] Run the scientific pilot for every model/domain pair; inspect repeated-query parse yield,
   hallucination/off-list rates, relevance, run time, and projected full-collection duration.
-  Both Qwen domains and Gemma/movie have passed under `closed-catalog-v2`; three model/domain
+  Both Qwen and Gemma domains have passed under `closed-catalog-v2`; the two Llama model/domain
   pairs remain.
 - [ ] Run full collection only after every matching pilot passes the hard budget gate.
 - [ ] Perform confirmatory analysis, diagnose model convergence, and freeze result tables.
@@ -132,6 +132,17 @@ Last updated: 2026-08-01
 - Gemma/music preflight grounded 59/60 artist entries with zero off-list output. The sole flag
   was the already documented LastFM duplicate collaboration name attached to a valid candidate
   code, so the domain is cleared with that conservative-matcher caveat.
+- The Gemma/music scientific pilot passed after provider-free re-grounding: 264 unique source
+  records, exactly 10 derived matches per response, zero derived hallucinated/off-list titles,
+  mean Precision@10 0.7402, mean NDCG@10 0.7186, zero cost, and 129.1 minutes elapsed. The 82
+  stored flags were three recurring exact LastFM names with valid candidate codes.
+- Duplicate-title resolution now prefers an exact title within the allowed candidate pool. The
+  analysis pipeline rebuilds parsed/matched derived views from immutable raw text and candidate
+  IDs, so matcher corrections require no record mutation and no model re-query. A reusable
+  catalog index removes repeated 176k-artist sorting during collection and analysis.
+- Llama/movie passed its six-preference preflight with 62 grounded entries across 60 requested
+  positions, zero hallucinated/off-list titles, and 9–12 items per response. Its tendency to
+  return the wrong list length remains a pilot diagnostic; analysis consistently uses top 10.
 
 ## Verification log
 
@@ -182,3 +193,7 @@ Last updated: 2026-08-01
 | 2026-08-02 | Gemma/movie protocol-v2 pilot | 264/264 unique; mean 9.989/10 matched; zero hallucinated/off-list — Passed |
 | 2026-08-02 | Gemma/movie analysis replay | 12 tables; paired bootstrap 120 rows; 27/27 RQ3 correlations defined — Passed with item-model pilot caveat |
 | 2026-08-02 | Gemma/music six-preference check | 59/60 matched; one known valid-code duplicate-name flag; zero off-list — Passed with documented caveat |
+| 2026-08-02 | Gemma/music protocol-v2 pilot | 264/264 unique; derived 10/10 for all rows; zero derived hallucinated/off-list — Passed |
+| 2026-08-02 | Duplicate-name matcher correction | 82/82 stored flags recovered from immutable valid-code responses; no model calls |
+| 2026-08-02 | Optimized verification suite | 34 tests; lint and strict typing passed |
+| 2026-08-02 | Llama/movie six-preference check | 62 matches/60 requested; 9–12 per query; zero hallucinated/off-list — Passed with length caveat |

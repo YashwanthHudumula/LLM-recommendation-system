@@ -8,12 +8,16 @@ import re
 _PREFIX = re.compile(r"^\s*(?:[-*•]|\d+[.)]|\[\d+\])\s*")
 _CANDIDATE_CODE = re.compile(r"^C\d{3}\s*[|:.-]\s*", re.IGNORECASE)
 _LABEL = re.compile(r"^(?:title|movie|artist|song)\s*:\s*", re.IGNORECASE)
+_SKIP_ANNOTATION = re.compile(
+    r"\s*\((?:does not match|not in catalog)(?:,\s*skipped)?\)\s*$", re.IGNORECASE
+)
 
 
 def _clean_title(value: str) -> str:
     value = _PREFIX.sub("", value.strip())
     value = _CANDIDATE_CODE.sub("", value)
     value = _LABEL.sub("", value)
+    value = _SKIP_ANNOTATION.sub("", value)
     value = value.strip().strip('"“”\'`')
     # Do not strip hyphen-delimited suffixes: they are frequently part of canonical titles
     # (for example, "Star Wars: Episode IV - A New Hope"). Explanatory text is rejected by

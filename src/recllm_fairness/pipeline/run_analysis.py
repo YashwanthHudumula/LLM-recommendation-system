@@ -8,6 +8,7 @@ import typer
 
 from recllm_fairness.pipeline.services import (
     load_configured_catalog,
+    reground_queries,
     synthetic_catalog,
     write_analysis_outputs,
 )
@@ -43,12 +44,18 @@ def main(
     selected_domain = str(domains[0])
     synthetic = all(
         str(item_id).startswith(f"{selected_domain}-")
-        for item_id in queries["matched_item_ids"].explode().dropna()
+        for item_id in queries["candidate_item_ids"].explode().dropna()
     )
     catalog = (
         synthetic_catalog(selected_domain, 60)
         if synthetic
         else load_configured_catalog(config, domain=selected_domain, stage=stage)
+    )
+    queries = reground_queries(
+        queries,
+        catalog,
+        fuzzy_threshold=float(config["matching"]["fuzzy_threshold"]),
+        ambiguity_margin=float(config["matching"]["ambiguity_margin"]),
     )
     outputs = write_analysis_outputs(
         queries,

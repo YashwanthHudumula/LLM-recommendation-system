@@ -11,7 +11,7 @@ import typer
 
 from recllm_fairness.models.ollama_client import OllamaClient
 from recllm_fairness.models.registry import create_client
-from recllm_fairness.parsing.matcher import match_titles
+from recllm_fairness.parsing.matcher import TitleMatcher
 from recllm_fairness.parsing.response_parser import parse_response
 from recllm_fairness.personas.generator import PersonaCondition
 from recllm_fairness.personas.relevance_labels import load_label_preferences
@@ -63,6 +63,7 @@ async def benchmark(
         seed=int(config["seed"]),
         shuffle_items=bool(pool_config["shuffle_items"]),
     )
+    title_matcher = TitleMatcher(catalog)
     results: list[dict[str, Any]] = []
     for model_name in model_names:
         client = create_client(model_name, config["models"])
@@ -81,9 +82,8 @@ async def benchmark(
             )
             model_snapshot = response.model
             parsed = parse_response(response.text)
-            matched = match_titles(
+            matched = title_matcher.match(
                 parsed,
-                catalog,
                 allowed_item_ids=pool.item_ids,
                 threshold=float(config["matching"]["fuzzy_threshold"]),
                 ambiguity_margin=float(config["matching"]["ambiguity_margin"]),

@@ -69,6 +69,10 @@ partition concurrently.
 
 Analysis reads only immutable Parquet records; it imports no provider client. To combine
 models for one domain, point `--query-root` to their common ancestor and select `--domain`.
+Before deriving metrics, analysis reparses `raw_response_text` and re-grounds it against each
+row's immutable `candidate_item_ids` using the current versioned matcher. This allows a parsing
+or duplicate-title resolution defect to be corrected without modifying source records or
+querying a model again; record the matcher version and both stored and derived diagnostics.
 
 ```powershell
 uv run recllm-analyze --stage full --domain movie

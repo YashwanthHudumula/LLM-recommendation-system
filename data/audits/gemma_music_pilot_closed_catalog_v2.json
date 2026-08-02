@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "audit_date": "2026-08-02",
+  "collection_protocol": "closed-catalog-v2",
+  "model_snapshot": "gemma3:12b@f4031aab637d1ffa37b42570452ae0e4fad0314754d17ded67322e4b95836f8a",
+  "domain": "music",
+  "source_root": "outputs/queries/pilot/closed-catalog-v2/ollama_gemma3_12b/music",
+  "integrity": {
+    "records": 264,
+    "unique_query_ids": 264,
+    "unique_resumability_keys": 264,
+    "condition_cells": 44,
+    "records_per_cell_minimum": 6,
+    "records_per_cell_maximum": 6,
+    "candidate_pool_variants_per_persona_maximum": 1
+  },
+  "stored_grounding_diagnostic": {
+    "matched_count_distribution": {
+      "8": 2,
+      "9": 78,
+      "10": 184
+    },
+    "matcher_hallucination_flags": 44,
+    "off_list_flags": 38,
+    "unique_flagged_names": [
+      "Soundgarden & Stone Temple Pilots",
+      "Kool G Rap / Rza",
+      "Sucker Djs Feat Wray"
+    ],
+    "flagged_items_with_valid_candidate_codes_and_exact_titles": 82,
+    "diagnosis": "The original matcher resolved duplicate LastFM names before enforcing the allowed candidate IDs."
+  },
+  "derived_grounding": {
+    "grounding_version": "exact-title-allowed-first-v2",
+    "source": "Immutable raw_response_text plus immutable candidate_item_ids",
+    "matched_count_distribution": {
+      "10": 264
+    },
+    "mean_matched_items": 10.0,
+    "hallucinated_titles": 0,
+    "off_list_titles": 0,
+    "model_requeries": 0,
+    "source_records_modified": false
+  },
+  "relevance_control_after_regrounding": {
+    "mean_precision_at_10": 0.7401515152,
+    "mean_ndcg_at_10": 0.7186359737
+  },
+  "runtime": {
+    "elapsed_minutes": 129.0769,
+    "mean_prompt_tokens": 1361.7652,
+    "mean_completion_tokens": 91.9318,
+    "total_tokens": 383776,
+    "cost_usd": 0.0
+  },
+  "analysis_replay": {
+    "tables_produced": 12,
+    "paired_item_delta_bootstrap_rows": 120,
+    "undefined_rq3_correlations": 6,
+    "user_side_mixed_effects_converged": true,
+    "item_outcome_mixed_effects_converged": false,
+    "pilot_limitation_note": "Undefined correlations and item-model non-convergence are expected with only six base personas; full-scale convergence remains a gate."
+  },
+  "gate_decision": "passed_after_provider_free_regrounding",
+  "next_model_technical_check": {
+    "model": "llama3.1:8b",
+    "domain": "movie",
+    "queries": 6,
+    "parsed_and_matched_items": 62,
+    "minimum_items_per_query": 9,
+    "maximum_items_per_query": 12,
+    "hallucinated_titles": 0,
+    "off_list_titles": 0,
+    "decision": "passed_with_list_length_caveat"
+  }
+}

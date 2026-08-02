@@ -36,7 +36,7 @@ from recllm_fairness.metrics.relevance import ndcg_at_k, precision_at_k
 from recllm_fairness.metrics.user_side import paired_similarities
 from recllm_fairness.models.base_client import LLMClient
 from recllm_fairness.models.registry import create_client
-from recllm_fairness.parsing.matcher import match_titles
+from recllm_fairness.parsing.matcher import TitleMatcher
 from recllm_fairness.parsing.response_parser import parse_response
 from recllm_fairness.personas.generator import PersonaCondition, assert_counterfactual_control
 from recllm_fairness.prompting.builder import PromptPair, build_prompt
@@ -272,6 +272,7 @@ async def collect_queries(
     limiter = MinuteRateLimiter(int(model_config["requests_per_minute"]))
     semaphore = asyncio.Semaphore(concurrency)
     budget_lock = asyncio.Lock()
+    title_matcher = TitleMatcher(catalog)
     groups: dict[tuple[str, int], list[QuerySpec]] = defaultdict(list)
     for spec in pending:
         groups[(spec.prompt_sha256, spec.repeat_idx)].append(spec)
@@ -296,9 +297,8 @@ async def collect_queries(
             async with budget_lock:
                 budget.record(actual_cost)
             parsed = parse_response(response.text)
-            matched = match_titles(
+            matched = title_matcher.match(
                 parsed,
-                catalog,
                 allowed_item_ids=representative.candidate_pool.item_ids,
                 threshold=fuzzy_threshold,
                 ambiguity_margin=ambiguity_margin,
@@ -516,6 +516,36 @@ def summarize_user_side(paired: pd.DataFrame) -> pd.DataFrame:
     flat_columns = cast(list[tuple[str, str]], wide.columns.tolist())
     wide.columns = [f"{left}_{right}" for left, right in flat_columns]
     return means.merge(wide.reset_index(), on=family, how="left")
+
+
+def reground_queries(
+    queries: pd.DataFrame,
+    catalog: list[Item],
+    *,
+    fuzzy_threshold: float,
+    ambiguity_margin: float,
+) -> pd.DataFrame:
+    """Reparse immutable raw text so matcher fixes never require another model call."""
+    required = {"raw_response_text", "candidate_item_ids"}
+    missing = required - set(queries.columns)
+    if missing:
+        raise ValueError(f"Cannot re-ground queries; missing columns: {sorted(missing)}")
+    result = queries.copy()
+    title_matcher = TitleMatcher(catalog)
+    for index, row in result.iterrows():
+        parsed = parse_response(str(row["raw_response_text"]))
+        matched = title_matcher.match(
+            parsed,
+            allowed_item_ids=frozenset(str(value) for value in row["candidate_item_ids"]),
+            threshold=fuzzy_threshold,
+            ambiguity_margin=ambiguity_margin,
+        )
+        result.at[index, "parsed_titles"] = parsed
+        result.at[index, "matched_item_ids"] = matched.matched_item_ids
+        result.at[index, "hallucinated_titles"] = matched.hallucinated_titles
+        result.at[index, "off_list_titles"] = matched.off_list_titles
+    result["grounding_version"] = "exact-title-allowed-first-v2"
+    return result
 
 
 def relevance_table(queries: pd.DataFrame, *, k: int) -> pd.DataFrame:
