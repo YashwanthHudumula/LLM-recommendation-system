@@ -62,6 +62,10 @@ See `data/DATA_SOURCES.md` before downloading data, and `progress.md` for implem
 and verification status. The research proposal is the scientific source of truth;
 `AGENTS.md` is the engineering architecture.
 
+The consolidated architecture, methodology, audit history, pilot diagnostics, limitations,
+execution workflow, and publication gates are maintained in
+[documentation.md](documentation.md).
+
 The persona/relevance design remains a draft until the cooling-off and independent blind
 wording reviews recorded in `config/persona_relevance_design_v1.yaml` are complete. Collection
 uses the generated label JSON directly and refuses to proceed if the required stage file is

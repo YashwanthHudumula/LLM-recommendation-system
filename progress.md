@@ -26,6 +26,8 @@ Last updated: 2026-08-02
   mitigation entrypoints.
 - [x] Document the metric contract, experiment protocol, ethics/reporting constraints, and
   software citation metadata.
+- [x] Consolidate architecture, methodology, audit history, pilot diagnostics, reproducible
+  commands, limitations, and publication gates in `documentation.md`.
 
 ## Verification status
 
@@ -156,6 +158,9 @@ Last updated: 2026-08-02
   9-11 per query, and zero off-list titles. Its strict automated gate failed because one valid
   coded artist had a parenthetical model annotation; the domain is cleared for the scientific
   pilot with the same predeclared format/list-length diagnostic.
+- The root `documentation.md` is the consolidated project overview. It explicitly distinguishes
+  the six independent pilot personas from repeated model draws and records independent-persona
+  sample size as a mandatory scientific decision before full collection.
 
 ## Verification log
 
@@ -213,3 +218,4 @@ Last updated: 2026-08-02
 | 2026-08-02 | Llama/movie protocol-v2 pilot | 264/264 unique; top-10 exposure yield 97.27%; 4 annotated valid-code flags; zero off-list — Passed with format/length caveat |
 | 2026-08-02 | Llama/movie analysis replay | 12 tables; paired bootstrap 120 rows; 3 singular pilot fits — Passed with pilot sample-size caveat |
 | 2026-08-02 | Llama/music six-preference check | 60 matches/60 requested; 9–11 per query; one annotated valid-code flag; zero off-list — Cleared with format/length caveat |
+| 2026-08-02 | Consolidated project documentation | Architecture, protocol, datasets, storage, metrics, pilot audits, limitations, commands, and publication gates recorded in `documentation.md` |
