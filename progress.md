@@ -1,6 +1,6 @@
 # Project progress
 
-Last updated: 2026-08-01
+Last updated: 2026-08-02
 
 ## Engineering status
 
@@ -48,8 +48,8 @@ Last updated: 2026-08-01
 - [x] Run the sentence-transformer phrasing gate and no-cost technical compatibility check.
 - [ ] Run the scientific pilot for every model/domain pair; inspect repeated-query parse yield,
   hallucination/off-list rates, relevance, run time, and projected full-collection duration.
-  Both Qwen and Gemma domains have passed under `closed-catalog-v2`; the two Llama model/domain
-  pairs remain.
+  Both Qwen and Gemma domains and Llama/movie have passed under `closed-catalog-v2`; only
+  Llama/music remains.
 - [ ] Run full collection only after every matching pilot passes the hard budget gate.
 - [ ] Perform confirmatory analysis, diagnose model convergence, and freeze result tables.
 - [ ] Run mitigation only after RQ1-RQ4 results are reviewed.
@@ -144,6 +144,19 @@ Last updated: 2026-08-01
   positions, zero hallucinated/off-list titles, and 9–12 items per response. Its tendency to
   return the wrong list length remains a pilot diagnostic; analysis consistently uses top 10.
 
+- The Llama/movie scientific pilot passed with a format/list-length caveat: 264 unique records,
+  262/264 responses with at least 8 matched movies, 159/264 with exactly 10, no off-list titles,
+  mean Precision@10 0.5133, mean NDCG@10 0.5733, zero cost, and 26.1 minutes elapsed. Four valid
+  coded entries carried model-added annotations and were conservatively flagged. After top-10
+  truncation, 2,568/2,640 requested exposure positions were available (97.27%).
+- Llama/movie analysis produced all 12 tables and 120 paired delta-bootstrap intervals. The
+  three item-outcome mixed-effects fits were singular at the six-persona pilot size; all 27 RQ3
+  diagnostics were classified independent, but no pilot inferential result is publishable.
+- The Llama/music six-preference check produced 60 grounded items across 60 requested positions,
+  9-11 per query, and zero off-list titles. Its strict automated gate failed because one valid
+  coded artist had a parenthetical model annotation; the domain is cleared for the scientific
+  pilot with the same predeclared format/list-length diagnostic.
+
 ## Verification log
 
 | Date | Check | Result |
@@ -197,3 +210,6 @@ Last updated: 2026-08-01
 | 2026-08-02 | Duplicate-name matcher correction | 82/82 stored flags recovered from immutable valid-code responses; no model calls |
 | 2026-08-02 | Optimized verification suite | 34 tests; lint and strict typing passed |
 | 2026-08-02 | Llama/movie six-preference check | 62 matches/60 requested; 9–12 per query; zero hallucinated/off-list — Passed with length caveat |
+| 2026-08-02 | Llama/movie protocol-v2 pilot | 264/264 unique; top-10 exposure yield 97.27%; 4 annotated valid-code flags; zero off-list — Passed with format/length caveat |
+| 2026-08-02 | Llama/movie analysis replay | 12 tables; paired bootstrap 120 rows; 3 singular pilot fits — Passed with pilot sample-size caveat |
+| 2026-08-02 | Llama/music six-preference check | 60 matches/60 requested; 9–11 per query; one annotated valid-code flag; zero off-list — Cleared with format/length caveat |

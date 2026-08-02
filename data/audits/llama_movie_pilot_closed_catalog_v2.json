@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "audit_date": "2026-08-02",
+  "collection_protocol": "closed-catalog-v2",
+  "model_snapshot": "llama3.1:8b@46e0c10c039e019119339687c3c1757cc81b9da49709a3b3924863ba87ca666e",
+  "domain": "movie",
+  "source_root": "outputs/queries/pilot/closed-catalog-v2/ollama_llama3_1_8b/movie",
+  "integrity": {
+    "records": 264,
+    "unique_query_ids": 264,
+    "unique_resumability_keys": 264,
+    "condition_cells": 44,
+    "records_per_cell_minimum": 6,
+    "records_per_cell_maximum": 6,
+    "candidate_pool_variants_per_persona_maximum": 1
+  },
+  "grounding": {
+    "parsed_count_distribution": {
+      "7": 1,
+      "8": 2,
+      "9": 61,
+      "10": 159,
+      "11": 28,
+      "12": 5,
+      "13": 2,
+      "14": 2,
+      "15": 1,
+      "16": 1,
+      "19": 1,
+      "28": 1
+    },
+    "matched_count_distribution": {
+      "7": 2,
+      "8": 3,
+      "9": 60,
+      "10": 159,
+      "11": 27,
+      "12": 5,
+      "13": 2,
+      "14": 2,
+      "15": 1,
+      "16": 1,
+      "19": 1,
+      "28": 1
+    },
+    "mean_matched_items": 10.0643939394,
+    "at_least_8_matched_rate": 0.9924242424,
+    "exactly_10_matched_rate": 0.6022727273,
+    "effective_top_10_exposure_yield": 0.9727272727,
+    "responses_below_10_items": 65,
+    "responses_above_10_items": 40,
+    "empty_responses": 0,
+    "matcher_hallucination_flags": 4,
+    "flagged_items_with_valid_candidate_codes": 4,
+    "off_list_titles": 0,
+    "flag_interpretation": "The four flags are model-added annotations on valid coded entries. Repeated codes/titles also explain the shortest lists; overlong lists are deterministically truncated to top 10 for analysis.",
+    "flagged_item_fraction_of_requested_exposure": 0.0015151515
+  },
+  "relevance_control": {
+    "mean_precision_at_10": 0.5132575758,
+    "mean_ndcg_at_10": 0.5732667431
+  },
+  "runtime": {
+    "elapsed_minutes": 26.1019,
+    "mean_prompt_tokens": 1193.053,
+    "mean_completion_tokens": 85.2348,
+    "total_tokens": 337468,
+    "cost_usd": 0.0
+  },
+  "analysis_replay": {
+    "tables_produced": 12,
+    "paired_item_delta_bootstrap_rows": 120,
+    "rq3_correlations": 27,
+    "rq3_scenarios": {
+      "independent": 27
+    },
+    "converged_mixed_effect_rows": 30,
+    "failed_mixed_effect_rows": 3,
+    "pilot_limitation_note": "The query-ARP, head-share, and tail-share fits were singular with only six base personas; full-scale convergence remains a gate. Pilot correlations are structural diagnostics, not paper findings."
+  },
+  "gate_decision": "passed_with_format_and_list_length_caveat",
+  "next_domain_technical_check": {
+    "model": "llama3.1:8b",
+    "domain": "music",
+    "queries": 6,
+    "parsed_items": 61,
+    "matched_items": 60,
+    "expected_items": 60,
+    "minimum_items_per_query": 9,
+    "maximum_items_per_query": 11,
+    "matcher_hallucination_flags": 1,
+    "flagged_items_with_valid_candidate_codes": 1,
+    "off_list_titles": 0,
+    "strict_preflight_passed": false,
+    "review_decision": "cleared_for_scientific_pilot_with_format_and_list_length_caveat"
+  }
+}
