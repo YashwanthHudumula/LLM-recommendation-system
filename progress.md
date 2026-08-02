@@ -48,7 +48,8 @@ Last updated: 2026-08-01
 - [x] Run the sentence-transformer phrasing gate and no-cost technical compatibility check.
 - [ ] Run the scientific pilot for every model/domain pair; inspect repeated-query parse yield,
   hallucination/off-list rates, relevance, run time, and projected full-collection duration.
-  Both Qwen domains have passed under `closed-catalog-v2`; four model/domain pairs remain.
+  Both Qwen domains and Gemma/movie have passed under `closed-catalog-v2`; three model/domain
+  pairs remain.
 - [ ] Run full collection only after every matching pilot passes the hard budget gate.
 - [ ] Perform confirmatory analysis, diagnose model convergence, and freeze result tables.
 - [ ] Run mitigation only after RQ1-RQ4 results are reviewed.
@@ -124,6 +125,13 @@ Last updated: 2026-08-01
 - Gemma/movie passed its six-preference protocol-v2 preflight with 60/60 matches and zero
   hallucinated/off-list titles. The 195.7-second preflight projects roughly 2.4 hours for 264
   queries before allowing for longer responses and loading overhead.
+- The Gemma/movie scientific pilot passed: 264 unique records, 261/264 responses with exactly
+  10 matched movies, zero hallucinated/off-list titles, mean Precision@10 0.7678, mean NDCG@10
+  0.7945, zero cost, and 113.3 minutes elapsed. Analysis produced all 12 tables, 120 paired
+  delta-bootstrap intervals, and 27/27 defined pilot RQ3 correlations.
+- Gemma/music preflight grounded 59/60 artist entries with zero off-list output. The sole flag
+  was the already documented LastFM duplicate collaboration name attached to a valid candidate
+  code, so the domain is cleared with that conservative-matcher caveat.
 
 ## Verification log
 
@@ -171,3 +179,6 @@ Last updated: 2026-08-01
 | 2026-08-02 | Qwen/music protocol-v2 pilot | 264/264 unique; mean 9.958/10 matched; 12 conservative duplicate-name flags — Passed |
 | 2026-08-02 | Qwen/music analysis replay | 12 tables; paired bootstrap 120 rows — Passed with pilot sample-size caveats |
 | 2026-08-02 | Gemma/movie six-preference check | 60/60 matched; zero hallucinated/off-list titles; 195.7 seconds — Passed |
+| 2026-08-02 | Gemma/movie protocol-v2 pilot | 264/264 unique; mean 9.989/10 matched; zero hallucinated/off-list — Passed |
+| 2026-08-02 | Gemma/movie analysis replay | 12 tables; paired bootstrap 120 rows; 27/27 RQ3 correlations defined — Passed with item-model pilot caveat |
+| 2026-08-02 | Gemma/music six-preference check | 59/60 matched; one known valid-code duplicate-name flag; zero off-list — Passed with documented caveat |

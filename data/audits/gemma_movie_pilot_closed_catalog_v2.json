@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "audit_date": "2026-08-02",
+  "collection_protocol": "closed-catalog-v2",
+  "model_snapshot": "gemma3:12b@f4031aab637d1ffa37b42570452ae0e4fad0314754d17ded67322e4b95836f8a",
+  "domain": "movie",
+  "source_root": "outputs/queries/pilot/closed-catalog-v2/ollama_gemma3_12b/movie",
+  "integrity": {
+    "records": 264,
+    "unique_query_ids": 264,
+    "unique_resumability_keys": 264,
+    "condition_cells": 44,
+    "records_per_cell_minimum": 6,
+    "records_per_cell_maximum": 6,
+    "candidate_pool_variants_per_persona_maximum": 1
+  },
+  "grounding": {
+    "parsed_count_distribution": {
+      "9": 3,
+      "10": 261
+    },
+    "matched_count_distribution": {
+      "9": 3,
+      "10": 261
+    },
+    "mean_matched_items": 9.9886363636,
+    "at_least_8_matched_rate": 1.0,
+    "exactly_10_matched_rate": 0.9886363636,
+    "empty_responses": 0,
+    "hallucinated_titles": 0,
+    "off_list_titles": 0
+  },
+  "relevance_control": {
+    "mean_precision_at_10": 0.7678030303,
+    "mean_ndcg_at_10": 0.7944680252
+  },
+  "runtime": {
+    "elapsed_minutes": 113.3211,
+    "mean_prompt_tokens": 1428.7652,
+    "mean_completion_tokens": 92.8144,
+    "total_tokens": 401697,
+    "cost_usd": 0.0
+  },
+  "analysis_replay": {
+    "tables_produced": 12,
+    "paired_item_delta_bootstrap_rows": 120,
+    "undefined_rq3_correlations": 0,
+    "user_side_mixed_effects_converged": true,
+    "item_outcome_mixed_effects_converged": false,
+    "pilot_limitation_note": "Item-model non-convergence is expected with only six base personas; full-scale convergence remains a gate."
+  },
+  "gate_decision": "passed",
+  "next_domain_technical_check": {
+    "model": "gemma3:12b",
+    "domain": "music",
+    "queries": 6,
+    "matched_items": 59,
+    "expected_items": 60,
+    "matcher_hallucination_flags": 1,
+    "flagged_items_with_valid_candidate_codes": 1,
+    "off_list_titles": 0,
+    "elapsed_seconds": 234.6,
+    "decision": "passed_with_known_duplicate_name_caveat"
+  }
+}
