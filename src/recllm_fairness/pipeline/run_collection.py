@@ -4,8 +4,9 @@ from __future__ import annotations
 
 import asyncio
 import json
+from contextlib import suppress
 from pathlib import Path
-from typing import Literal, cast
+from typing import Annotated, Literal, cast
 
 import typer
 
@@ -15,13 +16,27 @@ from recllm_fairness.personas.semantic_check import (
     check_phrasing_equivalence,
     load_sentence_transformer,
 )
+from recllm_fairness.pipeline.protocol import (
+    assert_collection_permitted,
+    experiment_provenance,
+    legacy_unversioned_storage,
+    validate_design_bundle,
+    validate_label_artifact,
+)
 from recllm_fairness.pipeline.services import (
     build_persona_candidate_pools,
     collect_queries,
+    deterministic_query_order,
     load_configured_catalog,
     make_specs,
     pilot_cost_projection,
     write_json,
+)
+from recllm_fairness.storage.manifest import (
+    finish_run_manifest,
+    manifest_model_digest,
+    query_output_root,
+    start_run_manifest,
 )
 from recllm_fairness.utils.config import load_config
 from recllm_fairness.utils.costs import BudgetGuard
@@ -33,11 +48,15 @@ app = typer.Typer(add_completion=False)
 @app.command()
 def main(
     config_dir: Path = Path("config"),
+    config_override: Annotated[
+        Path | None,
+        typer.Option(help="Versioned experiment override required for the future v2 full run"),
+    ] = None,
     model: str = typer.Option(..., help="Enabled key from config/models.yaml"),
     domain: str = typer.Option(..., help="movie or music"),
     stage: str = typer.Option("pilot", help="pilot or full"),
 ) -> None:
-    config = load_config(config_dir)
+    config = load_config(config_dir, config_override)
     configure_logging(config["logging"]["level"])
     if domain not in {"movie", "music"}:
         raise typer.BadParameter("domain must be movie or music")
@@ -47,6 +66,9 @@ def main(
     if model not in config["models"]:
         raise typer.BadParameter(f"Unknown model config: {model}")
     model_config = config["models"][model]
+    assert_collection_permitted(config, stage=stage)
+    provenance = experiment_provenance(config, domain=domain, stage=stage)
+    validate_design_bundle(config, provenance=provenance)
     if model_config["provider"] != "mock":
         encoder = load_sentence_transformer(config["semantic_check"]["model_name"])
         result = check_phrasing_equivalence(
@@ -67,7 +89,17 @@ def main(
             f"Missing fixed relevance labels: {label_path}. "
             f"Run recllm-build-labels --stage {stage} first."
         )
+    validate_label_artifact(
+        label_path,
+        provenance=provenance,
+        domain=domain,
+    )
     domain_preferences = load_label_preferences(label_path)
+    assert_collection_permitted(
+        config,
+        stage=stage,
+        persona_count=len(domain_preferences),
+    )
     repeats = 1 if stage == "pilot" else int(config["repeats"])
     conditions = generate_personas(
         preferences={domain: domain_preferences},
@@ -93,9 +125,11 @@ def main(
         conditions,
         pools,
         model_name=model,
+        provenance=provenance,
         repeats=repeats,
         top_k=int(config["top_k"]),
     )
+    specs = deterministic_query_order(specs, seed=int(config["seed"]))
     protocol = str(config["collection_protocol"])
     estimate_path = (
         Path("outputs/tables") / f"pilot_cost_estimate_{protocol}_{model}_{domain}.json"
@@ -112,22 +146,56 @@ def main(
         BudgetGuard(float(config["budget"]["hard_cap_usd"])).preflight(projected)
         typer.echo(f"Budget gate passed: projected full cost ${projected:.2f}")
 
-    root = Path(config["storage"]["root"]) / stage / protocol / model / domain
-    queries = asyncio.run(
-        collect_queries(
-            specs,
-            model_name=model,
-            model_config=model_config,
-            catalog=catalog,
-            output_root=root,
-            temperature=float(config["temperature"]),
-            max_tokens=int(config["max_tokens"]),
-            fuzzy_threshold=float(config["matching"]["fuzzy_threshold"]),
-            ambiguity_margin=float(config["matching"]["ambiguity_margin"]),
-            hard_cap_usd=float(config["budget"]["hard_cap_usd"]),
-            concurrency=int(model_config.get("concurrency", config["concurrency"])),
-        )
+    root = query_output_root(
+        config["storage"]["root"],
+        design_version=provenance.design_version,
+        stage=stage,
+        protocol_version=protocol,
+        model=model,
+        domain=domain,
+        legacy_unversioned=legacy_unversioned_storage(config),
     )
+    manifest_path = root / "run_manifest.json"
+    configured_digest = str(model_config.get("expected_digest", model_config["model"]))
+    start_run_manifest(
+        manifest_path,
+        provenance=provenance,
+        stage=stage,
+        model=model,
+        domain=domain,
+        seed=int(config["seed"]),
+        query_ids=[spec.query_id for spec in specs],
+        environment_lock=config_dir.resolve().parent / "uv.lock",
+        configured_model_digest=configured_digest,
+    )
+    try:
+        queries = asyncio.run(
+            collect_queries(
+                specs,
+                model_name=model,
+                model_config=model_config,
+                catalog=catalog,
+                output_root=root,
+                temperature=float(config["temperature"]),
+                max_tokens=int(config["max_tokens"]),
+                fuzzy_threshold=float(config["matching"]["fuzzy_threshold"]),
+                ambiguity_margin=float(config["matching"]["ambiguity_margin"]),
+                hard_cap_usd=float(config["budget"]["hard_cap_usd"]),
+                concurrency=int(model_config.get("concurrency", config["concurrency"])),
+            )
+        )
+        resolved_digest = manifest_model_digest(
+            [str(value) for value in queries["model_snapshot"].drop_duplicates().tolist()]
+        )
+        finish_run_manifest(
+            manifest_path,
+            status="completed",
+            resolved_model_digest=resolved_digest,
+        )
+    except BaseException as error:
+        with suppress(ValueError):
+            finish_run_manifest(manifest_path, status="failed", error=repr(error))
+        raise
     if stage == "pilot":
         write_json(estimate_path, pilot_cost_projection(queries, unique_calls))
     typer.echo(f"Collection complete: {len(queries)} immutable records under {root}")

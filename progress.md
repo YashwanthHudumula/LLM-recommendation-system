@@ -1,6 +1,6 @@
 # Project progress
 
-Last updated: 2026-08-02
+Last updated: 2026-08-03
 
 ## Engineering status
 
@@ -28,13 +28,16 @@ Last updated: 2026-08-02
   software citation metadata.
 - [x] Consolidate architecture, methodology, audit history, pilot diagnostics, reproducible
   commands, limitations, and publication gates in `documentation.md`.
+- [x] Complete 100-persona design Phase A: versioned query provenance and resume identity,
+  isolated v2 query/analysis roots, deterministic schedules, run manifests, and v1 migration
+  regression coverage. The draft v2 override fails closed before dataset/model loading.
 
 ## Verification status
 
 - [x] Dependency lock is current: 90 resolved packages.
-- [x] Unit/integration suite: 35 tests passed.
+- [x] Unit/integration suite: 41 tests passed.
 - [x] Lint: zero findings.
-- [x] Strict typing: zero issues across 54 source files.
+- [x] Strict typing: zero issues across 56 source files.
 - [x] No-cost end-to-end pilot: 120 query records and 12 derived analysis tables.
 - [x] Resumability replay: zero duplicate calls and exactly 120 records retained.
 - [x] Standalone analysis replay: completed from Parquet without importing/calling a provider.
@@ -52,6 +55,19 @@ Last updated: 2026-08-02
   hallucination/off-list rates, relevance, run time, and projected full-collection duration.
   All six Qwen, Gemma, and Llama model/domain pairs passed under `closed-catalog-v2`, with
   provider-free grounding and documented format caveats where required.
+- [x] Select the confirmatory population target: 100 independent personas per domain, three
+  repeats, three local model snapshots, and two domains (79,200 records total).
+- [x] Implement the Phase-A `persona-relevance-v2-100` protocol/provenance schema without
+  changing frozen v1 artifacts; follow `docs/FULL_RUN_PLAN_100_PERSONAS.md`.
+- [ ] Construct, audit, and freeze the 100-persona v2 population and design bundle.
+- [ ] Complete dataset-feasibility, power/precision, leakage, candidate-opportunity, and v2
+  preflight gates without inspecting confirmatory fairness outcomes.
+- [ ] Qualify the RTX 2000 Ada 16 GB / 32 GB workstation using
+  `docs/WORKSTATION_MIGRATION.md`; keep environments and Ollama caches machine-local and use
+  the external SSD for the portable project/data volume.
+- [ ] Non-destructively copy the 6,977,811,617-byte project inventory from
+  `E:\LLM recommend` to `F:\LLM recommend`, verify it, create an independent backup, and then
+  reopen the Codex workspace from `F:` so only one canonical working copy is edited.
 - [ ] Run full collection only after every matching pilot passes the hard budget gate.
 - [ ] Perform confirmatory analysis, diagnose model convergence, and freeze result tables.
 - [ ] Run mitigation only after RQ1-RQ4 results are reviewed.
@@ -170,10 +186,14 @@ Last updated: 2026-08-02
   and 100% for Qwen movie/music, 99.89% and 100% for Gemma movie/music, and 97.39% and 97.88%
   for Llama movie/music. The combined audit is `data/audits/pilot_regrounding_v3.json`.
 - All six scientific pilot pairs are complete. Full collection remains blocked on the
-  independent-persona population/power decision and confirmatory sampling-plan freeze.
+  v2 population construction, power/precision documentation, provenance changes, and
+  confirmatory sampling-plan freeze. The population target is 100 independent personas per
+  domain; the existing six-profile v1 full configuration must not be run.
 - The root `documentation.md` is the consolidated project overview. It explicitly distinguishes
   the six independent pilot personas from repeated model draws and records independent-persona
   sample size as a mandatory scientific decision before full collection.
+- The detailed gated execution plan for the selected population is
+  `docs/FULL_RUN_PLAN_100_PERSONAS.md`.
 
 ## Verification log
 
@@ -238,3 +258,9 @@ Last updated: 2026-08-02
 | 2026-08-02 | Llama/music analysis replay | 12 tables; paired bootstrap 120 rows; 21 Independent and 6 undefined RQ3 diagnostics; 3 singular pilot fits |
 | 2026-08-02 | Scientific pilot phase | All 6 model/domain pairs completed and audited |
 | 2026-08-02 | Six-pilot grounding v3 replay | All immutable pilots re-grounded consistently; no model calls or source-record changes |
+| 2026-08-02 | Confirmatory sample-size decision | 100 independent personas/domain, 3 repeats, 3 models, 2 domains = 79,200 records |
+| 2026-08-02 | Full-run execution plan | Added gated `docs/FULL_RUN_PLAN_100_PERSONAS.md`; v1 full command remains blocked |
+| 2026-08-03 | Second execution system available | RTX 2000 Ada 16 GB VRAM, 32 GB DDR5 RAM; acceptance testing pending |
+| 2026-08-03 | External-SSD migration procedure | Added `docs/WORKSTATION_MIGRATION.md`; RTX workstation designated as sole confirmatory collector |
+| 2026-08-03 | External volume check | `F:` is `YASHWANTH 2TB`, NTFS, writable, approximately 1.7 TB free; dry-run project copy is 2,466 files / 6,977,811,617 bytes |
+| 2026-08-03 | 100-persona Phase A | Versioned provenance/resume identity, isolated output roots, deterministic run manifests, and migration regressions completed; Gate A passed with 41 tests |

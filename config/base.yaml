@@ -1,5 +1,17 @@
 seed: 20260731
 collection_protocol: closed-catalog-v2
+design:
+  version: persona-relevance-v1
+  status: frozen
+  bundle_path: data/relevance_labels/persona_relevance_bundle_pilot_v1_frozen.json
+  bundle_sha256: 4604a8a3d247e3f43249424bf1d94b64b58445b20a97af9985b3390ffc348178
+  permitted_stages: [pilot]
+  expected_personas:
+    pilot: 6
+  legacy_unversioned_storage: true
+analysis:
+  version: pilot-analysis-v1
+  table_root: outputs/tables/analysis
 top_k: 10
 temperature: 0.7
 max_tokens: 500

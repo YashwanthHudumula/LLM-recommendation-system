@@ -1,0 +1,43 @@
+schema_version: 2
+design_version: persona-relevance-v2-100
+status: draft
+created_date: "2026-08-03"
+target_personas_per_domain: 100
+source_datasets:
+  movie:
+    name: MovieLens
+    version: 25m
+  music:
+    name: LastFM
+    version: 360k
+population_construction:
+  seed: 20260731
+  sample_without_replacement: true
+  raw_user_ids_allowed_in_prompts: false
+  raw_user_ids_allowed_in_public_outputs: false
+  construction_and_evaluation_sets_disjoint: true
+  minimum_held_out_relevant_items: 30
+  stratification_dimensions:
+    - activity
+    - popularity_tendency
+    - genre_or_listening_diversity
+  movie:
+    positive_rating_threshold: null
+    minimum_activity: null
+    construction_fraction: null
+    strata_boundaries: null
+    preference_template_grammar: null
+  music:
+    minimum_distinct_artists: null
+    construction_fraction: null
+    strata_boundaries: null
+    preference_template_grammar: null
+freeze_requirements:
+  feasibility_diagnostics_complete: false
+  exactly_100_unique_profiles_per_domain: false
+  leakage_audit_passed: false
+  duplicate_profile_audit_passed: false
+  candidate_opportunity_audit_passed: false
+  human_wording_review_passed: false
+  semantic_phrasing_gate_passed: false
+  note: All requirements must pass before status may change to frozen.

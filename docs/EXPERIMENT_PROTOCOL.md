@@ -9,7 +9,7 @@ before any real model call. Archive the proposal, commit hash, `uv.lock`, all co
 files, current date, provider/model snapshot IDs, prices, and API-region information. Never
 replace a snapshot ID in an existing run; add a new model key.
 
-Each domain has six fixed base preferences. Every base preference is crossed with ten Big-Five
+The frozen v1 pilot has six fixed base preferences per domain. Every base preference is crossed with ten Big-Five
 poles plus one shared neutral baseline and the configured phrasing variants. Movie relevance is
 the complete declared genre-filter set with at least 20 ratings. Music relevance uses binary
 listener-vector cosine similarity to the declared seed-union, at least 30 listeners, and the
@@ -53,8 +53,13 @@ combined with protocol-v2 results.
 
 ## 5. Full collection
 
+The confirmatory run uses the separate `persona-relevance-v2-100` design. Its draft override is
+committed for review, but collection is blocked until the 100-persona bundle is constructed,
+audited, frozen, and assigned its SHA256.
+
 ```powershell
-uv run recllm-collect --model MODEL_KEY --domain movie --stage full
+uv run recllm-collect --config-override config/full_run_v2_100.yaml `
+  --model MODEL_KEY --domain movie --stage full
 ```
 
 Full collection refuses to start without the matching pilot estimate or if projected spend
@@ -64,6 +69,12 @@ record. Restarting checks the complete experimental identity and skips finished 
 
 Run each provider/domain separately. Never run multiple collectors against the same output
 partition concurrently.
+
+Each new query row includes the design version, frozen design-bundle SHA256, dataset version,
+and collection-protocol version in its resumability identity. Query order is deterministically
+randomized per model/domain and recorded in `run_manifest.json` with the seed, `uv.lock` hash,
+model digest, attempt timestamps, and host hardware. Legacy v1 Parquet remains readable but is
+never accepted as a v2 resume source.
 
 ## 6. Analysis
 

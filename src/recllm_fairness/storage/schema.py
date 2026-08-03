@@ -7,11 +7,32 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
+SHA256_PATTERN = r"^[0-9a-f]{64}$"
+
+
+class ExperimentProvenance(BaseModel):
+    """Frozen identifiers that prevent cross-design collection or resume."""
+
+    model_config = ConfigDict(frozen=True)
+
+    design_version: str = Field(min_length=1)
+    design_bundle_sha256: str = Field(pattern=SHA256_PATTERN)
+    dataset_version: str = Field(min_length=1)
+    collection_protocol_version: str = Field(min_length=1)
+
+    def identity_values(self) -> tuple[str, ...]:
+        return tuple(str(getattr(self, column)) for column in PROVENANCE_COLUMNS)
+
 
 class QueryRecord(BaseModel):
     model_config = ConfigDict(frozen=True)
 
+    schema_version: Literal[2] = 2
     query_id: str
+    design_version: str = Field(min_length=1)
+    design_bundle_sha256: str = Field(pattern=SHA256_PATTERN)
+    dataset_version: str = Field(min_length=1)
+    collection_protocol_version: str = Field(min_length=1)
     persona_id: str
     model: str
     model_snapshot: str
@@ -44,7 +65,7 @@ class QueryRecord(BaseModel):
         return value
 
 
-IDENTITY_COLUMNS = [
+LEGACY_IDENTITY_COLUMNS = [
     "persona_id",
     "model",
     "domain",
@@ -53,3 +74,12 @@ IDENTITY_COLUMNS = [
     "phrasing_variant",
     "repeat_idx",
 ]
+
+PROVENANCE_COLUMNS = [
+    "design_version",
+    "design_bundle_sha256",
+    "dataset_version",
+    "collection_protocol_version",
+]
+
+IDENTITY_COLUMNS = [*PROVENANCE_COLUMNS, *LEGACY_IDENTITY_COLUMNS]

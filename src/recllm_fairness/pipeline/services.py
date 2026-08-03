@@ -6,6 +6,7 @@ import asyncio
 import hashlib
 import json
 import logging
+import random
 import time
 import warnings
 from collections import Counter, defaultdict
@@ -49,7 +50,8 @@ from recllm_fairness.storage.io import (
     condition_diagnostics,
     read_records,
 )
-from recllm_fairness.storage.schema import IDENTITY_COLUMNS, QueryRecord
+from recllm_fairness.storage.manifest import manifest_seed
+from recllm_fairness.storage.schema import IDENTITY_COLUMNS, ExperimentProvenance, QueryRecord
 from recllm_fairness.utils.costs import BudgetGuard, Price
 
 LOGGER = logging.getLogger(__name__)
@@ -63,12 +65,15 @@ class QuerySpec:
     prompt_sha256: str
     query_id: str
     candidate_pool: CandidatePool
+    model_name: str
+    provenance: ExperimentProvenance
 
     @property
     def identity(self) -> tuple[object, ...]:
         values = {
+            **self.provenance.model_dump(),
             "persona_id": self.condition.persona_id,
-            "model": "",  # filled by collector because config name is not a persona field
+            "model": self.model_name,
             "domain": self.condition.domain,
             "trait": self.condition.trait,
             "trait_level": self.condition.trait_level,
@@ -187,6 +192,7 @@ def make_specs(
     pool: CandidatePool | Mapping[str, CandidatePool],
     *,
     model_name: str,
+    provenance: ExperimentProvenance,
     repeats: int,
     top_k: int,
     fairness_instruction: bool = False,
@@ -207,6 +213,7 @@ def make_specs(
         for repeat_idx in range(repeats):
             identity = "|".join(
                 [
+                    *provenance.identity_values(),
                     condition.persona_id,
                     model_name,
                     condition.domain,
@@ -218,9 +225,35 @@ def make_specs(
             )
             query_id = hashlib.sha256(identity.encode()).hexdigest()[:24]
             specs.append(
-                QuerySpec(condition, repeat_idx, prompt, digest, query_id, condition_pool)
+                QuerySpec(
+                    condition,
+                    repeat_idx,
+                    prompt,
+                    digest,
+                    query_id,
+                    condition_pool,
+                    model_name,
+                    provenance,
+                )
             )
     return specs
+
+
+def deterministic_query_order(specs: list[QuerySpec], *, seed: int) -> list[QuerySpec]:
+    """Return a stable randomized schedule for one model/domain partition."""
+    if not specs:
+        return []
+    models = {spec.model_name for spec in specs}
+    domains = {spec.condition.domain for spec in specs}
+    provenances = {spec.provenance for spec in specs}
+    if len(models) != 1 or len(domains) != 1 or len(provenances) != 1:
+        raise ValueError("Query ordering requires exactly one model, domain, and provenance")
+    model = next(iter(models))
+    domain = next(iter(domains))
+    provenance = next(iter(provenances))
+    ordered = list(specs)
+    random.Random(manifest_seed(seed, provenance, model, domain)).shuffle(ordered)
+    return ordered
 
 
 async def collect_queries(
@@ -239,21 +272,19 @@ async def collect_queries(
     initial_spent_usd: float = 0.0,
 ) -> pd.DataFrame:
     """Collect grouped identical prompts once, write all condition records, and resume safely."""
+    if not specs:
+        return read_records(output_root)
+    provenances = {spec.provenance for spec in specs}
+    spec_models = {spec.model_name for spec in specs}
+    if len(provenances) != 1 or spec_models != {model_name}:
+        raise ValueError("Collection specs must share one provenance and requested model")
+    provenance = next(iter(provenances))
     existing = read_records(output_root)
-    done = completed_keys(existing)
+    done = completed_keys(existing, expected_provenance=provenance)
     pending = [
         spec
         for spec in specs
-        if (
-            spec.condition.persona_id,
-            model_name,
-            spec.condition.domain,
-            spec.condition.trait,
-            spec.condition.trait_level,
-            spec.condition.phrasing_variant,
-            spec.repeat_idx,
-        )
-        not in done
+        if spec.identity not in done
     ]
     if not pending:
         LOGGER.info("All %d requested conditions are already complete", len(specs))
@@ -306,6 +337,7 @@ async def collect_queries(
             for index, spec in enumerate(group):
                 record = QueryRecord(
                     query_id=spec.query_id,
+                    **spec.provenance.model_dump(),
                     persona_id=spec.condition.persona_id,
                     model=model_name,
                     model_snapshot=response.model,
@@ -319,9 +351,9 @@ async def collect_queries(
                     system_prompt=spec.prompt.system_prompt,
                     user_prompt=spec.prompt.user_prompt,
                     prompt_sha256=spec.prompt_sha256,
-                      candidate_item_ids=[
-                          item.item_id for item in representative.candidate_pool.items
-                      ],
+                    candidate_item_ids=[
+                        item.item_id for item in representative.candidate_pool.items
+                    ],
                     raw_response_text=response.text,
                     parsed_titles=parsed,
                     matched_item_ids=matched.matched_item_ids,

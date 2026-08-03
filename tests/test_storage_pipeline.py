@@ -11,6 +11,7 @@ from recllm_fairness.pipeline.services import (
     relevance_table,
     synthetic_catalog,
 )
+from recllm_fairness.storage.schema import ExperimentProvenance
 
 
 def test_collection_is_append_only_resumable_and_relevance_ready(tmp_path: Path) -> None:
@@ -40,7 +41,20 @@ def test_collection_is_append_only_resumable_and_relevance_ready(tmp_path: Path)
         phrasing_variants=["direct"],
         domains=("movie",),
     )
-    specs = make_specs(conditions, pool, model_name="mock", repeats=1, top_k=3)
+    provenance = ExperimentProvenance(
+        design_version="test-v2",
+        design_bundle_sha256="a" * 64,
+        dataset_version="synthetic:12",
+        collection_protocol_version="test-protocol-v2",
+    )
+    specs = make_specs(
+        conditions,
+        pool,
+        model_name="mock",
+        provenance=provenance,
+        repeats=1,
+        top_k=3,
+    )
     kwargs = dict(
         specs=specs,
         model_name="mock",
@@ -65,6 +79,7 @@ def test_collection_is_append_only_resumable_and_relevance_ready(tmp_path: Path)
     second = asyncio.run(collect_queries(**kwargs))
     assert len(first) == len(second) == 3
     assert len(list(tmp_path.glob("**/*.parquet"))) == 3
+    assert set(first["design_version"]) == {"test-v2"}
     relevance = relevance_table(second, k=3)
     assert relevance["relevance_labels_available"].all()
     assert relevance["precision_at_k"].between(0, 1).all()

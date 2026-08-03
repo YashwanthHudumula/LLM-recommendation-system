@@ -1,0 +1,18 @@
+# Phase-A override for the selected confirmatory population. Collection remains
+# intentionally blocked until Phases B-D freeze the bundle and replace the null hash.
+design:
+  version: persona-relevance-v2-100
+  status: draft
+  bundle_path: data/relevance_labels/persona_relevance_bundle_full_v2_100_frozen.json
+  bundle_sha256: null
+  permitted_stages: []
+  expected_personas:
+    full: 100
+  legacy_unversioned_storage: false
+analysis:
+  version: confirmatory-analysis-v1
+  table_root: outputs/tables/analysis
+relevance_labels:
+  full:
+    movie: data/relevance_labels/relevance_labels_movies_full_v2_100.json
+    music: data/relevance_labels/relevance_labels_music_full_v2_100.json

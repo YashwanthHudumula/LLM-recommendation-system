@@ -15,6 +15,13 @@ from recllm_fairness.personas.semantic_check import (
     check_phrasing_equivalence,
     load_sentence_transformer,
 )
+from recllm_fairness.pipeline.protocol import (
+    assert_collection_permitted,
+    experiment_provenance,
+    legacy_unversioned_storage,
+    validate_design_bundle,
+    validate_label_artifact,
+)
 from recllm_fairness.pipeline.services import (
     build_persona_candidate_pools,
     collect_queries,
@@ -22,6 +29,7 @@ from recllm_fairness.pipeline.services import (
     make_specs,
 )
 from recllm_fairness.storage.io import read_records
+from recllm_fairness.storage.manifest import query_output_root
 from recllm_fairness.utils.config import load_config
 from recllm_fairness.utils.costs import BudgetGuard
 
@@ -33,6 +41,7 @@ def main(
     model: str = typer.Option(...),
     domain: str = typer.Option(...),
     config_dir: Path = Path("config"),
+    config_override: Path | None = None,
     results: Path = Path("outputs/tables/analysis/item_side_metrics.csv"),
 ) -> None:
     if not results.exists():
@@ -40,10 +49,13 @@ def main(
     if domain not in {"movie", "music"}:
         raise typer.BadParameter("domain must be movie or music")
     domain_literal = cast(Literal["movie", "music"], domain)
-    config = load_config(config_dir)
+    config = load_config(config_dir, config_override)
     if model not in config["models"]:
         raise typer.BadParameter(f"Unknown model config: {model}")
     model_config = config["models"][model]
+    assert_collection_permitted(config, stage="full")
+    provenance = experiment_provenance(config, domain=domain, stage="full")
+    validate_design_bundle(config, provenance=provenance)
     if model_config["provider"] != "mock":
         encoder = load_sentence_transformer(config["semantic_check"]["model_name"])
         check_phrasing_equivalence(
@@ -57,7 +69,13 @@ def main(
     label_path = Path(config["relevance_labels"]["full"][domain])
     if not label_path.exists():
         raise typer.BadParameter(f"Missing fixed full-scale relevance labels: {label_path}")
+    validate_label_artifact(label_path, provenance=provenance, domain=domain)
     domain_preferences = load_label_preferences(label_path)
+    assert_collection_permitted(
+        config,
+        stage="full",
+        persona_count=len(domain_preferences),
+    )
     conditions = generate_personas(
         preferences={domain: domain_preferences},
         personas_per_cell=len(domain_preferences),
@@ -82,12 +100,21 @@ def main(
         conditions,
         pools,
         model_name=model,
+        provenance=provenance,
         repeats=int(config["repeats"]),
         top_k=int(config["top_k"]),
         fairness_instruction=True,
     )
     protocol = str(config["collection_protocol"])
-    prior = read_records(Path(config["storage"]["root"]) / "full" / protocol)
+    prior = read_records(
+        query_output_root(
+            config["storage"]["root"],
+            design_version=provenance.design_version,
+            stage="full",
+            protocol_version=protocol,
+            legacy_unversioned=legacy_unversioned_storage(config),
+        )
+    )
     prior_spend = (
         float(prior["cost_usd"].sum())
         if not prior.empty and "cost_usd" in prior
@@ -103,8 +130,14 @@ def main(
         unique_calls = len({(spec.prompt_sha256, spec.repeat_idx) for spec in specs})
         projected = prior_spend + float(estimate["average_cost_per_unique_call_usd"]) * unique_calls
         BudgetGuard(float(config["budget"]["hard_cap_usd"])).preflight(projected)
-    root = (
-        Path(config["storage"]["root"]) / "mitigation" / protocol / model / domain
+    root = query_output_root(
+        config["storage"]["root"],
+        design_version=provenance.design_version,
+        stage="mitigation",
+        protocol_version=protocol,
+        model=model,
+        domain=domain,
+        legacy_unversioned=False,
     )
     queries = asyncio.run(
         collect_queries(

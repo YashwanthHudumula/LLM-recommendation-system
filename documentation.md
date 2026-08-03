@@ -4,9 +4,10 @@
 **Study title:** *Who Gets Seen? Auditing Item-Side Exposure Disparities Induced by
 Personality-Conditioned Prompting in LLM-Based Recommender Systems*  
 **Document status:** Living technical and scientific overview  
-**Last updated:** 2026-08-02  
+**Last updated:** 2026-08-03
 **Current execution status:** All six scientific pilot model/domain pairs are complete and
-audited. No full-scale collection has started.
+audited. The confirmatory target is 100 independent personas per domain; v2 population
+construction is pending and no full-scale collection has started.
 
 This file is the central documentation index for the project. It consolidates the design,
 architecture, implementation, operational workflow, audit history, pilot diagnostics,
@@ -90,7 +91,7 @@ For every base persona and domain, the current matrix contains:
 This creates `10 trait poles + 1 neutral = 11` framings and `11 x 4 = 44` prompt conditions
 per base persona.
 
-### Current sample sizes
+### Sample sizes
 
 There are six fixed base preferences per domain.
 
@@ -98,13 +99,16 @@ There are six fixed base preferences per domain.
 - **Currently configured full stage:** `6 personas x 44 conditions x 3 repeats = 792 records`
   per model/domain.
 - **All three local models and two domains at the current full configuration:** 4,752 records.
+- **Selected confirmatory target:** `100 personas x 44 conditions x 3 repeats = 13,200 records`
+  per model/domain.
+- **Selected target across three local models and two domains:** 79,200 records.
 
 Repeated generations improve estimates of decoding variability, but they do **not** create new
-independent persona clusters. The proposal anticipated a substantially larger synthetic
-population. Therefore, expanding the independent persona population or justifying a revised
-sample size through power/precision analysis is a mandatory decision before the current
-configuration can be called publication-ready. This is documented as a scientific gate in
-Section 20.
+independent persona clusters. The researcher selected 100 independent personas per domain on
+2026-08-02. The existing six-persona v1 configuration remains the pilot design only. A new
+data-grounded, independently labeled and hashed v2 population must be constructed and its
+power/precision properties documented before collection. The gated execution plan is
+[docs/FULL_RUN_PLAN_100_PERSONAS.md](docs/FULL_RUN_PLAN_100_PERSONAS.md).
 
 ### Frozen prompt parameters
 
@@ -159,6 +163,9 @@ flowchart LR
 6. **Versioned protocol:** incompatible collection protocols never share an output root.
 7. **Explicit failures:** hallucinations, catalog-valid off-list items, under-length lists,
    statistical non-convergence, and undefined correlations are retained as diagnostics.
+8. **Design-bound resume:** design version, frozen bundle hash, dataset version, and collection
+   protocol are part of every new record identity; legacy v1 rows remain readable but cannot
+   satisfy a v2 resume request.
 
 ## 6. Repository layout and module ownership
 
@@ -329,10 +336,10 @@ stage catalog, reparses and re-grounds every response, and writes 12 tables:
 11. `rq3_correlations.csv`
 12. `mixed_effects.csv`
 
-The current CLI writes to `outputs/tables/analysis`. Separate runs overwrite that derived
-location, although immutable queries and committed audit summaries remain intact. Before
-confirmatory analysis, result roots must be versioned or immediately archived by protocol,
-stage, domain, model set, matcher version, and analysis commit.
+Analysis tables are namespaced by design version, domain, sorted model set, and analysis
+version. The CLI refuses to write into a non-empty analysis-version directory; corrections and
+new manuscript evidence must use a new analysis version. An `analysis_manifest.json` records
+the source query root and record count.
 
 ## 14. Metric contract
 
@@ -475,11 +482,14 @@ uv run recllm-analyze `
 ### Full collection template
 
 ```powershell
-uv run recllm-collect --config-dir config --model MODEL_KEY --domain DOMAIN --stage full
+uv run recllm-collect --config-dir config `
+  --config-override config/full_run_v2_100.yaml `
+  --model MODEL_KEY --domain DOMAIN --stage full
 ```
 
-Do not run this template until every gate in Section 20 is resolved. Never run two collectors
-against the same model/domain partition concurrently.
+This command currently fails closed because the v2 design is a draft with no frozen bundle
+hash. Do not enable it until Gates B-D are complete. Never run two collectors against the same
+model/domain partition concurrently.
 
 ## 19. Cost, runtime, and hardware behavior
 
@@ -496,27 +506,36 @@ configuration, three full repeats give a simple generation-time projection of ab
 excluding larger-catalog loading, analysis, thermal throttling, interruption, and storage
 overhead. This projection becomes invalid if the independent persona population is expanded.
 
+The selected confirmatory collector is a second university workstation with an RTX 2000 Ada
+Generation GPU (16 GB VRAM) and 32 GB DDR5 RAM. The portable repository, datasets, and outputs
+remain on the external SSD; Python environments and Ollama installations/model caches should be
+machine-local. To avoid a hardware/runtime confound, the RTX workstation is the sole planned
+confirmatory inference host and the laptop is reserved for development, backups, and
+provider-free analysis. The acceptance and safe-transfer procedure is
+[docs/WORKSTATION_MIGRATION.md](docs/WORKSTATION_MIGRATION.md).
+
 ## 20. Remaining gates before a publishable full run
 
-1. **Resolve independent-population size.** The present full configuration has six persona
-   clusters. Repeats are not independent users. Conduct a power/precision analysis and either:
-   expand the fixed, independently labeled persona population under a new frozen design version,
-   or narrow and justify the study as a six-preference controlled benchmark. The former is
-   closer to the proposal's stated population-scale contribution.
-2. **Freeze the confirmatory sampling plan.** Record persona count, repeats, exclusion rules for
+Phase A protocol versioning is complete: new records carry design/dataset/protocol provenance,
+v2 storage and analyses are isolated, query order and run environments are manifested, and
+incompatible resume is regression-tested. The remaining gates begin with population work.
+
+1. **Construct and freeze the v2 population.** The target is 100 independently constructed and
+   labeled personas per domain. Keep all v1 artifacts unchanged and do not create
+   pseudoreplicates from the six pilot preferences.
+2. **Document power/precision and freeze the confirmatory sampling plan.** Record the selected
+   population construction, three repeats, exclusion rules for
    short lists, handling of annotated valid-code entries, and primary versus sensitivity views.
-3. **Version analysis outputs.** Prevent movie/music or per-model replays from overwriting the
-   derived tables used in the manuscript.
-4. **Run same-model/domain budget and duration checks.** Local cost is zero, but elapsed time,
+3. **Run same-model/domain budget and duration checks.** Local cost is zero, but elapsed time,
    thermals, storage, and crash-resume behavior still require planning.
-5. **Run full collection serially by model/domain.** Retain exact snapshots and timestamps.
-6. **Perform confirmatory analysis.** Require mixed-model convergence or document/use a
+4. **Run full collection serially by model/domain.** Retain exact snapshots and timestamps.
+5. **Perform confirmatory analysis.** Require mixed-model convergence or document/use a
    defensible alternative; freeze corrected result tables before narrative interpretation.
-7. **Create figures and manuscript.** Separate confirmatory results, sensitivity analyses, and
+6. **Create figures and manuscript.** Separate confirmatory results, sensitivity analyses, and
    exploratory genre/provider slices.
-8. **Select and verify a journal.** Check current scope, formatting, word limits, data/code
+7. **Select and verify a journal.** Check current scope, formatting, word limits, data/code
    policy, ethics statement, and submission checklist at submission time.
-9. **Archive reproducibility materials.** Add a repository URL/DOI, environment lock, frozen
+8. **Archive reproducibility materials.** Add a repository URL/DOI, environment lock, frozen
     configuration, de-identified outputs permitted by provider/dataset terms, and a data
     availability statement.
 

@@ -10,7 +10,13 @@ from typing import Any
 
 import pandas as pd
 
-from recllm_fairness.storage.schema import IDENTITY_COLUMNS, QueryRecord
+from recllm_fairness.storage.schema import (
+    IDENTITY_COLUMNS,
+    LEGACY_IDENTITY_COLUMNS,
+    PROVENANCE_COLUMNS,
+    ExperimentProvenance,
+    QueryRecord,
+)
 
 _SAFE_PART = re.compile(r"[^A-Za-z0-9_.-]")
 
@@ -21,10 +27,16 @@ def _partition_value(value: str) -> str:
 
 def record_path(root: str | Path, record: QueryRecord) -> Path:
     base = Path(root)
+    model_partition = f"model={_partition_value(record.model)}"
+    domain_partition = f"domain={record.domain}"
+    suffix = base.parts[-2:]
+    already_partitioned = suffix in {
+        (model_partition, domain_partition),
+        (_partition_value(record.model), record.domain),
+    }
+    partition = base if already_partitioned else base / model_partition / domain_partition
     return (
-        base
-        / f"model={_partition_value(record.model)}"
-        / f"domain={record.domain}"
+        partition
         / f"trait={_partition_value(record.trait)}"
         / f"trait_level={record.trait_level}"
         / f"{_partition_value(record.query_id)}.parquet"
@@ -64,16 +76,51 @@ def read_records(root: str | Path, filters: dict[str, Any] | None = None) -> pd.
     return frame.reset_index(drop=True)
 
 
-def completed_keys(frame: pd.DataFrame) -> set[tuple[object, ...]]:
-    """Build the exact resumability key set from an existing query table."""
+class IncompatibleDesignError(ValueError):
+    """Raised before resume could mix records from incompatible experiments."""
+
+
+def completed_keys(
+    frame: pd.DataFrame,
+    expected_provenance: ExperimentProvenance | None = None,
+) -> set[tuple[object, ...]]:
+    """Build resume keys while retaining read/resume support for legacy v1 tables."""
     if frame.empty:
         return set()
-    missing = set(IDENTITY_COLUMNS) - set(frame.columns)
-    if missing:
-        raise ValueError(f"Query table is missing identity columns: {sorted(missing)}")
-    if frame.duplicated(IDENTITY_COLUMNS).any():
+    present_provenance = set(PROVENANCE_COLUMNS) & set(frame.columns)
+    if present_provenance and present_provenance != set(PROVENANCE_COLUMNS):
+        missing = set(PROVENANCE_COLUMNS) - set(frame.columns)
+        raise IncompatibleDesignError(
+            f"Query table has incomplete provenance columns: {sorted(missing)}"
+        )
+    if expected_provenance is not None:
+        missing = set(IDENTITY_COLUMNS) - set(frame.columns)
+        if missing:
+            raise IncompatibleDesignError(
+                "Cannot resume a versioned collection from legacy or incomplete records; "
+                f"missing identity columns: {sorted(missing)}"
+            )
+        observed = frame[PROVENANCE_COLUMNS].drop_duplicates()
+        expected = expected_provenance.identity_values()
+        observed_values = set(observed.itertuples(index=False, name=None))
+        if observed_values != {expected}:
+            raise IncompatibleDesignError(
+                "Existing records have incompatible experiment provenance: "
+                f"expected {expected}, observed {sorted(observed_values)}"
+            )
+        identity_columns = IDENTITY_COLUMNS
+    elif present_provenance:
+        identity_columns = IDENTITY_COLUMNS
+    else:
+        missing_legacy = set(LEGACY_IDENTITY_COLUMNS) - set(frame.columns)
+        if missing_legacy:
+            raise ValueError(
+                f"Query table is missing identity columns: {sorted(missing_legacy)}"
+            )
+        identity_columns = LEGACY_IDENTITY_COLUMNS
+    if frame.duplicated(identity_columns).any():
         raise ValueError("Duplicate experimental condition records detected")
-    return set(frame[IDENTITY_COLUMNS].itertuples(index=False, name=None))
+    return set(frame[identity_columns].itertuples(index=False, name=None))
 
 
 def condition_diagnostics(frame: pd.DataFrame) -> pd.DataFrame:
@@ -99,4 +146,3 @@ def condition_diagnostics(frame: pd.DataFrame) -> pd.DataFrame:
         )
         .reset_index()
     )
-

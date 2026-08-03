@@ -17,6 +17,8 @@ from recllm_fairness.pipeline.services import (
     write_analysis_outputs,
     write_json,
 )
+from recllm_fairness.storage.manifest import query_output_root
+from recllm_fairness.storage.schema import ExperimentProvenance
 from recllm_fairness.utils.config import load_config
 from recllm_fairness.utils.logging import configure_logging
 
@@ -69,10 +71,21 @@ def main(config_dir: Path = Path("config")) -> None:
         conditions,
         pool,
         model_name="mock",
+        provenance=ExperimentProvenance(
+            design_version="synthetic-smoke-v2",
+            design_bundle_sha256="0" * 64,
+            dataset_version="synthetic:60",
+            collection_protocol_version="synthetic-smoke-v2",
+        ),
         repeats=1,
         top_k=int(config["top_k"]),
     )
-    output_root = Path(config["storage"]["root"]) / "pilot"
+    output_root = query_output_root(
+        config["storage"]["root"],
+        design_version="synthetic-smoke-v2",
+        stage="pilot",
+        protocol_version="synthetic-smoke-v2",
+    )
     queries = asyncio.run(
         collect_queries(
             specs,

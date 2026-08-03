@@ -51,8 +51,10 @@ uv run recllm-pilot --config-dir config
 # Same-model/domain scientific pilot after editing config/models.yaml
 uv run recllm-collect --config-dir config --model openai --domain movie
 
-# Full collection only after the matching pilot and budget gate pass
-uv run recllm-collect --config-dir config --model openai --domain movie --stage full
+# Confirmatory collection only after the v2 design is frozen (currently blocked)
+uv run recllm-collect --config-dir config `
+  --config-override config/full_run_v2_100.yaml `
+  --model ollama_qwen3_8b --domain movie --stage full
 
 # Analysis never calls a model
 uv run recllm-analyze --config-dir config
@@ -66,10 +68,10 @@ The consolidated architecture, methodology, audit history, pilot diagnostics, li
 execution workflow, and publication gates are maintained in
 [documentation.md](documentation.md).
 
-The persona/relevance design remains a draft until the cooling-off and independent blind
-wording reviews recorded in `config/persona_relevance_design_v1.yaml` are complete. Collection
-uses the generated label JSON directly and refuses to proceed if the required stage file is
-missing.
+The six-persona v1 pilot design is frozen. The 100-persona v2 confirmatory design remains a
+draft until its data-grounded population, independent labels, audits, and bundle hash are
+complete. Collection verifies that frozen bundle on disk and refuses incompatible or unfrozen
+designs before loading a model or full dataset.
 
 For publication runs, follow [the experiment protocol](docs/EXPERIMENT_PROTOCOL.md) and
 cite formulas exactly as operationalized in [the metric specification](docs/METRICS.md).
