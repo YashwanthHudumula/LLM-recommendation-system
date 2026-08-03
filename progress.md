@@ -65,9 +65,11 @@ Last updated: 2026-08-03
 - [ ] Qualify the RTX 2000 Ada 16 GB / 32 GB workstation using
   `docs/WORKSTATION_MIGRATION.md`; keep environments and Ollama caches machine-local and use
   the external SSD for the portable project/data volume.
-- [ ] Non-destructively copy the 6,977,811,617-byte project inventory from
-  `E:\LLM recommend` to `F:\LLM recommend`, verify it, create an independent backup, and then
-  reopen the Codex workspace from `F:` so only one canonical working copy is edited.
+- [x] Non-destructively synchronize `E:\LLM recommend` to `F:\LLM recommend`; verify zero
+  pending source files, matching Git commit and lock hash, Git object integrity, and all four
+  dataset archive checksums. Retain the clean `E:` copy as the independent backup.
+- [ ] Reopen the Codex workspace from `F:\LLM recommend` on the RTX workstation and edit only
+  that canonical copy from then on.
 - [ ] Run full collection only after every matching pilot passes the hard budget gate.
 - [ ] Perform confirmatory analysis, diagnose model convergence, and freeze result tables.
 - [ ] Run mitigation only after RQ1-RQ4 results are reviewed.
@@ -264,3 +266,7 @@ Last updated: 2026-08-03
 | 2026-08-03 | External-SSD migration procedure | Added `docs/WORKSTATION_MIGRATION.md`; RTX workstation designated as sole confirmatory collector |
 | 2026-08-03 | External volume check | `F:` is `YASHWANTH 2TB`, NTFS, writable, approximately 1.7 TB free; dry-run project copy is 2,466 files / 6,977,811,617 bytes |
 | 2026-08-03 | 100-persona Phase A | Versioned provenance/resume identity, isolated output roots, deterministic run manifests, and migration regressions completed; Gate A passed with 41 tests |
+| 2026-08-03 | Phase A checkpoint | Commit `3614221f02c8c37b0bdb723f50fe6d9b405be22c` created on `master` |
+| 2026-08-03 | External-SSD project synchronization | Post-copy dry run: 2,513/2,513 source files current, zero failed/mismatched/pending; destination extras limited to disposable caches and one old Codex checkpoint |
+| 2026-08-03 | External-SSD repository verification | `uv.lock` SHA256 matched (`99687297f3fad09232d43cde627f589eede5eea8e879e18be50c5e94ccc22a51`); Git HEAD matched and `git fsck` passed |
+| 2026-08-03 | External-SSD dataset verification | All four archive MD5 values on `F:` matched the frozen publisher checksums |
