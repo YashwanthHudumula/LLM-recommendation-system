@@ -18,7 +18,7 @@ def _clean_title(value: str) -> str:
     value = _CANDIDATE_CODE.sub("", value)
     value = _LABEL.sub("", value)
     value = _SKIP_ANNOTATION.sub("", value)
-    value = value.strip().strip('"“”\'`')
+    value = value.strip().strip("\"“”'`")
     # Do not strip hyphen-delimited suffixes: they are frequently part of canonical titles
     # (for example, "Star Wars: Episode IV - A New Hope"). Explanatory text is rejected by
     # catalog grounding rather than destructively guessed away here.

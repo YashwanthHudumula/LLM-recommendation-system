@@ -9,9 +9,8 @@ import json
 import os
 import subprocess
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
-
 
 TARGETS = (
     "AGENTS.md",
@@ -144,9 +143,7 @@ def main() -> None:
                 {
                     "relative_path": relative,
                     "size_bytes": stat.st_size,
-                    "last_write_utc": datetime.fromtimestamp(
-                        stat.st_mtime, timezone.utc
-                    ).isoformat(),
+                    "last_write_utc": datetime.fromtimestamp(stat.st_mtime, UTC).isoformat(),
                     "sha256": future.result(),
                     "evidence_class": evidence_class(relative),
                     "category": category(relative),
@@ -166,7 +163,7 @@ def main() -> None:
     summary = {
         "schema_version": 1,
         "study_id": args.study_id,
-        "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+        "generated_at_utc": datetime.now(UTC).isoformat(),
         "project_root": str(project_root),
         "inventory_file": inventory_path.name,
         "inventory_sha256": inventory_hash,

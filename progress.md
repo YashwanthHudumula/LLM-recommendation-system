@@ -278,3 +278,22 @@ Last updated: 2026-08-03
 | 2026-08-03 | Phase C/D freeze | SESOI 0.20 accepted; 200 mixed-model simulations gave power 1.00, mean CI width 0.160, convergence 1.00, failures 0; sampling plan and v2 bundle frozen at SHA256 e478bbe4841ac57800df22a1b9d73a8841774f46becdb28173d23df92fa92710; full collection remains blocked pending Phase E preflight |
 | 2026-08-03 | Phase E balanced preflight | 84 frozen-pool calls across all models/domains/traits/phrasings; Qwen and Gemma passed both domains, Llama movie passed, Llama music top-10 exposure yield 78.6% versus frozen 90% gate and failed; bad-title rate 0.72%; GPU placement confirmed; partial-write/resume/replay passed 2 -> 4 -> 4 with zero duplicates; full collection remains blocked |
 | 2026-08-03 | Design amendment A1 ready | Single format-only retry implemented with all attempts preserved; Llama/music amended preflight passed 92.9%; 45 tests, lint, typing, bundle, 100+100 labels, six model/domain cost gates, and all three digests verified; A1 bundle SHA256 f847715539c3d97c569cb597b9df50190c68be5bcd8eeb423f50871b84555d50; full stage opened but collection not yet started |
+
+## 2026-08-25 reproducibility and sensitivity gate
+
+- Rebuilt the locked environment with CPython 3.12.5 in `.venv-repro`; the unavailable historical
+  `.venv` was preserved unchanged.
+- Final gate: 48 tests passed, strict typing passed for 60 source files, and Ruff lint/format passed
+  for 76 files.
+- Replayed primary movie and music analyses from all 79,200 immutable records at 2,000 persona
+  bootstrap resamples under `confirmatory-analysis-v2`.
+- Completed pair-safe `exact-10-grounded` and `exclude-flagged-records` sensitivity packages for
+  both domains.
+- Preserved all singular/failure MixedLM diagnostics and added residual-standardized OLS with
+  persona-clustered robust standard errors; all six outcomes succeeded in every domain/view.
+- Hashed 90 files across six analysis packages in
+  `data/audits/confirmatory_analysis_v2_reproducibility.json`.
+- Exact-10 materially changes a small set of Llama/Qwen RQ3 classifications and must be reported;
+  the unflagged view is nearly identical to primary.
+- Remaining gates: within-opportunity sensitivity metrics, figures/manuscript, bibliography
+  verification, external archival deposit, and DOI.

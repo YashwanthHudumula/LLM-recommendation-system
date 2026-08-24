@@ -2,8 +2,10 @@
 
 **Current status:** confirmatory collection is complete with 79,200 immutable records across
 three local model snapshots, two domains, 100 personas per domain, and three repeats. The frozen
-provider-free primary analysis is complete; registered sensitivity analyses and statistical-fit
-remediation remain pending before journal submission.
+provider-free primary analysis, both registered sensitivity views, and persona-clustered robust
+fit diagnostics are complete and checksummed. Within-opportunity sensitivity metrics, final
+figures, the manuscript, and external archival deposition remain pending before journal
+submission.
 
 This repository implements the study **Who Gets Seen? Auditing Item-Side Exposure
 Disparities Induced by Personality-Conditioned Prompting in LLM-Based Recommender
@@ -25,7 +27,8 @@ The primary outcomes are:
   MGU, and DGU;
 - utility controls: Precision@K and NDCG@K;
 - inference: persona-resampled confidence intervals, mixed-effects models,
-  Benjamini-Hochberg correction, and pre-registered RQ3 scenario classification.
+  Benjamini-Hochberg correction, pre-registered RQ3 scenario classification, and transparent
+  persona-clustered robust alternatives when mixed models are singular.
 
 ## Safety and cost controls
 
@@ -60,6 +63,17 @@ uv run recllm-collect --config-dir config --model openai --domain movie
 uv run recllm-analyze --config-dir config `
   --config-override config/full_run_v2_100_a1.yaml `
   --stage full --domain movie --analysis-version confirmatory-analysis-v2
+
+# Registered exact-10, paired-neutral sensitivity view
+uv run recllm-analyze --config-dir config `
+  --config-override config/full_run_v2_100_a1.yaml `
+  --stage full --domain movie `
+  --analysis-version confirmatory-analysis-v2-sensitivity-exact10 `
+  --sensitivity exact-10-grounded
+
+# Fit remediation over an existing analysis package
+uv run python -m recllm_fairness.pipeline.run_fit_diagnostics `
+  outputs/tables/analysis/<analysis-package>
 ```
 
 See `data/DATA_SOURCES.md` before downloading data, and `progress.md` for implementation
@@ -69,6 +83,8 @@ and verification status. The research proposal is the scientific source of truth
 The consolidated architecture, methodology, audit history, pilot diagnostics, limitations,
 execution workflow, and publication gates are maintained in
 [documentation.md](documentation.md).
+The completed clean-environment replay and sensitivity gate are documented in
+[documentation/14_REPRODUCIBILITY_GATE_AND_SENSITIVITY_V2.md](documentation/14_REPRODUCIBILITY_GATE_AND_SENSITIVITY_V2.md).
 
 The six-persona v1 pilot and 100-persona A1 confirmatory designs are frozen. Collection verifies
 the frozen bundle on disk and refuses incompatible or unfrozen designs before loading a model or

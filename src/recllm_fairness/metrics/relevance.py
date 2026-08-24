@@ -30,4 +30,3 @@ def ndcg_at_k(
     ideal = sorted(scores.values(), reverse=True)[:k]
     idcg = sum((2**gain - 1) / np.log2(rank + 1) for rank, gain in enumerate(ideal, 1))
     return 0.0 if idcg == 0 else float(dcg / idcg)
-

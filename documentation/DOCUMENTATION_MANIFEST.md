@@ -15,3 +15,11 @@ Generated and verified on 2026-08-06. All internal Markdown links were checked: 
 
 The status log is intentionally time-specific. Adding later snapshots will change its checksum;
 append a new manifest entry rather than erasing this historical checksum.
+
+## 2026-08-25 addendum
+
+| File | Lines | SHA256 |
+|---|---:|---|
+| `README.md` | 55 | `7d0798a78d1e93ac54f81ffe0c1ce91aa9b6a40b7bb206df56b9e777b09a68bd` |
+| `14_REPRODUCIBILITY_GATE_AND_SENSITIVITY_V2.md` | 161 | `5fb85ee3fe40ad021c7a58083ce0179df44794059cb2f69cd21d4e1f84601036` |
+| `../data/audits/confirmatory_analysis_v2_reproducibility.json` | 1,089 | `b7193059e3c3c7b200863d5a2f084b3b46748a62a8cb36f154e3ae22ad3e65da` |

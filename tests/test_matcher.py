@@ -52,9 +52,7 @@ def test_parser_handles_numbered_and_json_outputs() -> None:
     assert parse_response("C042 | Star Wars: Episode IV - A New Hope") == [
         "Star Wars: Episode IV - A New Hope"
     ]
-    assert parse_response("C042 | Blade Runner (does not match, skipped)") == [
-        "Blade Runner"
-    ]
+    assert parse_response("C042 | Blade Runner (does not match, skipped)") == ["Blade Runner"]
 
 
 def test_matcher_separates_hallucinated_and_off_list_titles() -> None:
@@ -71,9 +69,7 @@ def test_matcher_separates_hallucinated_and_off_list_titles() -> None:
 
 def test_matcher_prefers_allowed_id_for_exact_duplicate_title() -> None:
     catalog = _catalog()
-    duplicate = catalog[0].model_copy(
-        update={"item_id": "4", "popularity_rank": 4}
-    )
+    duplicate = catalog[0].model_copy(update={"item_id": "4", "popularity_rank": 4})
     result = match_titles(
         ["Spirited Away"],
         [*catalog, duplicate],

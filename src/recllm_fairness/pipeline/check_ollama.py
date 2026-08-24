@@ -96,8 +96,7 @@ async def benchmark(
                     "persona_id": condition.persona_id,
                     "prompt_tokens": response.prompt_tokens,
                     "completion_tokens": response.completion_tokens,
-                    "total_duration_seconds": int(raw.get("total_duration", 0))
-                    / 1_000_000_000,
+                    "total_duration_seconds": int(raw.get("total_duration", 0)) / 1_000_000_000,
                     "generation_tokens_per_second": (
                         response.completion_tokens / (eval_duration / 1_000_000_000)
                         if eval_duration
@@ -157,17 +156,14 @@ def main(
     if domain not in {"movie", "music"}:
         raise typer.BadParameter("domain must be movie or music")
     model_names = [value.strip() for value in models.split(",") if value.strip()]
-    report = asyncio.run(
-        benchmark(config, model_names, cast(Literal["movie", "music"], domain))
-    )
+    report = asyncio.run(benchmark(config, model_names, cast(Literal["movie", "music"], domain)))
     write_json(output, report)
     for result in report["models"]:
         queries = result["queries"]
         matched = sum(len(query["matched_item_ids"]) for query in queries)
         expected = len(queries) * int(report["top_k"])
         typer.echo(
-            f"{result['config_name']}: passed={result['passed']} "
-            f"matched={matched}/{expected}"
+            f"{result['config_name']}: passed={result['passed']} matched={matched}/{expected}"
         )
     if not report["all_passed"]:
         raise typer.Exit(code=1)

@@ -80,8 +80,7 @@ def main(
     bundle = build_audit_bundle(specification, movie_labels, music_labels)
     status_suffix = "frozen" if specification.get("status") == "frozen" else "draft"
     bundle_path = (
-        output_dir
-        / f"persona_relevance_bundle_{stage}_{artifact_tag}_{status_suffix}.json"
+        output_dir / f"persona_relevance_bundle_{stage}_{artifact_tag}_{status_suffix}.json"
     )
     write_label_file(bundle_path, bundle)
     bundle_sha256 = sha256_file(bundle_path)

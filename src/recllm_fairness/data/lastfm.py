@@ -82,9 +82,7 @@ def load_lastfm(
             genres=[],
             provider_or_studio=None,
             popularity_rank=int(row["popularity_rank"]),
-            popularity_tier=cast(
-                Literal["head", "mid", "tail"], str(row["popularity_tier"])
-            ),
+            popularity_tier=cast(Literal["head", "mid", "tail"], str(row["popularity_tier"])),
             interaction_count=int(row["interaction_count"]),
             release_year=None,
         )

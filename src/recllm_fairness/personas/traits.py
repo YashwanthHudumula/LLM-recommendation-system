@@ -10,9 +10,7 @@ from __future__ import annotations
 import re
 from typing import Literal
 
-Trait = Literal[
-    "openness", "conscientiousness", "extraversion", "agreeableness", "neuroticism"
-]
+Trait = Literal["openness", "conscientiousness", "extraversion", "agreeableness", "neuroticism"]
 TraitLevel = Literal["low", "neutral", "high"]
 
 TRAIT_MARKERS: dict[Trait, dict[TraitLevel, tuple[str, ...]]] = {
@@ -51,13 +49,11 @@ TRAIT_MARKERS: dict[Trait, dict[TraitLevel, tuple[str, ...]]] = {
     },
     "agreeableness": {
         "high": (
-            "I try to be warm, cooperative, and considerate of other people's feelings and "
-            "needs.",
+            "I try to be warm, cooperative, and considerate of other people's feelings and needs.",
         ),
         "neutral": (),
         "low": (
-            "I tend to be skeptical and blunt with others, and I don't usually accommodate "
-            "people.",
+            "I tend to be skeptical and blunt with others, and I don't usually accommodate people.",
         ),
     },
     "neuroticism": {

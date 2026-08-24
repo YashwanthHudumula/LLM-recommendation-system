@@ -20,4 +20,3 @@ def verify_checksum(path: str | Path, expected_md5: str) -> None:
     actual = md5_checksum(path)
     if actual.casefold() != expected_md5.casefold():
         raise ValueError(f"Checksum mismatch for {path}: expected {expected_md5}, got {actual}")
-

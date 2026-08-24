@@ -20,4 +20,3 @@ def benjamini_hochberg(
     adjusted = np.empty(m, dtype=float)
     adjusted[order] = adjusted_ranked
     return adjusted <= alpha, adjusted
-

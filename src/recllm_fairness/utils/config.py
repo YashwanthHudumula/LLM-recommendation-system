@@ -45,4 +45,3 @@ def load_config(config_dir: str | Path, override: str | Path | None = None) -> d
     if override is not None:
         result = deep_merge(result, load_yaml(Path(override)))
     return result
-

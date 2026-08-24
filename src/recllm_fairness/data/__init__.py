@@ -3,4 +3,3 @@
 from recllm_fairness.data.catalog import Item
 
 __all__ = ["Item"]
-

@@ -25,9 +25,7 @@ def test_generator_holds_preferences_fixed_across_counterfactuals() -> None:
     assert len(conditions) == 12
     assert_counterfactual_control(conditions)
     assert all(
-        not condition.trait_marker
-        for condition in conditions
-        if condition.trait_level == "neutral"
+        not condition.trait_marker for condition in conditions if condition.trait_level == "neutral"
     )
 
 

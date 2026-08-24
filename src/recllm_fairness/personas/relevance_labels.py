@@ -114,12 +114,10 @@ def read_lastfm_listener_pairs(root: str | Path, version: str) -> pd.DataFrame:
         stable_artist_id(mbid, name)
         for mbid, name in zip(frame["artist_mbid"], frame["artist_name"], strict=True)
     ]
-    frame["normalized_artist_name"] = (
-        frame["artist_name"].str.casefold().str.split().str.join(" ")
+    frame["normalized_artist_name"] = frame["artist_name"].str.casefold().str.split().str.join(" ")
+    return frame[["user_id", "item_id", "artist_name", "normalized_artist_name"]].drop_duplicates(
+        ["user_id", "item_id"]
     )
-    return frame[
-        ["user_id", "item_id", "artist_name", "normalized_artist_name"]
-    ].drop_duplicates(["user_id", "item_id"])
 
 
 def build_music_labels(
@@ -178,9 +176,7 @@ def build_music_labels(
             )
         union_size = len(union_listeners)
         intersections = (
-            pairs.loc[pairs["user_id"].isin(union_listeners)]
-            .groupby("item_id", sort=False)
-            .size()
+            pairs.loc[pairs["user_id"].isin(union_listeners)].groupby("item_id", sort=False).size()
         )
         candidates = listener_counts.loc[listener_counts >= min_candidate_listeners]
         similarities = {

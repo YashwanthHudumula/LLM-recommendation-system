@@ -16,8 +16,7 @@ class Price:
 
     def cost(self, prompt_tokens: int, completion_tokens: int) -> float:
         return (
-            prompt_tokens * self.input_per_million
-            + completion_tokens * self.output_per_million
+            prompt_tokens * self.input_per_million + completion_tokens * self.output_per_million
         ) / 1_000_000
 
 
@@ -43,4 +42,3 @@ class BudgetGuard:
         self.spent_usd += actual_call_usd
         if self.spent_usd > self.hard_cap_usd + 1e-9:
             raise BudgetExceededError("Provider-reported cost exceeded the hard budget cap")
-

@@ -28,9 +28,7 @@ def experiment_provenance(
         raise ValueError("Configuration is missing the versioned design block")
     bundle_sha256 = design.get("bundle_sha256")
     if not bundle_sha256:
-        raise ValueError(
-            f"Design {design.get('version', '<unknown>')} has no frozen bundle SHA256"
-        )
+        raise ValueError(f"Design {design.get('version', '<unknown>')} has no frozen bundle SHA256")
     return ExperimentProvenance(
         design_version=str(design["version"]),
         design_bundle_sha256=str(bundle_sha256),
@@ -50,9 +48,7 @@ def assert_collection_permitted(
         raise ValueError(f"Design {design.get('version')} is not frozen; collection is blocked")
     permitted = design.get("permitted_stages", [])
     if stage not in permitted:
-        raise ValueError(
-            f"Design {design.get('version')} does not permit {stage!r} collection"
-        )
+        raise ValueError(f"Design {design.get('version')} does not permit {stage!r} collection")
     expected = design.get("expected_personas", {}).get(stage)
     if expected is not None and persona_count is not None and persona_count != int(expected):
         raise ValueError(
@@ -60,9 +56,7 @@ def assert_collection_permitted(
         )
 
 
-def validate_design_bundle(
-    config: dict[str, Any], *, provenance: ExperimentProvenance
-) -> Path:
+def validate_design_bundle(config: dict[str, Any], *, provenance: ExperimentProvenance) -> Path:
     """Verify that the configured frozen bundle exists and matches the recorded digest."""
     design = config["design"]
     path = Path(str(design["bundle_path"]))

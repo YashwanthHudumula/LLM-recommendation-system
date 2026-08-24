@@ -25,20 +25,26 @@ individual recommendation lists, aggregate item exposure, and relevance.
    pause/resume rules, workstation controls, verification, backup, and publication workflow.
 6. [Audit and source index](06_AUDIT_AND_SOURCE_INDEX.md) maps claims to frozen configuration,
    machine-readable audits, manifests, code, and prior documentation.
+7. [Reproducibility gate and sensitivity analysis](14_REPRODUCIBILITY_GATE_AND_SENSITIVITY_V2.md)
+   records the clean Python 3.12.5 replay, registered exact-10 and unflagged views, singular-fit
+   diagnosis, persona-clustered robust estimates, concordance audit, and remaining publication
+   gates.
 
 ## Current status snapshot
 
-Snapshot date: **2026-08-06**. The confirmatory design is
+Snapshot date: **2026-08-25**. The confirmatory design is
 `persona-relevance-v2-100-a1`, protocol `closed-catalog-v2-a1-retry`, frozen bundle SHA256
 `f847715539c3d97c569cb597b9df50190c68be5bcd8eeb423f50871b84555d50`.
 
-- Qwen/movie: 13,200/13,200 records, manifest completed, final operational verification passed.
-- Qwen/music: collection in progress and resumable.
-- Llama/movie, Llama/music, Gemma/movie, Gemma/music: pending in the frozen sequence.
-- No confirmatory trait-level fairness outcomes have been inspected.
+- All six model/domain partitions are complete: 79,200/79,200 immutable records.
+- Clean-environment primary replays are complete for movie and music at 2,000 bootstrap resamples.
+- Registered exact-10-grounded and exclude-flagged-record sensitivities are complete.
+- All six analysis packages have persona-clustered robust fit diagnostics and SHA-256 inventories.
+- Final within-opportunity metrics, figures, manuscript text, and external DOI deposition remain.
 
-Collection status is operational and changes over time. The authoritative live source is each
-partition's `run_manifest.json` plus its immutable Parquet record count.
+The authoritative evidence is each partition's `run_manifest.json`, its immutable Parquet record
+count, and `data/audits/confirmatory_analysis_v2_reproducibility.json` for the six analysis
+packages.
 
 ## Interpretation boundary
 

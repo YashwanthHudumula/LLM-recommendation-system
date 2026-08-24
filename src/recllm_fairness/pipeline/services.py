@@ -56,6 +56,8 @@ from recllm_fairness.utils.costs import BudgetGuard, Price
 
 LOGGER = logging.getLogger(__name__)
 
+AnalysisView = Literal["primary", "exact-10-grounded", "exclude-flagged-records"]
+
 
 @dataclass(frozen=True)
 class QuerySpec:
@@ -606,6 +608,37 @@ def reground_queries(
         result.at[index, "off_list_titles"] = matched.off_list_titles
     result["grounding_version"] = "allowed-title-annotation-v3"
     return result
+
+
+def select_analysis_view(queries: pd.DataFrame, *, view: AnalysisView, k: int) -> pd.DataFrame:
+    """Return a preregistered derived view without mutating immutable query records."""
+    if view == "primary":
+        selected = queries
+    elif view == "exact-10-grounded":
+        selected = queries.loc[queries["matched_item_ids"].map(len).eq(k)]
+    elif view == "exclude-flagged-records":
+        no_hallucinations = queries["hallucinated_titles"].map(len).eq(0)
+        no_off_list = queries["off_list_titles"].map(len).eq(0)
+        selected = queries.loc[no_hallucinations & no_off_list]
+    else:
+        raise ValueError(f"Unknown analysis view: {view}")
+    if view != "primary":
+        pair_keys = ["persona_id", "model", "domain", "phrasing_variant", "repeat_idx"]
+        missing = set(pair_keys) - set(selected.columns)
+        if missing:
+            raise ValueError(f"Sensitivity view cannot verify neutral pairs: {sorted(missing)}")
+        neutral_keys = (
+            selected.loc[selected["trait_level"].eq("neutral"), pair_keys]
+            .drop_duplicates()
+            .assign(__neutral_pair=True)
+        )
+        selected = selected.merge(
+            neutral_keys,
+            on=pair_keys,
+            how="inner",
+            validate="many_to_one",
+        ).drop(columns="__neutral_pair")
+    return selected.reset_index(drop=True)
 
 
 def relevance_table(queries: pd.DataFrame, *, k: int) -> pd.DataFrame:

@@ -63,4 +63,3 @@ def exposure_counts(
         .agg(exposure_count=("item_id", "size"), exposure=("exposure_weight", "sum"))
         .reset_index()
     )
-

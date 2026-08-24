@@ -56,4 +56,3 @@ def spearman_fairness_scenario(
         p_value,
         classify_scenario(rho, p_value, alpha=alpha, minimum_effect=minimum_effect),
     )
-

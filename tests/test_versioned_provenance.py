@@ -50,11 +50,22 @@ def test_legacy_v1_remains_readable_but_cannot_resume_as_v2(tmp_path: Path) -> N
 
     loaded = read_records(tmp_path)
     assert len(loaded) == 1
-    assert completed_keys(loaded) == {
-        ("M1", "mock", "movie", "openness", "high", "direct", 0)
-    }
+    assert completed_keys(loaded) == {("M1", "mock", "movie", "openness", "high", "direct", 0)}
     with pytest.raises(IncompatibleDesignError, match="legacy or incomplete"):
         completed_keys(loaded, expected_provenance=_provenance("persona-relevance-v2-100", "b"))
+
+
+def test_read_records_applies_partition_filters_before_opening_files(tmp_path: Path) -> None:
+    movie_path = tmp_path / "model=mock" / "domain=movie" / "movie.parquet"
+    movie_path.parent.mkdir(parents=True)
+    pd.DataFrame([{**_legacy_row(), "query_id": "movie-query"}]).to_parquet(movie_path, index=False)
+    music_path = tmp_path / "model=mock" / "domain=music" / "unreadable.parquet"
+    music_path.parent.mkdir(parents=True)
+    music_path.write_bytes(b"not a parquet file")
+
+    loaded = read_records(tmp_path, filters={"domain": "movie"})
+
+    assert loaded["query_id"].tolist() == ["movie-query"]
 
 
 def test_frozen_v2_still_blocks_full_collection_until_preflight() -> None:

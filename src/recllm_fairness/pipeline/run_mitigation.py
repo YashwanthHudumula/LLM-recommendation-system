@@ -115,14 +115,8 @@ def main(
             legacy_unversioned=legacy_unversioned_storage(config),
         )
     )
-    prior_spend = (
-        float(prior["cost_usd"].sum())
-        if not prior.empty and "cost_usd" in prior
-        else 0.0
-    )
-    estimate_path = (
-        Path("outputs/tables") / f"pilot_cost_estimate_{protocol}_{model}_{domain}.json"
-    )
+    prior_spend = float(prior["cost_usd"].sum()) if not prior.empty and "cost_usd" in prior else 0.0
+    estimate_path = Path("outputs/tables") / f"pilot_cost_estimate_{protocol}_{model}_{domain}.json"
     if model_config["provider"] != "mock":
         if not estimate_path.exists():
             raise typer.BadParameter(f"Missing pilot cost estimate: {estimate_path}")

@@ -3,4 +3,3 @@
 from recllm_fairness.personas.generator import PersonaCondition
 
 __all__ = ["PersonaCondition"]
-

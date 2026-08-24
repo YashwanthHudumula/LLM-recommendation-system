@@ -55,4 +55,3 @@ def persona_bootstrap(
         confidence_level=confidence_level,
         replicates=values,
     )
-

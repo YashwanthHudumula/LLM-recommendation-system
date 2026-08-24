@@ -3,13 +3,16 @@
 from __future__ import annotations
 
 from pathlib import Path
+from typing import cast
 
 import typer
 
 from recllm_fairness.pipeline.protocol import legacy_unversioned_storage
 from recllm_fairness.pipeline.services import (
+    AnalysisView,
     load_configured_catalog,
     reground_queries,
+    select_analysis_view,
     synthetic_catalog,
     write_analysis_outputs,
     write_json,
@@ -29,8 +32,13 @@ def main(
     domain: str | None = typer.Option(None, help="Required when the query root has both domains"),
     stage: str = typer.Option("pilot", help="pilot or full when query-root is omitted"),
     analysis_version: str | None = None,
+    sensitivity: str = "primary",
 ) -> None:
     config = load_config(config_dir, config_override)
+    valid_views = {"primary", "exact-10-grounded", "exclude-flagged-records"}
+    if sensitivity not in valid_views:
+        raise typer.BadParameter(f"sensitivity must be one of {sorted(valid_views)}")
+    selected_view = cast(AnalysisView, sensitivity)
     if stage not in {"pilot", "full"}:
         raise typer.BadParameter("stage must be pilot or full")
     configured_design = str(config["design"]["version"])
@@ -41,7 +49,7 @@ def main(
         protocol_version=str(config["collection_protocol"]),
         legacy_unversioned=legacy_unversioned_storage(config),
     )
-    queries = read_records(root)
+    queries = read_records(root, filters={"domain": domain} if domain is not None else None)
     if queries.empty:
         raise typer.BadParameter(f"No query records found under {root}")
     if domain is not None:
@@ -81,6 +89,10 @@ def main(
         fuzzy_threshold=float(config["matching"]["fuzzy_threshold"]),
         ambiguity_margin=float(config["matching"]["ambiguity_margin"]),
     )
+    source_query_records = len(queries)
+    queries = select_analysis_view(queries, view=selected_view, k=int(config["top_k"]))
+    if queries.empty:
+        raise typer.BadParameter(f"Analysis view {sensitivity!r} retained no query records")
     models = queries["model"].drop_duplicates().astype(str).tolist()
     selected_analysis_version = analysis_version or str(config["analysis"]["version"])
     table_dir = analysis_output_root(
@@ -112,7 +124,9 @@ def main(
             "domain": selected_domain,
             "models": sorted(models),
             "analysis_version": selected_analysis_version,
+            "analysis_view": selected_view,
             "source_query_root": str(root.resolve()),
+            "source_query_records": source_query_records,
             "query_records": len(queries),
         },
     )

@@ -57,9 +57,7 @@ def catalog_coverage(recommended_item_ids: Sequence[str], catalog_item_ids: Sequ
     return len(set(recommended_item_ids) & catalog) / len(catalog)
 
 
-def long_tail_coverage(
-    recommended_item_ids: Sequence[str], tail_item_ids: Sequence[str]
-) -> float:
+def long_tail_coverage(recommended_item_ids: Sequence[str], tail_item_ids: Sequence[str]) -> float:
     tail = set(tail_item_ids)
     if not tail:
         raise ValueError("Long-tail coverage needs a non-empty tail")

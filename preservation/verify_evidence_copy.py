@@ -7,7 +7,7 @@ import csv
 import hashlib
 import json
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 
@@ -73,7 +73,7 @@ def main() -> None:
 
     receipt = {
         "schema_version": 1,
-        "verified_at_utc": datetime.now(timezone.utc).isoformat(),
+        "verified_at_utc": datetime.now(UTC).isoformat(),
         "inventory": str(inventory),
         "inventory_sha256": sha256_file(inventory),
         "destination": str(destination),

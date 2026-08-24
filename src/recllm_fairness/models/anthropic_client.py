@@ -40,4 +40,3 @@ class AnthropicClient(RetryingHTTPClient):
             model=data.get("model", self.model),
             raw=data,
         )
-

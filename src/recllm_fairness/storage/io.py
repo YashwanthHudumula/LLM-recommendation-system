@@ -66,6 +66,12 @@ def append_record(root: str | Path, record: QueryRecord) -> Path:
 def read_records(root: str | Path, filters: dict[str, Any] | None = None) -> pd.DataFrame:
     """Read records safely without relying on inferred Hive partition types."""
     paths = sorted(Path(root).glob("**/*.parquet"))
+    for column, value in (filters or {}).items():
+        if column not in {"model", "domain"}:
+            continue
+        safe_value = _partition_value(str(value))
+        partition_names = {f"{column}={safe_value}", safe_value}
+        paths = [path for path in paths if partition_names.intersection(path.parts)]
     if not paths:
         return pd.DataFrame(columns=list(QueryRecord.model_fields))
     frame = pd.concat((pd.read_parquet(path) for path in paths), ignore_index=True)
@@ -114,9 +120,7 @@ def completed_keys(
     else:
         missing_legacy = set(LEGACY_IDENTITY_COLUMNS) - set(frame.columns)
         if missing_legacy:
-            raise ValueError(
-                f"Query table is missing identity columns: {sorted(missing_legacy)}"
-            )
+            raise ValueError(f"Query table is missing identity columns: {sorted(missing_legacy)}")
         identity_columns = LEGACY_IDENTITY_COLUMNS
     if frame.duplicated(identity_columns).any():
         raise ValueError("Duplicate experimental condition records detected")

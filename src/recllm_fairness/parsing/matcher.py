@@ -48,9 +48,7 @@ class TitleMatcher:
             raise ValueError("Cannot match against an empty catalog")
         self.ordered = sorted(catalog, key=lambda item: (item.popularity_rank, item.item_id))
         self.choices = [normalize_title(item.title) for item in self.ordered]
-        self.index_by_item_id = {
-            item.item_id: index for index, item in enumerate(self.ordered)
-        }
+        self.index_by_item_id = {item.item_id: index for index, item in enumerate(self.ordered)}
         self.exact_indices: dict[str, list[int]] = {}
         for index, choice in enumerate(self.choices):
             self.exact_indices.setdefault(choice, []).append(index)
@@ -76,8 +74,7 @@ class TitleMatcher:
                 eligible = [
                     index
                     for index in exact
-                    if allowed_item_ids is None
-                    or self.ordered[index].item_id in allowed_item_ids
+                    if allowed_item_ids is None or self.ordered[index].item_id in allowed_item_ids
                 ]
                 if not eligible:
                     off_list.append(raw_title)

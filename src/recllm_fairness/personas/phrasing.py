@@ -37,7 +37,6 @@ def render_instruction(variant: PhrasingVariant, domain: str, top_k: int) -> str
     if top_k < 1:
         raise ValueError("top_k must be positive")
     domain_items = "movies" if domain == "movie" else "music artists"
-    return (
-        PHRASING_TEMPLATES[variant].format(top_k=top_k, domain_items=domain_items)
-        + EXACT_COPY_SUFFIX.format(top_k=top_k)
-    )
+    return PHRASING_TEMPLATES[variant].format(
+        top_k=top_k, domain_items=domain_items
+    ) + EXACT_COPY_SUFFIX.format(top_k=top_k)

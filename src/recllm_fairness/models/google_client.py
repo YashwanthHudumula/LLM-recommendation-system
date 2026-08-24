@@ -41,4 +41,3 @@ class GoogleClient(RetryingHTTPClient):
             model=self.model,
             raw=data,
         )
-

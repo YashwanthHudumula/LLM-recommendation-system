@@ -25,7 +25,4 @@ def fit_mixed_effects(
     if clean[persona_column].nunique() < 2:
         raise ValueError("Mixed-effects model needs at least two personas")
     formula = outcome + " ~ " + " + ".join(f"C({effect})" for effect in fixed_effects)
-    return smf.mixedlm(formula, clean, groups=clean[persona_column]).fit(
-        reml=reml, method="lbfgs"
-    )
-
+    return smf.mixedlm(formula, clean, groups=clean[persona_column]).fit(reml=reml, method="lbfgs")

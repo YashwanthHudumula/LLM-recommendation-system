@@ -54,9 +54,7 @@ def main(config_dir: Path = Path("config")) -> None:
                 {
                     "text": "clever comedy and suspenseful mystery",
                     "relevant_item_ids": [
-                        item.item_id
-                        for item in catalog
-                        if set(item.genres) & {"Comedy", "Mystery"}
+                        item.item_id for item in catalog if set(item.genres) & {"Comedy", "Mystery"}
                     ],
                 },
             ],

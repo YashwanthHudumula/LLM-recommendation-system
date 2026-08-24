@@ -24,9 +24,7 @@ def serp_at_k(neutral: Sequence[str], sensitive: Sequence[str], k: int) -> float
     neutral_set = set(neutral[:k])
     denominator = 2 * k * (k + 1)
     weighted_overlap = sum(
-        k - rank + 2
-        for rank, item in enumerate(sensitive[:k], 1)
-        if item in neutral_set
+        k - rank + 2 for rank, item in enumerate(sensitive[:k], 1) if item in neutral_set
     )
     return weighted_overlap / denominator
 

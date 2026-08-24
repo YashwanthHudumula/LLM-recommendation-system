@@ -79,14 +79,10 @@ def load_movielens(
             item_id=str(row["item_id"]),
             domain="movie",
             title=str(row["title"]),
-            genres=[]
-            if row["genres"] == "(no genres listed)"
-            else str(row["genres"]).split("|"),
+            genres=[] if row["genres"] == "(no genres listed)" else str(row["genres"]).split("|"),
             provider_or_studio=None,
             popularity_rank=int(row["popularity_rank"]),
-            popularity_tier=cast(
-                Literal["head", "mid", "tail"], str(row["popularity_tier"])
-            ),
+            popularity_tier=cast(Literal["head", "mid", "tail"], str(row["popularity_tier"])),
             interaction_count=int(row["interaction_count"]),
             release_year=None if pd.isna(row["release_year"]) else int(row["release_year"]),
         )

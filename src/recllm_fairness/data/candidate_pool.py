@@ -20,9 +20,7 @@ class CandidatePool:
         return frozenset(item.item_id for item in self.items)
 
     def prompt_block(self) -> str:
-        return "\n".join(
-            f"C{index:03d} | {item.title}" for index, item in enumerate(self.items, 1)
-        )
+        return "\n".join(f"C{index:03d} | {item.title}" for index, item in enumerate(self.items, 1))
 
 
 def build_candidate_pool(

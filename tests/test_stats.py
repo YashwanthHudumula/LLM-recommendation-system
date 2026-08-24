@@ -13,6 +13,7 @@ from recllm_fairness.stats.correlation import classify_scenario, spearman_fairne
 from recllm_fairness.stats.design_simulation import simulate_mixed_model_design
 from recllm_fairness.stats.mixed_effects import fit_mixed_effects
 from recllm_fairness.stats.multiple_comparison import benjamini_hochberg
+from recllm_fairness.stats.robust_effects import fit_cluster_robust_ols
 
 
 def test_persona_bootstrap_resamples_persona_clusters() -> None:
@@ -75,6 +76,26 @@ def test_mixed_effects_wrapper_fits_persona_random_intercepts() -> None:
     )
     assert result.converged
     assert any("trait_level" in term for term in result.params.index)
+
+
+def test_cluster_robust_ols_uses_persona_clusters() -> None:
+    rows = []
+    for persona_index in range(20):
+        for level, effect in (("low", 0.0), ("high", 0.5)):
+            rows.append(
+                {
+                    "persona_id": f"p{persona_index}",
+                    "trait_level": level,
+                    "outcome": persona_index / 100 + effect,
+                }
+            )
+    result = fit_cluster_robust_ols(
+        pd.DataFrame(rows), outcome="outcome", fixed_effects=("trait_level",)
+    )
+    trait_terms = [term for term in result.params.index if "trait_level" in term]
+    assert len(trait_terms) == 1
+    assert abs(float(result.params[trait_terms[0]])) == pytest.approx(0.5)
+    assert result.cov_type == "cluster"
 
 
 def test_paired_item_bootstrap_joins_sensitive_traits_to_neutral_rows() -> None:
