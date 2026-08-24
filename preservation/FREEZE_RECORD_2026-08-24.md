@@ -45,6 +45,21 @@ and its SHA-256 was recalculated independently after the archive script complete
 - Archive manifest:
   `preservation/generated/confirmatory-study-v1/partition_archive_manifest.tsv`
 
+## Supporting evidence archives
+
+The independently downloadable dataset archives are preserved instead of duplicating every
+extracted source file. The full inventory still records hashes for all extracted files, while the
+download archives reproduce them under the documented loaders and checksums.
+
+| Evidence class | Contents | Archive MiB | SHA-256 |
+|---|---|---:|---|
+| Restricted | Four original MovieLens/LastFM downloads and original wording-audit workbook | 1,439.94 | `7b4c2941cea52313100a2b6a20e415c23570e1e3dd4cca9852d9257c063ac439` |
+| Controlled | Code, frozen designs, audits, derived tables, documentation, and report assets | 2.10 | `6050bb10048e848961d41ae119784099c47f4f22583ea1dd3dcb9d417ceb98ef` |
+
+- Supporting archive manifest SHA-256:
+  `4de13f5c27c440a5457c3cefce05e05ded98414e23a5e52e4a377f5e70bf6ce5`
+- Total generated backup package: approximately 1.673 GiB.
+
 ## Known gap
 
 The 26 domain-prefixed `confirmatory-analysis-v1` tables documented under the former account path
@@ -56,7 +71,7 @@ present and verified.
 ## Pending completion conditions
 
 1. Copy the entire `preservation/generated/confirmatory-study-v1` directory to independent
-   storage and recompute both manifest hashes and all six archive hashes at the destination.
+   storage and recompute all three manifest hashes and all eight archive hashes at the destination.
 2. Curate and commit the scientific code, frozen configurations, audits, and documentation without
    committing controlled or restricted evidence.
 3. Add a durable Git remote and release tag after the clean-environment test gate passes.

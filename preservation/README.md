@@ -21,3 +21,8 @@ integrity record; it does not modify any source evidence.
 The six confirmatory query partitions should subsequently be packaged as one archive per
 model/domain. Archive hashes must be recorded and independently verified after copying to a
 second storage device or institutional repository.
+
+The generated package also contains a restricted archive of the four original dataset downloads
+and wording-audit workbook, plus a controlled archive of code, frozen design artifacts,
+documentation, tables, and report assets. Do not place either archive in a public repository until
+its evidence class and licensing conditions have been reviewed.

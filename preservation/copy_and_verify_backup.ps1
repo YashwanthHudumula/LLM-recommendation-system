@@ -63,6 +63,29 @@ if ($checks.verified -contains $false) {
     throw "At least one copied archive failed SHA-256 verification."
 }
 
+$supportingSummary = Get-Content -Raw (Join-Path $source "supporting_archive_summary.json") | ConvertFrom-Json
+$supportingManifestPath = Join-Path $destination $supportingSummary.manifest_file
+$supportingManifestHash = (
+    Get-FileHash -LiteralPath $supportingManifestPath -Algorithm SHA256
+).Hash.ToLowerInvariant()
+if ($supportingManifestHash -ne $supportingSummary.manifest_sha256) {
+    throw "Destination supporting-archive manifest does not match the source freeze."
+}
+$supportingManifest = Import-Csv -LiteralPath $supportingManifestPath -Delimiter "`t"
+$supportingChecks = foreach ($row in $supportingManifest) {
+    $archivePath = Join-Path $destination $row.archive_file
+    $actual = (Get-FileHash -LiteralPath $archivePath -Algorithm SHA256).Hash.ToLowerInvariant()
+    [pscustomobject][ordered]@{
+        archive_file = $row.archive_file
+        expected_sha256 = $row.archive_sha256
+        actual_sha256 = $actual
+        verified = ($actual -eq $row.archive_sha256)
+    }
+}
+if ($supportingChecks.verified -contains $false) {
+    throw "At least one copied supporting archive failed SHA-256 verification."
+}
+
 $receipt = [ordered]@{
     schema_version = 1
     study_id = $StudyId
@@ -71,7 +94,9 @@ $receipt = [ordered]@{
     destination = $destination
     evidence_inventory_sha256 = $destinationInventoryHash
     archive_manifest_sha256 = $destinationManifestHash
+    supporting_archive_manifest_sha256 = $supportingManifestHash
     archives = $checks
+    supporting_archives = $supportingChecks
     all_verified = $true
 }
 $receiptPath = Join-Path $destination "backup_verification_receipt.json"
