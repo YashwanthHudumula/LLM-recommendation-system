@@ -1,0 +1,54 @@
+{
+  "design_version": "persona-relevance-v2-100",
+  "status": "draft",
+  "reports": {
+    "movie": {
+      "passed": true,
+      "profile_count": 100,
+      "pool_count": 100,
+      "expected_size": 120,
+      "expected_tier_allocation": {
+        "head": 60,
+        "mid": 30,
+        "tail": 30
+      },
+      "minimum_relevant_opportunity": 30,
+      "failures": {
+        "missing_pool": [],
+        "wrong_size": [],
+        "duplicate_items": [],
+        "off_catalog_items": [],
+        "wrong_tier_allocation": [],
+        "insufficient_relevant_opportunity": []
+      },
+      "relevant_opportunity_range": [
+        30,
+        34
+      ]
+    },
+    "music": {
+      "passed": true,
+      "profile_count": 100,
+      "pool_count": 100,
+      "expected_size": 120,
+      "expected_tier_allocation": {
+        "head": 60,
+        "mid": 30,
+        "tail": 30
+      },
+      "minimum_relevant_opportunity": 30,
+      "failures": {
+        "missing_pool": [],
+        "wrong_size": [],
+        "duplicate_items": [],
+        "off_catalog_items": [],
+        "wrong_tier_allocation": [],
+        "insufficient_relevant_opportunity": []
+      },
+      "relevant_opportunity_range": [
+        30,
+        30
+      ]
+    }
+  }
+}

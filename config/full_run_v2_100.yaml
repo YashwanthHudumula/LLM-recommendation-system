@@ -2,9 +2,9 @@
 # intentionally blocked until Phases B-D freeze the bundle and replace the null hash.
 design:
   version: persona-relevance-v2-100
-  status: draft
+  status: frozen
   bundle_path: data/relevance_labels/persona_relevance_bundle_full_v2_100_frozen.json
-  bundle_sha256: null
+  bundle_sha256: e478bbe4841ac57800df22a1b9d73a8841774f46becdb28173d23df92fa92710
   permitted_stages: []
   expected_personas:
     full: 100

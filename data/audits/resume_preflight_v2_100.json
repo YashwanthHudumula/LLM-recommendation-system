@@ -1,0 +1,10 @@
+{
+  "design_version": "persona-relevance-v2-100",
+  "purpose": "disposable interruption/resume preflight",
+  "initial_records": 2,
+  "records_after_resume": 4,
+  "records_after_idempotent_replay": 4,
+  "unique_query_ids": 4,
+  "duplicate_query_ids": 0,
+  "passed": true
+}

@@ -74,6 +74,9 @@ def test_collection_is_append_only_resumable_and_relevance_ready(tmp_path: Path)
         ambiguity_margin=3.0,
         hard_cap_usd=1.0,
         concurrency=2,
+        minimum_grounded_items_before_retry=4,
+        underlength_retry_instruction="Return four valid coded lines.",
+        retry_temperature=0.0,
     )
     first = asyncio.run(collect_queries(**kwargs))
     second = asyncio.run(collect_queries(**kwargs))
@@ -82,4 +85,7 @@ def test_collection_is_append_only_resumable_and_relevance_ready(tmp_path: Path)
     assert set(first["design_version"]) == {"test-v2"}
     relevance = relevance_table(second, k=3)
     assert relevance["relevance_labels_available"].all()
+    assert second["response_attempts"].map(len).eq(2).all()
+    assert second["selected_attempt_idx"].eq(1).all()
+    assert second["attempt_temperatures"].map(lambda values: list(values) == [0.7, 0.0]).all()
     assert relevance["precision_at_k"].between(0, 1).all()

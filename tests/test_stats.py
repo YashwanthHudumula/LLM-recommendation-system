@@ -10,6 +10,7 @@ from recllm_fairness.pipeline.services import (
 )
 from recllm_fairness.stats.bootstrap import persona_bootstrap
 from recllm_fairness.stats.correlation import classify_scenario, spearman_fairness_scenario
+from recllm_fairness.stats.design_simulation import simulate_mixed_model_design
 from recllm_fairness.stats.mixed_effects import fit_mixed_effects
 from recllm_fairness.stats.multiple_comparison import benjamini_hochberg
 
@@ -41,6 +42,19 @@ def test_benjamini_hochberg_known_example() -> None:
     rejected, adjusted = benjamini_hochberg([0.01, 0.04, 0.03, 0.20])
     assert rejected.tolist() == [True, False, False, False]
     assert adjusted == pytest.approx([0.04, 0.0533333333, 0.0533333333, 0.2])
+
+
+def test_design_simulation_reports_power_precision_and_convergence() -> None:
+    result = simulate_mixed_model_design(
+        simulations=3,
+        personas=12,
+        phrasings=2,
+        repeats=2,
+        standardized_effect=0.8,
+        seed=9,
+    )
+    assert 0 <= result.power <= 1
+    assert result.mean_ci_width > 0
 
 
 def test_mixed_effects_wrapper_fits_persona_random_intercepts() -> None:

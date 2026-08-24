@@ -1,0 +1,17 @@
+# Documentation manifest
+
+Generated and verified on 2026-08-06. All internal Markdown links were checked: zero broken.
+
+| File | Lines | SHA256 |
+|---|---:|---|
+| `README.md` | 50 | `568a352963ef831681fe22d1b935c7641a1b0270b544b610cae85d048f70e079` |
+| `01_PROJECT_HISTORY_AND_ARCHITECTURE.md` | 144 | `41c7f7decc2e377dbbdbada85de2bbff2a6d50005602915854d97a7fd8570dbb` |
+| `02_SIX_PILOT_TESTS.md` | 142 | `5bd25c53e5d51809ae16bf74c30af8cb7262e9f9d84b78df95c13d1648d24c97` |
+| `03_CONFIRMATORY_DESIGN_AND_COLLECTION.md` | 162 | `fb4865669b13f55a0a5c9c7a317386e24e196353fb6729f94969a8114c7507a4` |
+| `04_DATA_PIPELINE_METRICS_AND_ANALYSIS.md` | 146 | `8dd09d87db71b318c22830f6c3dbcc3d42b71afe17027e18dae1002a86c6143e` |
+| `05_REPRODUCIBILITY_AND_OPERATIONS.md` | 138 | `c3b88f91a6fa311c082bebc744f63fe4379121085b54ecae63bb736282b91950` |
+| `06_AUDIT_AND_SOURCE_INDEX.md` | 103 | `25fc24631c7a9082b4ec999f06fbe59230017300c62d24eef1046cbf2d9f810f` |
+| `07_COLLECTION_STATUS_LOG.md` | 47 | `a81481ef6b4ec7fd189a9a2c6f38b0f34996eb6ceebc9c3059a9b4ea2e9b45af` |
+
+The status log is intentionally time-specific. Adding later snapshots will change its checksum;
+append a new manifest entry rather than erasing this historical checksum.

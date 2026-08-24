@@ -50,6 +50,10 @@ class QueryRecord(BaseModel):
     candidate_item_ids: list[str]
     raw_response_text: str
     parsed_titles: list[str]
+    response_attempts: list[str] = Field(default_factory=list)
+    selected_attempt_idx: int = Field(default=0, ge=0)
+    retry_user_prompt: str | None = None
+    attempt_temperatures: list[float] = Field(default_factory=list)
     matched_item_ids: list[str]
     hallucinated_titles: list[str]
     off_list_titles: list[str] = Field(default_factory=list)

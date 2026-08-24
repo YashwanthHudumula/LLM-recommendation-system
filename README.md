@@ -1,5 +1,10 @@
 # RecLLM item-side exposure fairness
 
+**Current status:** confirmatory collection is complete with 79,200 immutable records across
+three local model snapshots, two domains, 100 personas per domain, and three repeats. The frozen
+provider-free primary analysis is complete; registered sensitivity analyses and statistical-fit
+remediation remain pending before journal submission.
+
 This repository implements the study **Who Gets Seen? Auditing Item-Side Exposure
 Disparities Induced by Personality-Conditioned Prompting in LLM-Based Recommender
 Systems**. It is an inference-only, counterfactual audit: fixed preferences and catalog,
@@ -51,13 +56,10 @@ uv run recllm-pilot --config-dir config
 # Same-model/domain scientific pilot after editing config/models.yaml
 uv run recllm-collect --config-dir config --model openai --domain movie
 
-# Confirmatory collection only after the v2 design is frozen (currently blocked)
-uv run recllm-collect --config-dir config `
-  --config-override config/full_run_v2_100.yaml `
-  --model ollama_qwen3_8b --domain movie --stage full
-
-# Analysis never calls a model
-uv run recllm-analyze --config-dir config
+# Reproduce analysis from the completed immutable query collection; no model call is made
+uv run recllm-analyze --config-dir config `
+  --config-override config/full_run_v2_100_a1.yaml `
+  --stage full --domain movie --analysis-version confirmatory-analysis-v2
 ```
 
 See `data/DATA_SOURCES.md` before downloading data, and `progress.md` for implementation
@@ -68,10 +70,11 @@ The consolidated architecture, methodology, audit history, pilot diagnostics, li
 execution workflow, and publication gates are maintained in
 [documentation.md](documentation.md).
 
-The six-persona v1 pilot design is frozen. The 100-persona v2 confirmatory design remains a
-draft until its data-grounded population, independent labels, audits, and bundle hash are
-complete. Collection verifies that frozen bundle on disk and refuses incompatible or unfrozen
-designs before loading a model or full dataset.
+The six-persona v1 pilot and 100-persona A1 confirmatory designs are frozen. Collection verifies
+the frozen bundle on disk and refuses incompatible or unfrozen designs before loading a model or
+full dataset. The complete confirmatory evidence is preserved locally with per-file and
+per-archive SHA-256 manifests; raw datasets and model-response Parquet files remain excluded from
+Git because of size, privacy, and licensing constraints.
 
 For publication runs, follow [the experiment protocol](docs/EXPERIMENT_PROTOCOL.md) and
 cite formulas exactly as operationalized in [the metric specification](docs/METRICS.md).

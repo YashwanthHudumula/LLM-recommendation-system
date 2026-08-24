@@ -1,0 +1,25 @@
+collection_protocol: closed-catalog-v2-a1-retry
+design:
+  version: persona-relevance-v2-100-a1
+  status: frozen
+  bundle_path: data/relevance_labels/persona_relevance_bundle_full_v2_100_a1_frozen.json
+  bundle_sha256: f847715539c3d97c569cb597b9df50190c68be5bcd8eeb423f50871b84555d50
+  permitted_stages: [full]
+  expected_personas:
+    full: 100
+  legacy_unversioned_storage: false
+analysis:
+  version: confirmatory-analysis-v1
+  table_root: outputs/tables/analysis
+relevance_labels:
+  full:
+    movie: data/relevance_labels/relevance_labels_movies_full_v2_100_a1.json
+    music: data/relevance_labels/relevance_labels_music_full_v2_100_a1.json
+underlength_retry:
+  maximum_retries: 1
+  minimum_grounded_items: 10
+  temperature: 0.0
+  instruction: >-
+    CORRECTION FOR THIS RETRY: Return exactly 10 distinct recommendations. Use exactly one
+    valid C-code from the candidate list on each line. Do not mention unavailable codes,
+    alternatives, explanations, or skipped items.

@@ -57,9 +57,9 @@ def test_legacy_v1_remains_readable_but_cannot_resume_as_v2(tmp_path: Path) -> N
         completed_keys(loaded, expected_provenance=_provenance("persona-relevance-v2-100", "b"))
 
 
-def test_draft_v2_full_collection_fails_closed() -> None:
+def test_frozen_v2_still_blocks_full_collection_until_preflight() -> None:
     config = load_config("config", "config/full_run_v2_100.yaml")
-    with pytest.raises(ValueError, match="not frozen"):
+    with pytest.raises(ValueError, match="does not permit 'full' collection"):
         assert_collection_permitted(config, stage="full")
 
 

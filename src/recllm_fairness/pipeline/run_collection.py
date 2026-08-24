@@ -131,9 +131,7 @@ def main(
     )
     specs = deterministic_query_order(specs, seed=int(config["seed"]))
     protocol = str(config["collection_protocol"])
-    estimate_path = (
-        Path("outputs/tables") / f"pilot_cost_estimate_{protocol}_{model}_{domain}.json"
-    )
+    estimate_path = Path("outputs/tables") / f"pilot_cost_estimate_{protocol}_{model}_{domain}.json"
     unique_calls = len({(spec.prompt_sha256, spec.repeat_idx) for spec in specs})
     if stage == "full" and model_config["provider"] != "mock":
         if not estimate_path.exists():
@@ -168,6 +166,7 @@ def main(
         environment_lock=config_dir.resolve().parent / "uv.lock",
         configured_model_digest=configured_digest,
     )
+    retry = config.get("underlength_retry", {})
     try:
         queries = asyncio.run(
             collect_queries(
@@ -182,6 +181,9 @@ def main(
                 ambiguity_margin=float(config["matching"]["ambiguity_margin"]),
                 hard_cap_usd=float(config["budget"]["hard_cap_usd"]),
                 concurrency=int(model_config.get("concurrency", config["concurrency"])),
+                minimum_grounded_items_before_retry=int(retry.get("minimum_grounded_items", 0)),
+                underlength_retry_instruction=retry.get("instruction"),
+                retry_temperature=float(retry.get("temperature", 0.0)),
             )
         )
         resolved_digest = manifest_model_digest(

@@ -1,0 +1,141 @@
+{
+  "artifacts": {
+    "candidate_pools": {
+      "movie": {
+        "path": "data/relevance_labels/candidate_pools_movies_full_v2_100_draft.json",
+        "sha256": "ac5b4fb664af6952bc824d579918a58fff26859b7f157019d7245d4e4019863e"
+      },
+      "music": {
+        "path": "data/relevance_labels/candidate_pools_music_full_v2_100_draft.json",
+        "sha256": "82dbc5ee677d0085c2e25e27960a016d1ae1ca78c11e47e26810c6a87b1fa4a0"
+      }
+    },
+    "labels": {
+      "movie": {
+        "path": "data/relevance_labels/relevance_labels_movies_full_v2_100.json",
+        "sha256": "3936ba52f0bec81fb43b1ce4a74f21751e4c10c9c9b791996bd3218def0610b4"
+      },
+      "music": {
+        "path": "data/relevance_labels/relevance_labels_music_full_v2_100.json",
+        "sha256": "dfd745223e8c275fc6ab9cd66a375b268b23a3e189fae0ba08f880a9907bb721"
+      }
+    }
+  },
+  "design": {
+    "candidate_pools": {
+      "minimum_relevant_opportunity": 30,
+      "movie_artifact": "data/relevance_labels/candidate_pools_movies_full_v2_100_draft.json",
+      "music_artifact": "data/relevance_labels/candidate_pools_music_full_v2_100_draft.json",
+      "note": "All requirements must pass before status may change to frozen.",
+      "seed_namespace": "candidate-pool",
+      "size": 120,
+      "tier_allocation": {
+        "head": 60,
+        "mid": 30,
+        "tail": 30
+      }
+    },
+    "created_date": "2026-08-03",
+    "design_version": "persona-relevance-v2-100",
+    "freeze_requirements": {
+      "candidate_opportunity_audit_passed": true,
+      "duplicate_profile_audit_passed": true,
+      "exactly_100_unique_profiles_per_domain": true,
+      "feasibility_diagnostics_complete": true,
+      "human_wording_review_passed": true,
+      "leakage_audit_passed": true,
+      "semantic_phrasing_gate": {
+        "audit": "data/audits/semantic_phrasing_v2_100.json",
+        "model": "sentence-transformers/all-MiniLM-L6-v2",
+        "movie_minimum_cosine": 0.8833701246,
+        "music_minimum_cosine": 0.9032811861,
+        "threshold": 0.82
+      },
+      "semantic_phrasing_gate_passed": true
+    },
+    "population_construction": {
+      "construction_and_evaluation_sets_disjoint": true,
+      "minimum_held_out_relevant_items": 30,
+      "movie": {
+        "construction_fraction": 0.5,
+        "minimum_activity": 60,
+        "positive_rating_threshold": 4.0,
+        "preference_template_grammar": "I enjoy films in genres such as {natural_join(top_3_construction_genres)}, especially titles from {natural_join(the_top_2_construction_decades)}.",
+        "strata_boundaries": {
+          "activity": [
+            91.0,
+            156.0
+          ],
+          "diversity": [
+            2.418376425262882,
+            2.516687525379724
+          ],
+          "popularity_tendency": [
+            0.01215783762737884,
+            0.019984080478263073
+          ]
+        }
+      },
+      "music": {
+        "construction_fraction": 0.5,
+        "minimum_distinct_artists": 60,
+        "preference_template_grammar": "I often listen to artists such as {natural_join(top_5_construction_artists_by_plays)}{terminal_punctuation_unless_present}",
+        "strata_boundaries": {
+          "activity": [
+            62.0,
+            67.0
+          ],
+          "diversity": [
+            3.854398919904295,
+            4.003426963709502
+          ],
+          "popularity_tendency": [
+            0.023321122709700607,
+            0.04267827807604872
+          ]
+        }
+      },
+      "raw_user_ids_allowed_in_prompts": false,
+      "raw_user_ids_allowed_in_public_outputs": false,
+      "sample_without_replacement": true,
+      "seed": 20260731,
+      "stratification_dimensions": [
+        "activity",
+        "popularity_tendency",
+        "genre_or_listening_diversity"
+      ]
+    },
+    "schema_version": 2,
+    "source_datasets": {
+      "movie": {
+        "name": "MovieLens",
+        "version": "25m"
+      },
+      "music": {
+        "name": "LastFM",
+        "version": "360k"
+      }
+    },
+    "status": "draft",
+    "target_personas_per_domain": 100
+  },
+  "design_version": "persona-relevance-v2-100",
+  "matrix_audit": {
+    "counterfactual_preference_invariance": true,
+    "prompt_conditions_per_domain": {
+      "movie": 4400,
+      "music": 4400
+    },
+    "records_at_three_repeats_per_domain": {
+      "movie": 13200,
+      "music": 13200
+    },
+    "records_per_model_domain_partition": 13200,
+    "unique_personas_per_domain": {
+      "movie": 100,
+      "music": 100
+    }
+  },
+  "schema_version": 2,
+  "status": "draft"
+}

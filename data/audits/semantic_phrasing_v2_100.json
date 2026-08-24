@@ -1,0 +1,30 @@
+{
+  "design_version": "persona-relevance-v2-100",
+  "model": "sentence-transformers/all-MiniLM-L6-v2",
+  "passed": true,
+  "results": {
+    "movie": {
+      "minimum_cosine": 0.8833701245751122,
+      "pairwise": {
+        "casual::direct": 0.9100394243379007,
+        "casual::indirect": 0.9554471923996551,
+        "direct::indirect": 0.8833701245751122,
+        "formal::casual": 0.9400250679491264,
+        "formal::direct": 0.9232757999522877,
+        "formal::indirect": 0.9452403364356603
+      }
+    },
+    "music": {
+      "minimum_cosine": 0.9032811860836144,
+      "pairwise": {
+        "casual::direct": 0.9179089109458711,
+        "casual::indirect": 0.9602267814415651,
+        "direct::indirect": 0.9032811860836144,
+        "formal::casual": 0.9476924855564304,
+        "formal::direct": 0.9287823110499759,
+        "formal::indirect": 0.9539794845266412
+      }
+    }
+  },
+  "threshold": 0.82
+}

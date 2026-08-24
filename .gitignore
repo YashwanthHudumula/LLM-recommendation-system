@@ -22,3 +22,5 @@ wandb/
 *.parquet
 Blind Wording Audit — Form Content (Responses) (1).xlsx
 preservation/generated/
+_report_work/
+README_CURRENT_*.md

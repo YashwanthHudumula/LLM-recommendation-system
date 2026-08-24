@@ -1,0 +1,478 @@
+{
+  "design_version": "persona-relevance-v2-100-a1",
+  "purpose": "operational amendment preflight only",
+  "model": "ollama_llama3_1_8b",
+  "domain": "music",
+  "digest": "46e0c10c039e019119339687c3c1757cc81b9da49709a3b3924863ba87ca666e",
+  "retry_rule": {
+    "maximum_retries": 1,
+    "trigger": "fewer than 10 grounded items",
+    "retry_temperature": 0.0,
+    "instruction": "CORRECTION FOR THIS RETRY: Return exactly 10 distinct recommendations. Use exactly one valid C-code from the candidate list on each line. Do not mention unavailable codes, alternatives, explanations, or skipped items."
+  },
+  "queries": [
+    {
+      "persona_id": "music-v2-001",
+      "trait": "neutral",
+      "level": "neutral",
+      "phrasing": "formal",
+      "attempts": [
+        {
+          "attempt": 1,
+          "temperature": 0.7,
+          "raw_response_text": "Here are the recommended artists based on your preferences:\n\nC027 | cisza & spokój\nC079 | yngwie malmsteen\nC094 | brand x\nC101 | bob dylan\nC115 | david bowie\nC118 | beyoncé vs black eyed peas\nC034 | limbic\nC022 | camino de lobo\nC043 | radiohead",
+          "matched_item_ids": [
+            "name:68e48c95a9ceff1ac45d4f0918b4b5ac9864b4b2",
+            "8fa5d80d-37e8-4133-9d5c-6bad446c63f0",
+            "097c86bc-b2b6-4791-833b-39b5385fe3e6",
+            "72c536dc-7137-4477-a521-567eeb840fa8",
+            "5441c29d-3602-4898-b1a1-b77fa23b8e50",
+            "name:7039390d0492f84aa5aed4993d39985855d18272",
+            "name:51bf8460b75b80782b6274ee2539906cc505dd30",
+            "name:f7e834229f80f33384604e724f8004a019b55169",
+            "a74b1b7f-71a5-4011-9441-d0b5e4122711"
+          ],
+          "hallucinated_titles": [],
+          "off_list_titles": []
+        },
+        {
+          "attempt": 2,
+          "temperature": 0.0,
+          "raw_response_text": "C079 | yngwie malmsteen\nC027 | cisza & spokój\nC038 | rammstein\nC028 | planet x\nC022 | camino de lobo\nC024 | evergrey\nC026 | fates warning\nC041 | mahavishnu orchestra\nC077 | astor piazzolla nuevo octeto",
+          "matched_item_ids": [
+            "8fa5d80d-37e8-4133-9d5c-6bad446c63f0",
+            "name:68e48c95a9ceff1ac45d4f0918b4b5ac9864b4b2",
+            "b2d122f9-eadb-4930-a196-8f221eeb0c66",
+            "663ce5b5-fdd8-47c1-b1e5-c632ed6c3d1b",
+            "name:f7e834229f80f33384604e724f8004a019b55169",
+            "40842674-a794-4580-a0f5-e43d5b600729",
+            "17fbada3-6dac-42f3-8a6c-8c1c1484f730",
+            "a2be74f5-0735-46f7-a295-7e41aab30029",
+            "name:3dc822ba889dcdebe3c34627cb86886b0b33fc64"
+          ],
+          "hallucinated_titles": [],
+          "off_list_titles": []
+        }
+      ],
+      "selected_attempt": 2,
+      "final_matched_count": 9
+    },
+    {
+      "persona_id": "music-v2-002",
+      "trait": "neutral",
+      "level": "neutral",
+      "phrasing": "casual",
+      "attempts": [
+        {
+          "attempt": 1,
+          "temperature": 0.7,
+          "raw_response_text": "Here are the top 10 music artists that fit your preferences:\n\nC035 | cpc\nC044 | mark roach\nC067 | linkin park\nC083 | faithless\nC102 | kashyyyk\nC103 | nine inch nails\nC108 | björk\nC110 | pandemonium\nC113 | banco de gaia\nC115 | ocelot",
+          "matched_item_ids": [
+            "2085595a-0f08-4e7e-9c89-521edc0b005b",
+            "5318daf4-af32-4133-827f-b20afec8301e",
+            "f59c5520-5f46-4d2c-b2c4-822eabf53419",
+            "23d9d74d-c95e-46a6-be26-a6075c49747a",
+            "214b5280-5c16-45c0-9cc5-eda7a0fefffd",
+            "b7ffd2af-418f-4be2-bdd1-22f8b48613da",
+            "87c5dedd-371d-4a53-9f7f-80522fb7f3cb",
+            "81b84398-6a98-4fd7-bf64-03bb97b9e7a1",
+            "70cc316b-37a3-4174-bdc0-f546b3b3d03c",
+            "febb200b-f91c-476f-a2aa-815126ed072d"
+          ],
+          "hallucinated_titles": [],
+          "off_list_titles": []
+        }
+      ],
+      "selected_attempt": 1,
+      "final_matched_count": 10
+    },
+    {
+      "persona_id": "music-v2-003",
+      "trait": "neutral",
+      "level": "neutral",
+      "phrasing": "direct",
+      "attempts": [
+        {
+          "attempt": 1,
+          "temperature": 0.7,
+          "raw_response_text": "Here are exactly 10 matching music artists:\n\nC011 | margaret berger\nC014 | lunik\nC024 | nightwish\nC025 | dido\nC040 | depeche mode\nC046 | queen\nC074 | u2\nC086 | red hot chili peppers\nC093 | the beatles\nC110 | Ані Лорак",
+          "matched_item_ids": [
+            "437874ed-a132-40dc-990b-92fae12c732f",
+            "9dd236dc-473f-41c3-89d9-111316b212b7",
+            "00a9f935-ba93-4fc8-a33a-993abe9c936b",
+            "d1353a0c-26fb-4318-a116-defde9c7c9ad",
+            "8538e728-ca0b-4321-b7e5-cff6565dd4c0",
+            "0383dadf-2a4e-4d10-a46a-e9e041da8eb3",
+            "a3cb23fc-acd3-4ce0-8f36-1e5aa6a18432",
+            "8bfac288-ccc5-448d-9573-c33ea2aa5c30",
+            "b10bbbfc-cf9e-42e0-be17-e2c3e1d2600d",
+            "29ec65e9-0dcf-4dfa-9155-7f13cef07335"
+          ],
+          "hallucinated_titles": [],
+          "off_list_titles": []
+        }
+      ],
+      "selected_attempt": 1,
+      "final_matched_count": 10
+    },
+    {
+      "persona_id": "music-v2-004",
+      "trait": "neutral",
+      "level": "neutral",
+      "phrasing": "indirect",
+      "attempts": [
+        {
+          "attempt": 1,
+          "temperature": 0.7,
+          "raw_response_text": "Based on your preferences, here is a ranked list of 10 music artists suited to your taste:\n\nC040 | queen\nC043 | marlango\nC044 | amorphis\nC045 | fangoria\nC047 | the beatles\nC063 | the atomic men\nC068 | eric clapton\nC073 | blood lake\nC086 | the men of hell\nC092 | anathema",
+          "matched_item_ids": [
+            "0383dadf-2a4e-4d10-a46a-e9e041da8eb3",
+            "1a2bd2b1-7fe4-4b09-9ae8-96d2a519bf9a",
+            "efaefde1-e09b-4d49-9d8e-b1304d2ece8d",
+            "0579e174-f377-4fbb-a3bf-db7ddc7aabb1",
+            "b10bbbfc-cf9e-42e0-be17-e2c3e1d2600d",
+            "5961adcf-51ff-4d4d-b843-748ae20ee330",
+            "618b6900-0618-4f1e-b835-bccb17f84294",
+            "name:a6e98ecd6d21ef78a28395305ba99b332ca4a682",
+            "name:a5c243a144fcf898821a64d705a2d0c6abc64d1c",
+            "20aa23e3-3532-42ca-acf6-e8c2e9df2688"
+          ],
+          "hallucinated_titles": [],
+          "off_list_titles": []
+        }
+      ],
+      "selected_attempt": 1,
+      "final_matched_count": 10
+    },
+    {
+      "persona_id": "music-v2-005",
+      "trait": "openness",
+      "level": "low",
+      "phrasing": "formal",
+      "attempts": [
+        {
+          "attempt": 1,
+          "temperature": 0.7,
+          "raw_response_text": "C002 | adonis alvarez\nC016 | andy hall hall\nC030 | we'll write\nC042 | alice cooper; rob zombie\nC054 | martin pearlman\nC068 | cocteau twins\nC070 | placebo\nC091 | element of crime\nC109 | maroon 5\nC115 | joy division",
+          "matched_item_ids": [
+            "7d290286-0f05-4863-8f1e-1163848217de",
+            "name:93de6f76da664e3735adc6bfd61b5eefb490c4fc",
+            "name:cd59c463792b73692be6788bcaeef342e88202b1",
+            "name:985c3d6f39c95a19104c2e09c3b879a756215e9a",
+            "1d78f8e1-fe1b-4db7-b238-985e1507dbef",
+            "000fc734-b7e1-4a01-92d1-f544261b43f5",
+            "847e8284-8582-4b0e-9c26-b042a4f49e57",
+            "40985bd2-6d44-4c86-bd16-35cad449cce3",
+            "0ab49580-c84f-44d4-875f-d83760ea2cfe",
+            "9a58fda3-f4ed-4080-a3a5-f457aac9fcdd"
+          ],
+          "hallucinated_titles": [],
+          "off_list_titles": []
+        }
+      ],
+      "selected_attempt": 1,
+      "final_matched_count": 10
+    },
+    {
+      "persona_id": "music-v2-006",
+      "trait": "openness",
+      "level": "high",
+      "phrasing": "casual",
+      "attempts": [
+        {
+          "attempt": 1,
+          "temperature": 0.7,
+          "raw_response_text": "C038 | suuntaus\nC083 | papa roach\nC054 | tool\nC115 | the paper scissors\nC093 | brou - hamon - quimbert\nC040 | nautilus pompilius\nC078 | before the dawn\nC031 | linkin park\nC113 | red hot chili peppers",
+          "matched_item_ids": [
+            "name:71527c5bb0112d2d243f01672bd0580969d2c288",
+            "c5eb9407-caeb-4303-b383-6929aa94021c",
+            "66fc5bf8-daa4-4241-b378-9bc9077939d2",
+            "eee4a768-4083-4ffc-aa2a-ddd46736e927",
+            "name:136dba1a03fe22c619e12833f53c879f06344608",
+            "247efe0f-80f1-477c-a4a0-b5cb1b8c832e",
+            "0915e81d-e897-415c-b129-04dab2843240",
+            "f59c5520-5f46-4d2c-b2c4-822eabf53419",
+            "8bfac288-ccc5-448d-9573-c33ea2aa5c30"
+          ],
+          "hallucinated_titles": [],
+          "off_list_titles": []
+        },
+        {
+          "attempt": 2,
+          "temperature": 0.0,
+          "raw_response_text": "C034 | britney spears\nC035 | rammstein\nC054 | tool\nC055 | feto in fetus\nC056 | hespèrion xxi, jordi savall\nC057 | disciple\nC058 | Śmierć kliniczna\nC075 | the cool kids and don cannon\nC083 | papa roach\nC091 | the simon sisters",
+          "matched_item_ids": [
+            "45a663b5-b1cb-4a91-bff6-2bef7bbfdd76",
+            "b2d122f9-eadb-4930-a196-8f221eeb0c66",
+            "66fc5bf8-daa4-4241-b378-9bc9077939d2",
+            "name:cb7c739944a469091d88a6be5a03b8e42df4e392",
+            "name:26e8a1b31e7023ebf10601372d06641a51975438",
+            "4ebed31c-4984-432c-8d78-0f08a4b169a2",
+            "c6fc25e0-ffa1-48c8-b129-57f5f8200cf6",
+            "name:c3aa8c57a09e003d379a059c12e34963d71896fe",
+            "c5eb9407-caeb-4303-b383-6929aa94021c",
+            "cb5b9dd3-e67e-4b3e-bd81-eebfc03a1e30"
+          ],
+          "hallucinated_titles": [],
+          "off_list_titles": []
+        }
+      ],
+      "selected_attempt": 2,
+      "final_matched_count": 10
+    },
+    {
+      "persona_id": "music-v2-007",
+      "trait": "conscientiousness",
+      "level": "low",
+      "phrasing": "direct",
+      "attempts": [
+        {
+          "attempt": 1,
+          "temperature": 0.7,
+          "raw_response_text": "Here are the top 10 music artist recommendations based on your preferences:\n\nC013 | red hot chili peppers\nC028 | foo fighters\nC058 | totalt jävla mörker\nC068 | the beatles\nC069 | dwight yoakam\nC070 | nine inch nails\nC071 | tomahawk jam\nC075 | dj sl\nC086 | breach\nC091 | saltwater band",
+          "matched_item_ids": [
+            "8bfac288-ccc5-448d-9573-c33ea2aa5c30",
+            "67f66c07-6e61-4026-ade5-7e782fad3a5d",
+            "cec7da6d-b94a-48a4-a0ca-af07d60b97bd",
+            "b10bbbfc-cf9e-42e0-be17-e2c3e1d2600d",
+            "0fb711af-c7ba-4bdc-b0b6-b8495fc0a590",
+            "b7ffd2af-418f-4be2-bdd1-22f8b48613da",
+            "name:08f867090430bf885f213dc7ae30ce5ec479244f",
+            "name:a2e655bcfb9538a14448d85b35b8ae850438e2ba",
+            "1ddcc89e-4a4a-41e4-9a2d-891e44302f08",
+            "a556bf1f-877d-4b7a-adcd-8e63d668b5a0"
+          ],
+          "hallucinated_titles": [],
+          "off_list_titles": []
+        }
+      ],
+      "selected_attempt": 1,
+      "final_matched_count": 10
+    },
+    {
+      "persona_id": "music-v2-008",
+      "trait": "conscientiousness",
+      "level": "high",
+      "phrasing": "indirect",
+      "attempts": [
+        {
+          "attempt": 1,
+          "temperature": 0.7,
+          "raw_response_text": "Based on your preferences, here is a ranked list of 10 music artists that fit your taste:\n\nC026 | system of a down\nC032 | within temptation\nC040 | sentenced\nC054 | old mans child\nC056 | big sister\nC068 | nine inch nails\nC076 | bloodbath\nC090 | katatonia\nC094 | the cure\nC110 | epica",
+          "matched_item_ids": [
+            "cc0b7089-c08d-4c10-b6b0-873582c17fd6",
+            "eace2373-31c8-4aba-9a5c-7bce22dd140a",
+            "82a5b152-ee60-4447-939a-dd5a91cd7c38",
+            "02fc3032-e491-46b8-8742-9859e4906dcc",
+            "name:9c5083207e22f510b2502d75cdb9fda4c61567b2",
+            "b7ffd2af-418f-4be2-bdd1-22f8b48613da",
+            "bc27c60a-a967-41c9-9633-c682ca0d77d5",
+            "61ed9c9c-79eb-4e8f-8015-bd599ac0ab49",
+            "69ee3720-a7cb-4402-b48d-a02c366f2bcf",
+            "21985b14-1b0d-44fe-b357-310b29bba510"
+          ],
+          "hallucinated_titles": [],
+          "off_list_titles": []
+        }
+      ],
+      "selected_attempt": 1,
+      "final_matched_count": 10
+    },
+    {
+      "persona_id": "music-v2-009",
+      "trait": "extraversion",
+      "level": "low",
+      "phrasing": "formal",
+      "attempts": [
+        {
+          "attempt": 1,
+          "temperature": 0.7,
+          "raw_response_text": "Here are exactly 10 music artist recommendations that match your preferences:\n\nC017 | death cab for cutie\nC034 | the cure\nC042 | smog\nC044 | m. ward\nC045 | johannes brahms\nC048 | black flood diesel\nC058 | coldplay\nC065 | iron & wine\nC076 | rammstein\nC080 | radiohead",
+          "matched_item_ids": [
+            "0039c7ae-e1a7-4a7d-9b49-0cbc716821a6",
+            "69ee3720-a7cb-4402-b48d-a02c366f2bcf",
+            "89af9575-4d72-4345-8eba-e9de3d36ac34",
+            "655b3e5b-09e4-45dd-941c-6fa3fc12521b",
+            "c70d12a2-24fe-4f83-a6e6-57d84f8efb51",
+            "0fb0762f-fed3-45c7-9157-f8142206fe6d",
+            "cc197bad-dc9c-440d-a5b5-d52ba2e14234",
+            "c3f28da8-662d-4f09-bdc7-3084bf685930",
+            "b2d122f9-eadb-4930-a196-8f221eeb0c66",
+            "a74b1b7f-71a5-4011-9441-d0b5e4122711"
+          ],
+          "hallucinated_titles": [],
+          "off_list_titles": []
+        }
+      ],
+      "selected_attempt": 1,
+      "final_matched_count": 10
+    },
+    {
+      "persona_id": "music-v2-010",
+      "trait": "extraversion",
+      "level": "high",
+      "phrasing": "casual",
+      "attempts": [
+        {
+          "attempt": 1,
+          "temperature": 0.7,
+          "raw_response_text": "Here are 10 music artists that fit your preferences, ranked from highest to lowest match:\n\nC065 | rancid\nC068 | death cab for cutie\nC091 | boogie down productions\nC093 | the bouncing souls\nC070 | stuttgart state opera - dennis russell davies\nC077 | [http:\nC063 | metallica\nC067 | bluebeaters\nC054 | madonna\nC060 | union jack",
+          "matched_item_ids": [
+            "24f8d8a5-269b-475c-a1cb-792990b0b2ee",
+            "0039c7ae-e1a7-4a7d-9b49-0cbc716821a6",
+            "ff7466a5-c538-4d2b-8450-54f11b20f2f4",
+            "429d5f26-329c-41cc-bdff-17c29dbf1fb8",
+            "name:17f70d1f15fae7e48c0b293aaed0f17452fd80d6",
+            "name:7e01ce8c2484da76dd75832b47ca97bfe7afeba3",
+            "65f4f0c5-ef9e-490c-aee3-909e7ae6b2ab",
+            "name:67ff36d0aa0d7cdb0ed7e10f9685dabc4736e46c",
+            "79239441-bfd5-4981-a70c-55c3f15c1287",
+            "94cf1fe5-0431-48be-b23f-b815da39aa2f"
+          ],
+          "hallucinated_titles": [],
+          "off_list_titles": []
+        }
+      ],
+      "selected_attempt": 1,
+      "final_matched_count": 10
+    },
+    {
+      "persona_id": "music-v2-011",
+      "trait": "agreeableness",
+      "level": "low",
+      "phrasing": "direct",
+      "attempts": [
+        {
+          "attempt": 1,
+          "temperature": 0.7,
+          "raw_response_text": "C007 | ragnarok (uk)\nC036 | system of a down\nC068 | the smashing pumpkins\nC078 | nirvana\nC082 | the mcgillicuddys\nC093 | iron maiden\nC101 | rammstein\nC104 | port mone\nC108 | red hot chili peppers\nC109 | cristina rus",
+          "matched_item_ids": [
+            "name:270654f1f1dfcd82d9ccd8e99bcbcccf694f094c",
+            "cc0b7089-c08d-4c10-b6b0-873582c17fd6",
+            "ba0d6274-db14-4ef5-b28d-657ebde1a396",
+            "85af0709-95db-4fbc-801a-120e9f4766d0",
+            "41c65ac9-ef33-4eb2-9f76-4e51a07c34f5",
+            "ca891d65-d9b0-4258-89f7-e6ba29d83767",
+            "b2d122f9-eadb-4930-a196-8f221eeb0c66",
+            "name:cdf23db4dc673eca801feda18b4d074309973409",
+            "8bfac288-ccc5-448d-9573-c33ea2aa5c30",
+            "9ce8ddca-8792-41cd-bcc7-b9b58c00fa7b"
+          ],
+          "hallucinated_titles": [],
+          "off_list_titles": []
+        }
+      ],
+      "selected_attempt": 1,
+      "final_matched_count": 10
+    },
+    {
+      "persona_id": "music-v2-012",
+      "trait": "agreeableness",
+      "level": "high",
+      "phrasing": "indirect",
+      "attempts": [
+        {
+          "attempt": 1,
+          "temperature": 0.7,
+          "raw_response_text": "C046 | covenant\nC028 | speculum\nC029 | throbbing gristle\nC068 | bob dylan\nC093 | j volshtein\nC077 | base ibiza 2003\nC063 | nine inch nails\nC115 | squarepusher\nC078 | death cab for cutie\nC035 | muse",
+          "matched_item_ids": [
+            "879a449d-506a-422c-9fb8-8af01d3d04ae",
+            "11771d73-4a71-4b28-9678-319616088f1d",
+            "e135d690-9c53-4333-8f11-98aec8c9f434",
+            "72c536dc-7137-4477-a521-567eeb840fa8",
+            "name:8d6770b475ae15613963295334287321bdf92498",
+            "name:8d4fbce16a718d4c9f8051904a61d6e443140b24",
+            "b7ffd2af-418f-4be2-bdd1-22f8b48613da",
+            "4d86ad4e-28d8-4e9f-8cf4-735c57060fdc",
+            "0039c7ae-e1a7-4a7d-9b49-0cbc716821a6",
+            "9c9f1380-2516-4fc9-a3e6-f9f61941d090"
+          ],
+          "hallucinated_titles": [],
+          "off_list_titles": []
+        }
+      ],
+      "selected_attempt": 1,
+      "final_matched_count": 10
+    },
+    {
+      "persona_id": "music-v2-013",
+      "trait": "neuroticism",
+      "level": "low",
+      "phrasing": "formal",
+      "attempts": [
+        {
+          "attempt": 1,
+          "temperature": 0.7,
+          "raw_response_text": "Here are the recommended artists based on your preferences:\n\nC001 | the gossip\nC005 | alaleh\nC014 | peaches\nC025 | muharrem temiz\nC034 | it's you i adore\nC038 | 森川美穂\nC046 | and you could be\nC053 | rammstein\nC063 | bob dylan\nC082 | speech debelle",
+          "matched_item_ids": [
+            "0f96c38b-8e21-4571-afe0-cb11196a8acd",
+            "name:452b0ea3e8de8803922aadf964f6b48711dc3bd6",
+            "270acfee-1fbe-413e-a0a8-6a35a8b3b66c",
+            "name:eaf0bcfe54be47c5b70009aa7fac119d518fec7e",
+            "name:386caf53757311df4be4962199b95b1fdfff6d8d",
+            "c4a646ec-db94-48a7-b46a-f3872d36ffcf",
+            "name:3ce655c07aca58db2eb37f8c4b070b54eae70109",
+            "b2d122f9-eadb-4930-a196-8f221eeb0c66",
+            "72c536dc-7137-4477-a521-567eeb840fa8",
+            "808391d8-ef0e-481a-b4d8-59312365e669"
+          ],
+          "hallucinated_titles": [],
+          "off_list_titles": []
+        }
+      ],
+      "selected_attempt": 1,
+      "final_matched_count": 10
+    },
+    {
+      "persona_id": "music-v2-014",
+      "trait": "neuroticism",
+      "level": "high",
+      "phrasing": "casual",
+      "attempts": [
+        {
+          "attempt": 1,
+          "temperature": 0.7,
+          "raw_response_text": "Here are the 10 music artists that fit your preferences, ranked from highest to lowest similarity:\n\nC026 | pain confessor\nC018 | testament\nC043 | ensiferum\nC095 | amon amarth\nC040 | iced earth\nC057 | green day (not as close but fits in some areas)\nC105 | hassmonstas und demonenpark (fits better than expected)\nC056 | children of bodom\nC061 | hypocrisy\nC101 | the uberkids",
+          "matched_item_ids": [
+            "d9d6c4d8-10dc-47c5-a0de-ff260c8b8afe",
+            "05106775-5d45-4131-aecc-1177f813ba11",
+            "6e64cbfa-1a60-450e-81f4-c044c868ab24",
+            "5b687684-ad34-4a9f-b425-0e7aa81fbd38",
+            "8a0e10a9-80c7-40e0-bf5b-89f1d57f9537",
+            "084308bd-1654-436f-ba03-df6697104e19",
+            "name:21e51de9cc71669259240add5c5c546f71e3fd05",
+            "f57e14e4-b030-467c-b202-539453f504ec",
+            "b1e23ada-a7eb-42d7-91ec-67a43bead43a",
+            "25a5410e-e4ee-41df-92bf-fb878948e473"
+          ],
+          "hallucinated_titles": [],
+          "off_list_titles": []
+        }
+      ],
+      "selected_attempt": 1,
+      "final_matched_count": 10
+    }
+  ],
+  "top_10_exposure_yield": 0.9285714285714286,
+  "retry_rate": 0.14285714285714285,
+  "runtime_status": {
+    "name": "llama3.1:8b",
+    "model": "llama3.1:8b",
+    "size": 5001183231,
+    "digest": "46e0c10c039e019119339687c3c1757cc81b9da49709a3b3924863ba87ca666e",
+    "details": {
+      "parent_model": "",
+      "format": "gguf",
+      "family": "llama",
+      "families": [
+        "llama"
+      ],
+      "parameter_size": "8.0B",
+      "quantization_level": "Q4_K_M"
+    },
+    "expires_at": "2026-08-03T14:46:26.8687755+02:00",
+    "size_vram": 5001183231,
+    "context_length": 2048
+  },
+  "passed": true
+}

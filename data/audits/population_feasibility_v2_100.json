@@ -1,0 +1,92 @@
+{
+  "design_version": "persona-relevance-v2-100",
+  "status": "draft",
+  "fairness_outputs_inspected": false,
+  "movie": {
+    "diagnostics": {
+      "eligible_users": 59812,
+      "threshold": 4.0,
+      "minimum_positive": 60,
+      "construction_fraction": 0.5,
+      "strata_boundaries": {
+        "activity": [
+          91.0,
+          156.0
+        ],
+        "popularity_tendency": [
+          0.01215783762737884,
+          0.019984080478263073
+        ],
+        "diversity": [
+          2.418376425262882,
+          2.516687525379724
+        ]
+      }
+    },
+    "audit": {
+      "passed": true,
+      "profile_count": 100,
+      "unique_profile_ids": 100,
+      "leakage_profile_ids": [],
+      "insufficient_relevant_profile_ids": [],
+      "duplicate_profile_records": false
+    },
+    "wording_review": {
+      "reviewed_profile_count": 100,
+      "natural_wording_passed": true,
+      "hidden_control_characters": 0,
+      "personality_or_trait_leakage": 0,
+      "raw_user_id_fields": 0,
+      "review_notes": "All statements reviewed. Dataset-native Unicode artist names retained. Natural list conjunctions and decade articles verified."
+    }
+  },
+  "music": {
+    "diagnostics": {
+      "eligible_users": 29555,
+      "minimum_distinct_artists": 60,
+      "construction_fraction": 0.5,
+      "strata_boundaries": {
+        "activity": [
+          62.0,
+          67.0
+        ],
+        "popularity_tendency": [
+          0.023321122709700607,
+          0.04267827807604872
+        ],
+        "diversity": [
+          3.854398919904295,
+          4.003426963709502
+        ]
+      }
+    },
+    "audit": {
+      "passed": true,
+      "profile_count": 100,
+      "unique_profile_ids": 100,
+      "leakage_profile_ids": [],
+      "insufficient_relevant_profile_ids": [],
+      "duplicate_profile_records": false
+    },
+    "wording_review": {
+      "reviewed_profile_count": 100,
+      "natural_wording_passed": true,
+      "hidden_control_characters": 0,
+      "personality_or_trait_leakage": 0,
+      "raw_user_id_fields": 0,
+      "review_notes": "All statements reviewed. Dataset-native Unicode artist names retained. Natural list conjunctions and decade articles verified."
+    }
+  },
+  "human_wording_review": {
+    "status": "passed",
+    "review_date": "2026-08-03",
+    "reviewed_profiles": 200,
+    "fairness_outputs_inspected": false,
+    "corrections_before_pass": [
+      "Natural conjunctions for controlled lists",
+      "Added articles before decade labels",
+      "Rephrased movie genre sentence",
+      "Prevented duplicate terminal punctuation for artist names"
+    ]
+  }
+}

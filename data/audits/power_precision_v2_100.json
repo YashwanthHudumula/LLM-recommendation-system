@@ -1,0 +1,24 @@
+{
+  "design_version": "persona-relevance-v2-100",
+  "analysis_type": "pre-results mixed-model simulation",
+  "seosi_standardized_within_persona": 0.2,
+  "alpha": 0.05,
+  "random_intercept_sd": 0.5,
+  "residual_sd": 1.0,
+  "simulations": 200,
+  "personas": 100,
+  "phrasings": 4,
+  "repeats": 3,
+  "standardized_effect": 0.2,
+  "power": 1.0,
+  "mean_ci_width": 0.16014674057132688,
+  "median_standard_error": 0.04089406720937672,
+  "convergence_rate": 1.0,
+  "failure_rate": 0.0,
+  "acceptance": {
+    "minimum_power": 0.8,
+    "minimum_convergence_rate": 0.95,
+    "maximum_failure_rate": 0.05
+  },
+  "passed": true
+}

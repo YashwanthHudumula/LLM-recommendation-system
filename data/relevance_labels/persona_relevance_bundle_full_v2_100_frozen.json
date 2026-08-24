@@ -1,0 +1,156 @@
+{
+  "artifacts": {
+    "movie": {
+      "candidate_pools": {
+        "path": "data/relevance_labels/candidate_pools_movies_full_v2_100_frozen.json",
+        "sha256": "ae7545af85729b9f5de226bc9a4682642c42bbde02b1de34a5279951cf540930"
+      },
+      "labels": {
+        "path": "data/relevance_labels/relevance_labels_movies_full_v2_100.json",
+        "sha256": "c54887b25dc103e6b2fd20303217925ae837b62b38be47c66e3a2ed5260903aa"
+      },
+      "population": {
+        "path": "data/relevance_labels/population_movies_full_v2_100_frozen.json",
+        "sha256": "b77d970dded687b2413b87e80cdff6787d5c58d46fd9a899bbe97263421db2c0"
+      }
+    },
+    "music": {
+      "candidate_pools": {
+        "path": "data/relevance_labels/candidate_pools_music_full_v2_100_frozen.json",
+        "sha256": "a0c44cdc24fb48c5677983ff4646c51b1cacf96ab041e39306a264266a453456"
+      },
+      "labels": {
+        "path": "data/relevance_labels/relevance_labels_music_full_v2_100.json",
+        "sha256": "79b59e1b2765ce1d0e8d4c177cfb1050af40a475ed6be9305b55af00d9760ef8"
+      },
+      "population": {
+        "path": "data/relevance_labels/population_music_full_v2_100_frozen.json",
+        "sha256": "1568ec00ad39d895199b088285f9d6fcc80bd10fe87ab1625d7403be9780d126"
+      }
+    }
+  },
+  "audit_reports": {
+    "candidate_pools_v2_100.json": "16c2ef02c15f1bfd32ab4d574da5a40b9d9b061baab4a7a5f2ca9f8fd9b3100c",
+    "design_matrix_v2_100.json": "e326ce8839f8c0086a321c7c27130a38ef1b381686ad38f2bd8ebe8fe5372dd2",
+    "population_feasibility_v2_100.json": "252c9f1f4a74a9c8168eef8204ecc90270bc21d1030227cce89a913be277df6b",
+    "power_precision_v2_100.json": "2abd9e646f80dc89bc3ac1216bbff6b782d759160764883afcefd255d5c81e77",
+    "semantic_phrasing_v2_100.json": "cfbc6170e4031dca6606a5aeb770f0c805933024a758be94e63195f397ba0522"
+  },
+  "design": {
+    "candidate_pools": {
+      "minimum_relevant_opportunity": 30,
+      "movie_artifact": "data/relevance_labels/candidate_pools_movies_full_v2_100_frozen.json",
+      "music_artifact": "data/relevance_labels/candidate_pools_music_full_v2_100_frozen.json",
+      "seed_namespace": "candidate-pool",
+      "size": 120,
+      "tier_allocation": {
+        "head": 60,
+        "mid": 30,
+        "tail": 30
+      }
+    },
+    "created_date": "2026-08-03",
+    "design_version": "persona-relevance-v2-100",
+    "freeze_requirements": {
+      "candidate_opportunity_audit_passed": true,
+      "duplicate_profile_audit_passed": true,
+      "exactly_100_unique_profiles_per_domain": true,
+      "feasibility_diagnostics_complete": true,
+      "human_wording_review_passed": true,
+      "leakage_audit_passed": true,
+      "semantic_phrasing_gate": {
+        "audit": "data/audits/semantic_phrasing_v2_100.json",
+        "model": "sentence-transformers/all-MiniLM-L6-v2",
+        "movie_minimum_cosine": 0.8833701246,
+        "music_minimum_cosine": 0.9032811861,
+        "threshold": 0.82
+      },
+      "semantic_phrasing_gate_passed": true
+    },
+    "frozen_date": "2026-08-03",
+    "population_construction": {
+      "construction_and_evaluation_sets_disjoint": true,
+      "minimum_held_out_relevant_items": 30,
+      "movie": {
+        "construction_fraction": 0.5,
+        "minimum_activity": 60,
+        "positive_rating_threshold": 4.0,
+        "preference_template_grammar": "I enjoy films in genres such as {natural_join(top_3_construction_genres)}, especially titles from {natural_join(the_top_2_construction_decades)}.",
+        "strata_boundaries": {
+          "activity": [
+            91.0,
+            156.0
+          ],
+          "diversity": [
+            2.418376425262882,
+            2.516687525379724
+          ],
+          "popularity_tendency": [
+            0.01215783762737884,
+            0.019984080478263073
+          ]
+        }
+      },
+      "music": {
+        "construction_fraction": 0.5,
+        "minimum_distinct_artists": 60,
+        "preference_template_grammar": "I often listen to artists such as {natural_join(top_5_construction_artists_by_plays)}{terminal_punctuation_unless_present}",
+        "strata_boundaries": {
+          "activity": [
+            62.0,
+            67.0
+          ],
+          "diversity": [
+            3.854398919904295,
+            4.003426963709502
+          ],
+          "popularity_tendency": [
+            0.023321122709700607,
+            0.04267827807604872
+          ]
+        }
+      },
+      "raw_user_ids_allowed_in_prompts": false,
+      "raw_user_ids_allowed_in_public_outputs": false,
+      "sample_without_replacement": true,
+      "seed": 20260731,
+      "stratification_dimensions": [
+        "activity",
+        "popularity_tendency",
+        "genre_or_listening_diversity"
+      ]
+    },
+    "sampling_plan": {
+      "note": "All requirements must pass before status may change to frozen.",
+      "path": "docs/SAMPLING_PLAN_V2_100.md",
+      "status": "frozen"
+    },
+    "schema_version": 2,
+    "source_datasets": {
+      "movie": {
+        "name": "MovieLens",
+        "version": "25m"
+      },
+      "music": {
+        "name": "LastFM",
+        "version": "360k"
+      }
+    },
+    "status": "frozen",
+    "target_personas_per_domain": 100
+  },
+  "design_version": "persona-relevance-v2-100",
+  "frozen_date": "2026-08-03",
+  "matrix": {
+    "complete_records": 79200,
+    "personas_per_domain": 100,
+    "prompt_conditions_per_domain": 4400,
+    "records_per_model_domain_partition": 13200
+  },
+  "sampling_plan": {
+    "path": "docs/SAMPLING_PLAN_V2_100.md",
+    "sha256": "d228263de4a7ece0be679573f29b99b96c2458a119a38a94e36bccdc7de63930"
+  },
+  "schema_version": 2,
+  "status": "frozen"
+}

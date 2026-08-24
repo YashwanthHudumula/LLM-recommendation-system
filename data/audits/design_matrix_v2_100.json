@@ -1,0 +1,20 @@
+{
+  "design_version": "persona-relevance-v2-100",
+  "passed": true,
+  "prompt_conditions_per_domain": {
+    "movie": 4400,
+    "music": 4400
+  },
+  "records_at_three_repeats_per_domain": {
+    "movie": 13200,
+    "music": 13200
+  },
+  "unique_personas_per_domain": {
+    "movie": 100,
+    "music": 100
+  },
+  "counterfactual_preference_invariance": true,
+  "records_per_model_domain_partition": 13200,
+  "bundle_path": "data/relevance_labels/persona_relevance_bundle_full_v2_100_draft.json",
+  "bundle_sha256": "8a49c4dc7177970d5f3270c2ed7ea3b30ec15c79f096347dc99f37bc00d94729"
+}

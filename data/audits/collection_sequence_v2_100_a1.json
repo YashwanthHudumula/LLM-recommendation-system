@@ -1,0 +1,45 @@
+{
+  "design_version": "persona-relevance-v2-100-a1",
+  "collection_protocol": "closed-catalog-v2-a1-retry",
+  "frozen_date": "2026-08-03",
+  "basis": "model-grouped operational sequence selected before confirmatory results; no fairness outputs inspected",
+  "sequence": [
+    {
+      "position": 1,
+      "model": "ollama_qwen3_8b",
+      "domain": "movie",
+      "expected_records": 13200
+    },
+    {
+      "position": 2,
+      "model": "ollama_qwen3_8b",
+      "domain": "music",
+      "expected_records": 13200
+    },
+    {
+      "position": 3,
+      "model": "ollama_llama3_1_8b",
+      "domain": "movie",
+      "expected_records": 13200
+    },
+    {
+      "position": 4,
+      "model": "ollama_llama3_1_8b",
+      "domain": "music",
+      "expected_records": 13200
+    },
+    {
+      "position": 5,
+      "model": "ollama_gemma3_12b",
+      "domain": "movie",
+      "expected_records": 13200
+    },
+    {
+      "position": 6,
+      "model": "ollama_gemma3_12b",
+      "domain": "music",
+      "expected_records": 13200
+    }
+  ],
+  "change_rule": "Do not reorder in response to fairness outcomes. Operational failures pause and resume the same partition."
+}

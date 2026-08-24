@@ -102,9 +102,7 @@ class MinuteRateLimiter:
             self.timestamps.append(now)
 
 
-def load_configured_catalog(
-    config: dict[str, Any], *, domain: str, stage: str
-) -> list[Item]:
+def load_configured_catalog(config: dict[str, Any], *, domain: str, stage: str) -> list[Item]:
     """Load the configured pilot/full catalog with shared tier cutoffs."""
     if stage not in {"pilot", "full"}:
         raise ValueError("stage must be pilot or full")
@@ -270,6 +268,9 @@ async def collect_queries(
     hard_cap_usd: float,
     concurrency: int,
     initial_spent_usd: float = 0.0,
+    minimum_grounded_items_before_retry: int = 0,
+    underlength_retry_instruction: str | None = None,
+    retry_temperature: float = 0.0,
 ) -> pd.DataFrame:
     """Collect grouped identical prompts once, write all condition records, and resume safely."""
     if not specs:
@@ -281,11 +282,7 @@ async def collect_queries(
     provenance = next(iter(provenances))
     existing = read_records(output_root)
     done = completed_keys(existing, expected_provenance=provenance)
-    pending = [
-        spec
-        for spec in specs
-        if spec.identity not in done
-    ]
+    pending = [spec for spec in specs if spec.identity not in done]
     if not pending:
         LOGGER.info("All %d requested conditions are already complete", len(specs))
         return existing
@@ -310,9 +307,10 @@ async def collect_queries(
 
     async def execute(group: list[QuerySpec]) -> None:
         representative = group[0]
-        conservative_prompt_tokens = len(
-            (representative.prompt.system_prompt + representative.prompt.user_prompt).split()
-        ) * 2
+        conservative_prompt_tokens = (
+            len((representative.prompt.system_prompt + representative.prompt.user_prompt).split())
+            * 2
+        )
         conservative_cost = price.cost(conservative_prompt_tokens, max_tokens)
         async with semaphore:
             async with budget_lock:
@@ -334,6 +332,47 @@ async def collect_queries(
                 threshold=fuzzy_threshold,
                 ambiguity_margin=ambiguity_margin,
             )
+            response_attempts = [response.text]
+            attempt_temperatures = [temperature]
+            retry_user_prompt: str | None = None
+            total_prompt_tokens = response.prompt_tokens
+            total_completion_tokens = response.completion_tokens
+            total_cost = actual_cost
+            if (
+                underlength_retry_instruction
+                and minimum_grounded_items_before_retry > 0
+                and len(matched.matched_item_ids) < minimum_grounded_items_before_retry
+            ):
+                retry_user_prompt = (
+                    representative.prompt.user_prompt + "\n\n" + underlength_retry_instruction
+                )
+                async with budget_lock:
+                    budget.reserve(conservative_cost)
+                await limiter.acquire()
+                retry_response = await client.complete(
+                    representative.prompt.system_prompt,
+                    retry_user_prompt,
+                    retry_temperature,
+                    max_tokens,
+                )
+                retry_cost = price.cost(
+                    retry_response.prompt_tokens, retry_response.completion_tokens
+                )
+                async with budget_lock:
+                    budget.record(retry_cost)
+                response = retry_response
+                response_attempts.append(response.text)
+                attempt_temperatures.append(retry_temperature)
+                total_prompt_tokens += response.prompt_tokens
+                total_completion_tokens += response.completion_tokens
+                total_cost += retry_cost
+                parsed = parse_response(response.text)
+                matched = title_matcher.match(
+                    parsed,
+                    allowed_item_ids=representative.candidate_pool.item_ids,
+                    threshold=fuzzy_threshold,
+                    ambiguity_margin=ambiguity_margin,
+                )
             for index, spec in enumerate(group):
                 record = QueryRecord(
                     query_id=spec.query_id,
@@ -355,13 +394,17 @@ async def collect_queries(
                         item.item_id for item in representative.candidate_pool.items
                     ],
                     raw_response_text=response.text,
+                    response_attempts=response_attempts,
+                    selected_attempt_idx=len(response_attempts) - 1,
+                    retry_user_prompt=retry_user_prompt,
+                    attempt_temperatures=attempt_temperatures,
                     parsed_titles=parsed,
                     matched_item_ids=matched.matched_item_ids,
                     hallucinated_titles=matched.hallucinated_titles,
                     off_list_titles=matched.off_list_titles,
-                    prompt_tokens=response.prompt_tokens if index == 0 else 0,
-                    completion_tokens=response.completion_tokens if index == 0 else 0,
-                    cost_usd=actual_cost if index == 0 else 0.0,
+                    prompt_tokens=total_prompt_tokens if index == 0 else 0,
+                    completion_tokens=total_completion_tokens if index == 0 else 0,
+                    cost_usd=total_cost if index == 0 else 0.0,
                 )
                 append_record(output_root, record)
 
@@ -399,9 +442,7 @@ def compute_condition_item_metrics(
             mask &= queries[column] == value
         condition_queries = queries.loc[mask]
         candidate_ids = set(
-            item_id
-            for values in condition_queries["candidate_item_ids"]
-            for item_id in values
+            item_id for values in condition_queries["candidate_item_ids"] for item_id in values
         )
         rec_tiers = Counter(item_by_id[item_id].popularity_tier for item_id in recommended)
         ref_tiers = Counter(item_by_id[item_id].popularity_tier for item_id in candidate_ids)
@@ -450,8 +491,7 @@ def item_metric_deltas(item_metrics: pd.DataFrame) -> pd.DataFrame:
         "genre_dgu",
     ]
     neutral = item_metrics.loc[
-        (item_metrics["trait"] == "neutral")
-        & (item_metrics["trait_level"] == "neutral"),
+        (item_metrics["trait"] == "neutral") & (item_metrics["trait_level"] == "neutral"),
         [*family, *metric_columns],
     ].rename(columns={metric: f"neutral_{metric}" for metric in metric_columns})
     sensitive = item_metrics.loc[item_metrics["trait_level"] != "neutral"].copy()
@@ -477,18 +517,8 @@ def group_exposure_diagnostics(
         return [item.provider_or_studio or "unknown"]
 
     for condition, group in queries.groupby(conditions, dropna=False):
-        recommended = [
-            item_id
-            for values in group["matched_item_ids"]
-            for item_id in values[:k]
-        ]
-        candidates = list(
-            {
-                item_id
-                for values in group["candidate_item_ids"]
-                for item_id in values
-            }
-        )
+        recommended = [item_id for values in group["matched_item_ids"] for item_id in values[:k]]
+        candidates = list({item_id for values in group["candidate_item_ids"] for item_id in values})
         prefix = dict(zip(conditions, condition, strict=True))
         for group_type in ("popularity_tier", "genre", "provider"):
             rec_counts: Counter[str] = Counter()
@@ -519,9 +549,7 @@ def summarize_user_side(paired: pd.DataFrame) -> pd.DataFrame:
     """Average individual similarities per condition and add FairEval family summaries."""
     condition = ["model", "domain", "trait", "trait_level", "phrasing_variant"]
     means = (
-        paired.groupby(condition, dropna=False)[["jaccard", "serp", "prag"]]
-        .mean()
-        .reset_index()
+        paired.groupby(condition, dropna=False)[["jaccard", "serp", "prag"]].mean().reset_index()
     )
     family = ["model", "domain", "phrasing_variant"]
     rows: list[dict[str, object]] = []
@@ -617,9 +645,7 @@ def relevance_table(queries: pd.DataFrame, *, k: int) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
-def per_query_item_outcomes(
-    queries: pd.DataFrame, catalog: list[Item], *, k: int
-) -> pd.DataFrame:
+def per_query_item_outcomes(queries: pd.DataFrame, catalog: list[Item], *, k: int) -> pd.DataFrame:
     """Derive persona-level item outcomes suitable for mixed-effects inference."""
     item_by_id = {item.item_id: item for item in catalog}
     rows: list[dict[str, object]] = []
@@ -642,10 +668,7 @@ def per_query_item_outcomes(
                 "query_arp": (
                     float(
                         np.mean(
-                            [
-                                item.interaction_count or 1 / item.popularity_rank
-                                for item in items
-                            ]
+                            [item.interaction_count or 1 / item.popularity_rank for item in items]
                         )
                     )
                     if items
@@ -897,9 +920,7 @@ def bootstrap_item_metric_deltas(
         }
 
     for keys, group in queries.groupby(family, dropna=False):
-        neutral = group.loc[
-            (group["trait"] == "neutral") & (group["trait_level"] == "neutral")
-        ]
+        neutral = group.loc[(group["trait"] == "neutral") & (group["trait_level"] == "neutral")]
         sensitive_conditions = group.loc[group["trait_level"] != "neutral"].groupby(
             ["trait", "trait_level"], dropna=False
         )

@@ -1,0 +1,58 @@
+{
+  "bound_artifacts": {
+    "amendment": {
+      "path": "docs/DESIGN_AMENDMENT_V2_100_A1.md",
+      "sha256": "562e6c29cf8ae0f27b19ad6c5b3e11ccd08a39b2875af551c403c13262107571"
+    },
+    "amendment_preflight": {
+      "path": "data/audits/preflight_v2_100_a1_llama_music.json",
+      "sha256": "f5f73dc9de4d095deb8e97b89edc95b53076ebaa304b9b16801ea8589a51d89b"
+    },
+    "parent_bundle": {
+      "path": "data/relevance_labels/persona_relevance_bundle_full_v2_100_frozen.json",
+      "sha256": "e478bbe4841ac57800df22a1b9d73a8841774f46becdb28173d23df92fa92710"
+    },
+    "parent_preflight": {
+      "path": "data/audits/preflight_v2_100.json",
+      "sha256": "b41eef137a8f1c6de6b1d487f4308a690f37979dbdf63d736b6d9eae03af920a"
+    },
+    "resume_preflight": {
+      "path": "data/audits/resume_preflight_v2_100.json",
+      "sha256": "b06fdb8b833715ce6f54dff051f52c0c0f4300c8c4c91f7143b429b267003cc2"
+    },
+    "sampling_plan": {
+      "path": "docs/SAMPLING_PLAN_V2_100.md",
+      "sha256": "d228263de4a7ece0be679573f29b99b96c2458a119a38a94e36bccdc7de63930"
+    }
+  },
+  "collection_protocol": "closed-catalog-v2-a1-retry",
+  "design_version": "persona-relevance-v2-100-a1",
+  "frozen_date": "2026-08-03",
+  "labels": {
+    "movie": {
+      "path": "data/relevance_labels/relevance_labels_movies_full_v2_100_a1.json",
+      "sha256": "30c072e49337ff9b4a46ec17e1fe737d4e2413da03178313312c9a26499d0efb"
+    },
+    "music": {
+      "path": "data/relevance_labels/relevance_labels_music_full_v2_100_a1.json",
+      "sha256": "d730aaf04e626bf6111d1d02e0692739ef415f8bfaadb0bba5437ab1b31c0845"
+    }
+  },
+  "parent_design_version": "persona-relevance-v2-100",
+  "phase_e": {
+    "five_unchanged_partitions_passed_parent_preflight": true,
+    "gate": 0.9,
+    "llama_music_amended_top_10_yield": 0.9285714285714286,
+    "passed": true,
+    "resume_passed": true
+  },
+  "retry_rule": {
+    "maximum_retries": 1,
+    "preserve_all_attempts": true,
+    "selected_attempt": "second attempt whenever triggered",
+    "temperature": 0.0,
+    "trigger": "fewer than 10 provider-free grounded items"
+  },
+  "schema_version": 2,
+  "status": "frozen"
+}

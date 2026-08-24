@@ -5,8 +5,7 @@ type: software
 version: 0.1.0
 date-released: 2026-07-31
 license: MIT
-repository-code: "REPLACE_WITH_ARCHIVAL_REPOSITORY_URL"
+repository-code: "https://github.com/YashwanthHudumula/LLM-recommendation-system"
 abstract: >-
   Reproducible inference-only audit of aggregate item exposure disparities induced by
   personality-conditioned prompting in large-language-model recommender systems.
-
