@@ -21,3 +21,4 @@ outputs/manuscript_assets/*
 wandb/
 *.parquet
 Blind Wording Audit — Form Content (Responses) (1).xlsx
+preservation/generated/
