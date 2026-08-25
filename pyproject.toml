@@ -12,6 +12,7 @@ license = { text = "MIT" }
 authors = [{ name = "Research project contributors" }]
 dependencies = [
   "httpx==0.28.1",
+  "matplotlib==3.10.5",
   "numpy==2.3.2",
   "pandas==2.3.1",
   "pyarrow==21.0.0",
@@ -42,6 +43,7 @@ recllm-opportunity-analyze = "recllm_fairness.pipeline.run_opportunity_analysis:
 recllm-mitigate = "recllm_fairness.pipeline.run_mitigation:app"
 recllm-build-labels = "recllm_fairness.pipeline.build_relevance_labels:app"
 recllm-check-ollama = "recllm_fairness.pipeline.check_ollama:app"
+recllm-build-manuscript-assets = "recllm_fairness.pipeline.build_manuscript_assets:app"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/recllm_fairness"]

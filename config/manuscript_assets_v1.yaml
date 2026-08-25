@@ -1,0 +1,34 @@
+version: manuscript-assets-v1
+status: frozen-before-render
+frozen_on: 2026-08-25
+source_audits:
+  confirmatory_v2:
+    path: data/audits/confirmatory_analysis_v2_reproducibility.json
+    sha256: b7193059e3c3c7b200863d5a2f084b3b46748a62a8cb36f154e3ae22ad3e65da
+  opportunity_v3:
+    path: data/audits/opportunity_analysis_v3_reproducibility.json
+    sha256: 2d43b34f566d68432510e959e49d6589b5378dc96d84f91839b13640735570bc
+output_root: outputs/manuscript_assets/version=manuscript-assets-v1
+formats:
+  vector: [pdf, svg]
+  raster: png
+  raster_dpi: 400
+style:
+  base_font_pt: 9
+  family: DejaVu Sans
+  colorblind_safe: true
+figures:
+  - figure_1_relevance_opportunity_tradeoff
+  - figure_2_opportunity_delta_forest
+  - figure_3_rq3_scenario_composition
+  - figure_4_raw_adjusted_concordance
+  - figure_s1_sensitivity_concordance
+tables:
+  - table_1_study_design
+  - table_2_primary_model_summary
+  - table_3_opportunity_delta_summary
+  - table_4_rq3_scenarios
+  - table_5_strongest_opportunity_effects
+interpretation: >-
+  Assets are descriptive and inferential summaries of frozen v2/v3 evidence. No manual value
+  editing is permitted after generation; corrections require a new asset version.

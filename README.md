@@ -4,8 +4,9 @@
 three local model snapshots, two domains, 100 personas per domain, and three repeats. The frozen
 provider-free primary analysis, both registered sensitivity views, and persona-clustered robust
 fit diagnostics are complete and checksummed. The within-candidate-opportunity sensitivity is
-also complete across all six domain/views. Final figures, the manuscript, bibliography
-verification, and external archival deposition remain pending before journal submission.
+also complete across all six domain/views. Five manuscript figure sets and five tables are now
+frozen, visually verified, and reproducible byte-for-byte. Manuscript text, bibliography
+verification, journal formatting, and external archival deposition remain pending.
 
 This repository implements the study **Who Gets Seen? Auditing Item-Side Exposure
 Disparities Induced by Personality-Conditioned Prompting in LLM-Based Recommender
@@ -82,6 +83,9 @@ uv run recllm-opportunity-analyze `
   --config-override config/full_run_v2_100_a1.yaml `
   --analysis-version confirmatory-analysis-v3-opportunity `
   --bootstrap-resamples 2000
+
+# Build the write-once, hash-verified publication asset package
+uv run recllm-build-manuscript-assets
 ```
 
 See `data/DATA_SOURCES.md` before downloading data, and `progress.md` for implementation
@@ -95,6 +99,8 @@ The completed clean-environment replay and sensitivity gate are documented in
 [documentation/14_REPRODUCIBILITY_GATE_AND_SENSITIVITY_V2.md](documentation/14_REPRODUCIBILITY_GATE_AND_SENSITIVITY_V2.md).
 The opportunity-adjusted sensitivity and its results are documented in
 [documentation/15_WITHIN_OPPORTUNITY_SENSITIVITY_V3.md](documentation/15_WITHIN_OPPORTUNITY_SENSITIVITY_V3.md).
+The frozen publication figures/tables and integrity checks are documented in
+[documentation/16_MANUSCRIPT_ASSET_FREEZE_V1.md](documentation/16_MANUSCRIPT_ASSET_FREEZE_V1.md).
 
 The six-persona v1 pilot and 100-persona A1 confirmatory designs are frozen. Collection verifies
 the frozen bundle on disk and refuses incompatible or unfrozen designs before loading a model or

@@ -84,6 +84,8 @@ Future Llama and Gemma manifests will appear under the same versioned hierarchy 
 | Parsing/grounding | `src/recllm_fairness/parsing` |
 | Immutable schema and manifests | `src/recllm_fairness/storage` |
 | Collection/analysis orchestration | `src/recllm_fairness/pipeline` |
+| Manuscript asset specification | `config/manuscript_assets_v1.yaml` |
+| Manuscript asset audit | `data/audits/manuscript_assets_v1_reproducibility.json` |
 | User/item/relevance metrics | `src/recllm_fairness/metrics` |
 | Bootstrap/mixed models/correlation | `src/recllm_fairness/stats` |
 | Regression tests | `tests` |

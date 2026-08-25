@@ -32,6 +32,8 @@ individual recommendation lists, aggregate item exposure, and relevance.
 8. [Within-candidate-opportunity sensitivity](15_WITHIN_OPPORTUNITY_SENSITIVITY_V3.md) defines
    the eligibility-adjusted estimands, validates exact reconstruction, reports paired-bootstrap
    results and robustness, and records the checksummed v3 evidence package.
+9. [Manuscript asset freeze v1](16_MANUSCRIPT_ASSET_FREEZE_V1.md) records the deterministic
+   five-figure/five-table package, visual QA, byte-identical rerender, and checksum inventory.
 
 ## Current status snapshot
 
@@ -44,16 +46,17 @@ Snapshot date: **2026-08-25**. The confirmatory design is
 - Registered exact-10-grounded and exclude-flagged-record sensitivities are complete.
 - All six analysis packages have persona-clustered robust fit diagnostics and SHA-256 inventories.
 - Within-opportunity primary, exact-10, and unflagged analyses are complete in both domains.
-- Final figures, manuscript text, bibliography verification, and external DOI deposition remain.
+- Five figure sets and five manuscript tables are frozen and independently checksummed.
+- Manuscript text, bibliography verification, journal formatting, and external DOI deposition remain.
 
 The authoritative evidence is each partition's `run_manifest.json`, its immutable Parquet record
 count, and `data/audits/confirmatory_analysis_v2_reproducibility.json` for the six analysis
-packages, plus `data/audits/opportunity_analysis_v3_reproducibility.json` for the v3 sensitivity.
+packages, `data/audits/opportunity_analysis_v3_reproducibility.json` for the v3 sensitivity,
+and `data/audits/manuscript_assets_v1_reproducibility.json` for the publication assets.
 
 ## Interpretation boundary
 
 Pilot outputs establish feasibility, grounding behavior, runtime, relevance controls, and
-analysis-pipeline behavior. They are not publishable confirmatory fairness findings because the
-pilot contained only six independent personas per domain. Confirmatory scientific conclusions
-must wait until all six 13,200-record partitions pass final integrity checks and the frozen
-analysis is run.
+analysis-pipeline behavior. They are not confirmatory fairness findings because the pilot used
+only six independent personas per domain. Scientific conclusions now come from the completed
+79,200-record confirmatory collection and its frozen v2/v3 analyses.

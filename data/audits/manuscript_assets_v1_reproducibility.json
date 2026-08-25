@@ -1,0 +1,157 @@
+{
+  "asset_root": "outputs/manuscript_assets/version=manuscript-assets-v1",
+  "asset_version": "manuscript-assets-v1",
+  "base_commit": "2d3f184d80a2f6ffa4da1beee36d273a1335907b",
+  "classification": "frozen manuscript figures and tables",
+  "figure_files": 15,
+  "figure_sets": 5,
+  "inventory": [
+    {
+      "path": "outputs/manuscript_assets/version=manuscript-assets-v1/figures/figure_1_relevance_opportunity_tradeoff.pdf",
+      "sha256": "2187ee5ca1a32e872ece0bd1d5455be966a6f21624d1c7e54d9b0e3a591f0010",
+      "size_bytes": 29750
+    },
+    {
+      "path": "outputs/manuscript_assets/version=manuscript-assets-v1/figures/figure_1_relevance_opportunity_tradeoff.png",
+      "sha256": "af4abfa28b43dfbf6eb74c6b25bad0c58cd28a8933b1499c91c5ba0cf7ede8c6",
+      "size_bytes": 225075
+    },
+    {
+      "path": "outputs/manuscript_assets/version=manuscript-assets-v1/figures/figure_1_relevance_opportunity_tradeoff.svg",
+      "sha256": "e36e424f247cf83a6b557c855dbe56f6312674fd7bf72cba80c5d9cb00c04685",
+      "size_bytes": 102457
+    },
+    {
+      "path": "outputs/manuscript_assets/version=manuscript-assets-v1/figures/figure_2_opportunity_delta_forest.pdf",
+      "sha256": "7f0c941646f43502d98a0281f8d9f13d632e29d8c3d9c36c410f382802e34782",
+      "size_bytes": 29847
+    },
+    {
+      "path": "outputs/manuscript_assets/version=manuscript-assets-v1/figures/figure_2_opportunity_delta_forest.png",
+      "sha256": "7e277cb78b73c695ab5b2b4c71d445e3929c51a1e246050bfefcc281eac91a25",
+      "size_bytes": 248361
+    },
+    {
+      "path": "outputs/manuscript_assets/version=manuscript-assets-v1/figures/figure_2_opportunity_delta_forest.svg",
+      "sha256": "e21b5dcfad3c9f0fac8e69475bb2e5df4d49766a18f069414be76c78a33307cc",
+      "size_bytes": 116422
+    },
+    {
+      "path": "outputs/manuscript_assets/version=manuscript-assets-v1/figures/figure_3_rq3_scenario_composition.pdf",
+      "sha256": "dcf449c54d6aa0c85b5d80716021b7d2e7fd790650e789efc3b1d28541b62d5a",
+      "size_bytes": 23186
+    },
+    {
+      "path": "outputs/manuscript_assets/version=manuscript-assets-v1/figures/figure_3_rq3_scenario_composition.png",
+      "sha256": "1828feb3eee537e2b75380f6491629482a05f96551fbd2bc1bdbf399ae492e59",
+      "size_bytes": 127312
+    },
+    {
+      "path": "outputs/manuscript_assets/version=manuscript-assets-v1/figures/figure_3_rq3_scenario_composition.svg",
+      "sha256": "76e8d7e2299f790f712d1d69c39282279d31079fff9501ffc808e9816f761f9f",
+      "size_bytes": 58749
+    },
+    {
+      "path": "outputs/manuscript_assets/version=manuscript-assets-v1/figures/figure_4_raw_adjusted_concordance.pdf",
+      "sha256": "54c58e560a0340a8b4b235cbd7523e2489527cfeb28b0478de3bc4cede7442a1",
+      "size_bytes": 38808
+    },
+    {
+      "path": "outputs/manuscript_assets/version=manuscript-assets-v1/figures/figure_4_raw_adjusted_concordance.png",
+      "sha256": "73b564fdfbc8e2f9a33fdfa90c0a6f01c3dc18ca3f20721c66fe1e886378777b",
+      "size_bytes": 611721
+    },
+    {
+      "path": "outputs/manuscript_assets/version=manuscript-assets-v1/figures/figure_4_raw_adjusted_concordance.svg",
+      "sha256": "3a96388296f3f8e6f45f3a49503d4773b6293863e2257722a4d880a93f81f4fd",
+      "size_bytes": 244021
+    },
+    {
+      "path": "outputs/manuscript_assets/version=manuscript-assets-v1/figures/figure_s1_sensitivity_concordance.pdf",
+      "sha256": "93abe3293a26cbf61081d48e0c46cbc6bd05dc85faab0d0cd74bb9234b7f54af",
+      "size_bytes": 26099
+    },
+    {
+      "path": "outputs/manuscript_assets/version=manuscript-assets-v1/figures/figure_s1_sensitivity_concordance.png",
+      "sha256": "d08cd63943c40e75049f5b85989820644de42442eceafe16332408f5568c36a2",
+      "size_bytes": 235974
+    },
+    {
+      "path": "outputs/manuscript_assets/version=manuscript-assets-v1/figures/figure_s1_sensitivity_concordance.svg",
+      "sha256": "c9986e46c5edebd7b87eeb6a813eff6d7759160064e40cfd09ba832cc8ccd0c7",
+      "size_bytes": 71968
+    },
+    {
+      "path": "outputs/manuscript_assets/version=manuscript-assets-v1/tables/table_1_study_design.csv",
+      "sha256": "06877481edc01bbce2050c29c09697d77e3f4e8173ab9dfff9bbf0667a495958",
+      "size_bytes": 279
+    },
+    {
+      "path": "outputs/manuscript_assets/version=manuscript-assets-v1/tables/table_1_study_design.tex",
+      "sha256": "d4c10c17dd86c9d831f7b118da0088f437887b4627c4320515128f05b05f99e9",
+      "size_bytes": 433
+    },
+    {
+      "path": "outputs/manuscript_assets/version=manuscript-assets-v1/tables/table_2_primary_model_summary.csv",
+      "sha256": "48613524fdb9419b9179ce520e0534a5e90941a8fc8b5a332f54cfdd61454087",
+      "size_bytes": 878
+    },
+    {
+      "path": "outputs/manuscript_assets/version=manuscript-assets-v1/tables/table_2_primary_model_summary.tex",
+      "sha256": "05570813eda91db655e9deef0da86591b5bdb83bcb410e311fca3474d13e4acf",
+      "size_bytes": 1029
+    },
+    {
+      "path": "outputs/manuscript_assets/version=manuscript-assets-v1/tables/table_3_opportunity_delta_summary.csv",
+      "sha256": "f3c5865b7795198f6987c0c07fc1a00bcc011f4d399bf16cdc31a9eecc5de626",
+      "size_bytes": 1070
+    },
+    {
+      "path": "outputs/manuscript_assets/version=manuscript-assets-v1/tables/table_3_opportunity_delta_summary.tex",
+      "sha256": "a8ed7663e961471aed10b3e9e65cb7fc167275d72ffb94c05c17aefef9e811ff",
+      "size_bytes": 1289
+    },
+    {
+      "path": "outputs/manuscript_assets/version=manuscript-assets-v1/tables/table_4_rq3_scenarios.csv",
+      "sha256": "389acc19cbb7ab01819320de8a998981d3e79d9f8a351a9536830c59d98b9251",
+      "size_bytes": 274
+    },
+    {
+      "path": "outputs/manuscript_assets/version=manuscript-assets-v1/tables/table_4_rq3_scenarios.tex",
+      "sha256": "d7094ee9769d8e6b3e26f6df39e73a79d0c00be6004774a89e5d3194968c0f5c",
+      "size_bytes": 462
+    },
+    {
+      "path": "outputs/manuscript_assets/version=manuscript-assets-v1/tables/table_5_strongest_opportunity_effects.csv",
+      "sha256": "c4e74a70219120dd80c2ca24f3fa92c32af43196333719a5d8581eb8d7d2a230",
+      "size_bytes": 1259
+    },
+    {
+      "path": "outputs/manuscript_assets/version=manuscript-assets-v1/tables/table_5_strongest_opportunity_effects.tex",
+      "sha256": "4819dd78610e03255749b06e8212df969627ba69876d9a766080971bff86a51d",
+      "size_bytes": 1549
+    },
+    {
+      "path": "outputs/manuscript_assets/version=manuscript-assets-v1/tables/TABLE_NOTES.md",
+      "sha256": "96a141c8b3d20ef22c908af06c3e9265ff685c9a21829605affa5735afe8666f",
+      "size_bytes": 343
+    }
+  ],
+  "manifest_path": "outputs/manuscript_assets/version=manuscript-assets-v1/manifest.json",
+  "manifest_sha256": "741e73b19e64f6311e497feafaee8e2d5eb9f0100caaa296a9d23d31f7cdb20c",
+  "schema_version": 1,
+  "source_audits": {
+    "confirmatory_v2": {
+      "path": "data/audits/confirmatory_analysis_v2_reproducibility.json",
+      "sha256": "b7193059e3c3c7b200863d5a2f084b3b46748a62a8cb36f154e3ae22ad3e65da"
+    },
+    "opportunity_v3": {
+      "path": "data/audits/opportunity_analysis_v3_reproducibility.json",
+      "sha256": "2d43b34f566d68432510e959e49d6589b5378dc96d84f91839b13640735570bc"
+    }
+  },
+  "spec_path": "config/manuscript_assets_v1.yaml",
+  "spec_sha256": "135ed2f3f49247a8232f6899b19770379f55824234900249cb06260729fa12da",
+  "table_files": 10,
+  "table_sets": 5
+}

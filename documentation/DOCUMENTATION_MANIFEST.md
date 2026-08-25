@@ -31,3 +31,11 @@ append a new manifest entry rather than erasing this historical checksum.
 | `README.md` | 59 | `f44054951895ba228d6b77c002ae4e6c66c958fe985f26cfc305c715d0081708` |
 | `15_WITHIN_OPPORTUNITY_SENSITIVITY_V3.md` | 186 | `1b648a5a21e6df332164ccf190fd7b9108fc2c8b195b1fcd1b46675421fa7716` |
 | `../data/audits/opportunity_analysis_v3_reproducibility.json` | 682 | `2d43b34f566d68432510e959e49d6589b5378dc96d84f91839b13640735570bc` |
+
+## 2026-08-25 manuscript-asset addendum
+
+| File | Lines | SHA256 |
+|---|---:|---|
+| `../README.md` | 113 | `18d08bf9bc7bb6fba7f4c6fdee0b5276181a84944ae421cb198f77701fb0eda1` |
+| `16_MANUSCRIPT_ASSET_FREEZE_V1.md` | 110 | `a1f8edd2420e39549dbfb9d7b4277c8408f37465cd4e6f4811a698542d810a09` |
+| `../data/audits/manuscript_assets_v1_reproducibility.json` | 157 | `3cc96ac5664c8b230b60d4eccad169282e049d1b7f6e5088e1ceb4b3e0e479bc` |

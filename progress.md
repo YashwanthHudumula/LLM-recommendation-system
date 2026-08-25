@@ -1,6 +1,16 @@
 # Project progress
 
-Last updated: 2026-08-03
+Last updated: 2026-08-25
+
+## Publication asset gate (current)
+
+- [x] Complete all six confirmatory v2 primary/sensitivity packages and robust fit diagnostics.
+- [x] Complete opportunity-adjusted v3 primary/exact-10/unflagged analyses in both domains.
+- [x] Freeze five publication figure sets and five tables in PDF/SVG/PNG and CSV/LaTeX.
+- [x] Visually inspect all figures and verify a 26/26 byte-identical deterministic rerender.
+- [x] Create an independent 26-file SHA-256 manuscript-asset audit.
+- [ ] Draft the manuscript against the frozen assets and verify every bibliography DOI.
+- [ ] Select the target journal, apply its template/checklists, and deposit the archive.
 
 ## Engineering status
 
@@ -34,10 +44,10 @@ Last updated: 2026-08-03
 
 ## Verification status
 
-- [x] Dependency lock is current: 90 resolved packages.
-- [x] Unit/integration suite: 41 tests passed.
+- [x] Dependency lock is current: 96 resolved packages.
+- [x] Unit/integration suite: 56 tests passed.
 - [x] Lint: zero findings.
-- [x] Strict typing: zero issues across 56 source files.
+- [x] Strict typing: zero issues across 62 source files.
 - [x] No-cost end-to-end pilot: 120 query records and 12 derived analysis tables.
 - [x] Resumability replay: zero duplicate calls and exactly 120 records retained.
 - [x] Standalone analysis replay: completed from Parquet without importing/calling a provider.
@@ -71,9 +81,9 @@ Last updated: 2026-08-03
 - [ ] Reopen the Codex workspace from `F:\LLM recommend` on the RTX workstation and edit only
   that canonical copy from then on.
 - [ ] Run full collection only after every matching pilot passes the hard budget gate.
-- [ ] Perform confirmatory analysis, diagnose model convergence, and freeze result tables.
+- [x] Perform confirmatory analysis, diagnose model convergence, and freeze result tables.
 - [ ] Run mitigation only after RQ1-RQ4 results are reviewed.
-- [ ] Add journal-specific manuscript, figures, author metadata, archival repository URL/DOI,
+- [ ] Add journal-specific manuscript, author metadata, archival repository URL/DOI,
   and venue checklist before submission.
 
 ## Decisions and known limitations
