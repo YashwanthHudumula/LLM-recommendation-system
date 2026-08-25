@@ -7,6 +7,7 @@ import hashlib
 import json
 import logging
 import random
+import re
 import time
 import warnings
 from collections import Counter, defaultdict
@@ -32,6 +33,10 @@ from recllm_fairness.metrics.item_side import (
     hhi,
     long_tail_coverage,
     mgu,
+    opportunity_adjusted_gini,
+    opportunity_adjusted_hhi,
+    opportunity_adjusted_normalized_hhi,
+    within_opportunity_coverage,
 )
 from recllm_fairness.metrics.relevance import ndcg_at_k, precision_at_k
 from recllm_fairness.metrics.user_side import paired_similarities
@@ -57,6 +62,16 @@ from recllm_fairness.utils.costs import BudgetGuard, Price
 LOGGER = logging.getLogger(__name__)
 
 AnalysisView = Literal["primary", "exact-10-grounded", "exclude-flagged-records"]
+
+OPPORTUNITY_METRIC_COLUMNS = [
+    "opportunity_gini",
+    "opportunity_hhi",
+    "opportunity_normalized_hhi",
+    "opportunity_coverage",
+    "opportunity_long_tail_coverage",
+]
+
+_QUOTED_ITEM_ID = re.compile(r"'([^']*)'")
 
 
 @dataclass(frozen=True)
@@ -476,6 +491,135 @@ def compute_condition_item_metrics(
             }
         )
     return pd.DataFrame(rows)
+
+
+def compute_condition_opportunity_metrics(
+    queries: pd.DataFrame, catalog: list[Item], *, k: int
+) -> pd.DataFrame:
+    """Measure exposure concentration after conditioning on item eligibility per query."""
+    condition_columns = ["model", "domain", "trait", "trait_level", "phrasing_variant"]
+    item_by_id = {item.item_id: item for item in catalog}
+    rows: list[dict[str, object]] = []
+    for condition, group in queries.groupby(condition_columns, dropna=False):
+        opportunity_counts: Counter[str] = Counter()
+        exposure_counts_by_item: Counter[str] = Counter()
+        for record in group.to_dict(orient="records"):
+            candidates = [str(item_id) for item_id in record["candidate_item_ids"]]
+            if len(candidates) != len(set(candidates)):
+                raise ValueError(
+                    f"Candidate pool contains duplicate items for {record['query_id']}"
+                )
+            recommended = [str(item_id) for item_id in record["matched_item_ids"][:k]]
+            if not set(recommended).issubset(candidates):
+                raise ValueError("Within-opportunity analysis requires grounded recommendations")
+            opportunity_counts.update(candidates)
+            exposure_counts_by_item.update(recommended)
+        item_ids = sorted(opportunity_counts)
+        missing = set(item_ids) - set(item_by_id)
+        if missing:
+            raise KeyError(f"Candidate items missing from catalog: {sorted(missing)[:5]}")
+        exposure_values = np.asarray(
+            [exposure_counts_by_item[item_id] for item_id in item_ids], dtype=float
+        )
+        opportunity_values = np.asarray(
+            [opportunity_counts[item_id] for item_id in item_ids], dtype=float
+        )
+        tail_mask = np.asarray(
+            [item_by_id[item_id].popularity_tier == "tail" for item_id in item_ids],
+            dtype=bool,
+        )
+        tail_coverage = (
+            within_opportunity_coverage(
+                exposure_values[tail_mask].tolist(), opportunity_values[tail_mask].tolist()
+            )
+            if tail_mask.any()
+            else np.nan
+        )
+        rows.append(
+            {
+                **dict(zip(condition_columns, condition, strict=True)),
+                "opportunity_gini": opportunity_adjusted_gini(
+                    exposure_values.tolist(), opportunity_values.tolist()
+                ),
+                "opportunity_hhi": opportunity_adjusted_hhi(
+                    exposure_values.tolist(), opportunity_values.tolist()
+                ),
+                "opportunity_normalized_hhi": opportunity_adjusted_normalized_hhi(
+                    exposure_values.tolist(), opportunity_values.tolist()
+                ),
+                "opportunity_coverage": within_opportunity_coverage(
+                    exposure_values.tolist(), opportunity_values.tolist()
+                ),
+                "opportunity_long_tail_coverage": tail_coverage,
+                "eligible_item_count": len(item_ids),
+                "candidate_opportunities": float(opportunity_values.sum()),
+                "total_exposure": float(exposure_values.sum()),
+                "overall_selection_rate": float(exposure_values.sum() / opportunity_values.sum()),
+            }
+        )
+    return pd.DataFrame(rows)
+
+
+def opportunity_metric_deltas(opportunity_metrics: pd.DataFrame) -> pd.DataFrame:
+    """Compute within-opportunity sensitive-minus-neutral condition differences."""
+    family = ["model", "domain", "phrasing_variant"]
+    neutral = opportunity_metrics.loc[
+        (opportunity_metrics["trait"] == "neutral")
+        & (opportunity_metrics["trait_level"] == "neutral"),
+        [*family, *OPPORTUNITY_METRIC_COLUMNS],
+    ].rename(columns={metric: f"neutral_{metric}" for metric in OPPORTUNITY_METRIC_COLUMNS})
+    sensitive = opportunity_metrics.loc[opportunity_metrics["trait_level"] != "neutral"].copy()
+    merged = sensitive.merge(neutral, on=family, how="left", validate="many_to_one")
+    for metric in OPPORTUNITY_METRIC_COLUMNS:
+        merged[f"delta_{metric}"] = merged[metric] - merged[f"neutral_{metric}"]
+    return merged
+
+
+def load_paired_analysis_queries(path: str | Path) -> pd.DataFrame:
+    """Reconstruct a complete selected query view from a frozen paired-analysis table."""
+    columns = [
+        "query_id",
+        "persona_id",
+        "model",
+        "domain",
+        "trait",
+        "trait_level",
+        "phrasing_variant",
+        "repeat_idx",
+        "candidate_item_ids",
+        "matched_item_ids",
+        "neutral_items",
+    ]
+    paired = pd.read_csv(path, usecols=columns, dtype=str, keep_default_na=False)
+    pair_keys = ["persona_id", "model", "domain", "phrasing_variant", "repeat_idx"]
+    for field in ("candidate_item_ids", "neutral_items"):
+        inconsistent = paired.groupby(pair_keys, dropna=False)[field].nunique().gt(1)
+        if inconsistent.any():
+            raise ValueError(f"Paired analysis has inconsistent {field} within neutral pair")
+
+    def item_ids(value: str) -> list[str]:
+        return _QUOTED_ITEM_ID.findall(value)
+
+    sensitive = paired.drop(columns="neutral_items").copy()
+    sensitive["candidate_item_ids"] = sensitive["candidate_item_ids"].map(item_ids)
+    sensitive["matched_item_ids"] = sensitive["matched_item_ids"].map(item_ids)
+
+    neutral = paired.drop_duplicates(pair_keys).copy()
+    neutral["query_id"] = (
+        neutral[pair_keys]
+        .agg("|".join, axis=1)
+        .map(lambda value: hashlib.sha256(f"neutral|{value}".encode()).hexdigest()[:24])
+    )
+    neutral["trait"] = "neutral"
+    neutral["trait_level"] = "neutral"
+    neutral["candidate_item_ids"] = neutral["candidate_item_ids"].map(item_ids)
+    neutral["matched_item_ids"] = neutral["neutral_items"].map(item_ids)
+    neutral = neutral.drop(columns="neutral_items")
+    reconstructed = pd.concat([sensitive, neutral], ignore_index=True)
+    reconstructed["repeat_idx"] = reconstructed["repeat_idx"].astype(int)
+    if reconstructed["query_id"].duplicated().any():
+        raise ValueError("Reconstructed paired query view contains duplicate query IDs")
+    return reconstructed
 
 
 def item_metric_deltas(item_metrics: pd.DataFrame) -> pd.DataFrame:
@@ -1007,6 +1151,214 @@ def bootstrap_item_metric_deltas(
     return pd.DataFrame(rows)
 
 
+def _persona_opportunity_matrices(
+    frame: pd.DataFrame,
+    personas: list[str],
+    item_index: dict[str, int],
+    *,
+    k: int,
+) -> tuple[np.ndarray, np.ndarray]:
+    persona_index = {persona: index for index, persona in enumerate(personas)}
+    exposure = np.zeros((len(personas), len(item_index)), dtype=float)
+    opportunity = np.zeros_like(exposure)
+    for record in frame.to_dict(orient="records"):
+        persona = str(record["persona_id"])
+        if persona not in persona_index:
+            continue
+        row = persona_index[persona]
+        candidates = [str(item_id) for item_id in record["candidate_item_ids"]]
+        recommended = [str(item_id) for item_id in record["matched_item_ids"][:k]]
+        if not set(recommended).issubset(candidates):
+            raise ValueError("Within-opportunity analysis requires grounded recommendations")
+        for item_id in candidates:
+            opportunity[row, item_index[item_id]] += 1
+        for item_id in recommended:
+            exposure[row, item_index[item_id]] += 1
+    return exposure, opportunity
+
+
+def _opportunity_metrics_from_arrays(
+    exposure: np.ndarray, opportunity: np.ndarray, tail_mask: np.ndarray
+) -> dict[str, float]:
+    eligible = opportunity > 0
+    if not eligible.any():
+        raise ValueError("Bootstrap replicate has no candidate opportunity")
+    tail_eligible = eligible & tail_mask
+    return {
+        "opportunity_gini": opportunity_adjusted_gini(
+            exposure[eligible].tolist(), opportunity[eligible].tolist()
+        ),
+        "opportunity_hhi": opportunity_adjusted_hhi(
+            exposure[eligible].tolist(), opportunity[eligible].tolist()
+        ),
+        "opportunity_normalized_hhi": opportunity_adjusted_normalized_hhi(
+            exposure[eligible].tolist(), opportunity[eligible].tolist()
+        ),
+        "opportunity_coverage": within_opportunity_coverage(
+            exposure[eligible].tolist(), opportunity[eligible].tolist()
+        ),
+        "opportunity_long_tail_coverage": (
+            within_opportunity_coverage(
+                exposure[tail_eligible].tolist(), opportunity[tail_eligible].tolist()
+            )
+            if tail_eligible.any()
+            else np.nan
+        ),
+    }
+
+
+def _opportunity_metrics_from_matrix(
+    exposure: np.ndarray, opportunity: np.ndarray, tail_mask: np.ndarray
+) -> dict[str, np.ndarray]:
+    """Vectorized counterpart used only to accelerate persona-bootstrap replicates."""
+    eligible = opportunity > 0
+    eligible_count = eligible.sum(axis=1)
+    if np.any(eligible_count == 0):
+        raise ValueError("Bootstrap replicate has no candidate opportunity")
+    rates = np.zeros_like(exposure, dtype=float)
+    np.divide(exposure, opportunity, out=rates, where=eligible)
+    rate_total = rates.sum(axis=1)
+    raw_hhi = np.divide(
+        np.square(rates).sum(axis=1),
+        np.square(rate_total),
+        out=np.zeros_like(rate_total),
+        where=rate_total > 0,
+    )
+    normalized = np.zeros_like(raw_hhi)
+    multiple = eligible_count > 1
+    normalized[multiple] = (raw_hhi[multiple] - 1 / eligible_count[multiple]) / (
+        1 - 1 / eligible_count[multiple]
+    )
+    normalized[~multiple & (rate_total > 0)] = 1.0
+
+    sortable = np.where(eligible, rates, np.inf)
+    sorted_rates = np.sort(sortable, axis=1)
+    sorted_rates[~np.isfinite(sorted_rates)] = 0.0
+    positions = np.arange(1, rates.shape[1] + 1, dtype=float)
+    valid_position = positions[None, :] <= eligible_count[:, None]
+    weighted_sum = (sorted_rates * positions[None, :] * valid_position).sum(axis=1)
+    gini = (
+        np.divide(
+            2 * weighted_sum,
+            eligible_count * rate_total,
+            out=np.zeros_like(rate_total),
+            where=rate_total > 0,
+        )
+        - (eligible_count + 1) / eligible_count
+    )
+    gini[rate_total == 0] = 0.0
+
+    tail_eligible = eligible & tail_mask[None, :]
+    tail_denominator = tail_eligible.sum(axis=1)
+    tail_coverage = np.divide(
+        ((exposure > 0) & tail_eligible).sum(axis=1),
+        tail_denominator,
+        out=np.full(exposure.shape[0], np.nan, dtype=float),
+        where=tail_denominator > 0,
+    )
+    return {
+        "opportunity_gini": gini,
+        "opportunity_hhi": raw_hhi,
+        "opportunity_normalized_hhi": normalized,
+        "opportunity_coverage": ((exposure > 0) & eligible).sum(axis=1) / eligible_count,
+        "opportunity_long_tail_coverage": tail_coverage,
+    }
+
+
+def bootstrap_opportunity_metric_deltas(
+    queries: pd.DataFrame,
+    catalog: list[Item],
+    *,
+    k: int,
+    n_resamples: int,
+    confidence_level: float,
+    seed: int,
+) -> pd.DataFrame:
+    """Paired persona-bootstrap CIs for opportunity-adjusted sensitive-minus-neutral shifts."""
+    if n_resamples < 1:
+        raise ValueError("Opportunity bootstrap needs at least one resample")
+    family = ["model", "domain", "phrasing_variant"]
+    pair_keys = ["persona_id", "repeat_idx"]
+    item_by_id = {item.item_id: item for item in catalog}
+    alpha = 1 - confidence_level
+    rng = np.random.default_rng(seed)
+    rows: list[dict[str, object]] = []
+    for keys, group in queries.groupby(family, dropna=False):
+        neutral = group.loc[(group["trait"] == "neutral") & (group["trait_level"] == "neutral")]
+        sensitive_conditions = group.loc[group["trait_level"] != "neutral"].groupby(
+            ["trait", "trait_level"], dropna=False
+        )
+        for (trait, level), sensitive in sensitive_conditions:
+            pairs = sensitive[pair_keys].drop_duplicates()
+            paired_neutral = neutral.merge(
+                pairs,
+                on=pair_keys,
+                how="inner",
+                validate="one_to_one",
+            )
+            personas = sorted(
+                set(paired_neutral["persona_id"].astype(str))
+                & set(sensitive["persona_id"].astype(str))
+            )
+            if not personas:
+                continue
+            item_ids = sorted(
+                {
+                    str(item_id)
+                    for frame in (paired_neutral, sensitive)
+                    for values in frame["candidate_item_ids"]
+                    for item_id in values
+                }
+            )
+            missing = set(item_ids) - set(item_by_id)
+            if missing:
+                raise KeyError(f"Candidate items missing from catalog: {sorted(missing)[:5]}")
+            item_index = {item_id: index for index, item_id in enumerate(item_ids)}
+            tail_mask = np.asarray(
+                [item_by_id[item_id].popularity_tier == "tail" for item_id in item_ids],
+                dtype=bool,
+            )
+            baseline = _persona_opportunity_matrices(paired_neutral, personas, item_index, k=k)
+            conditioned = _persona_opportunity_matrices(sensitive, personas, item_index, k=k)
+            replicates: dict[str, list[float]] = {
+                metric: [] for metric in OPPORTUNITY_METRIC_COLUMNS
+            }
+            batch_size = min(100, n_resamples)
+            probabilities = np.full(len(personas), 1 / len(personas), dtype=float)
+            for start in range(0, n_resamples, batch_size):
+                size = min(batch_size, n_resamples - start)
+                weights = rng.multinomial(len(personas), probabilities, size=size)
+                baseline_metrics = _opportunity_metrics_from_matrix(
+                    weights @ baseline[0], weights @ baseline[1], tail_mask
+                )
+                conditioned_metrics = _opportunity_metrics_from_matrix(
+                    weights @ conditioned[0], weights @ conditioned[1], tail_mask
+                )
+                for metric in OPPORTUNITY_METRIC_COLUMNS:
+                    replicates[metric].extend(
+                        (conditioned_metrics[metric] - baseline_metrics[metric]).tolist()
+                    )
+            prefix = {
+                **dict(zip(family, keys, strict=True)),
+                "trait": trait,
+                "trait_level": level,
+            }
+            for metric, values in replicates.items():
+                array = np.asarray(values, dtype=float)
+                lower, upper = np.nanquantile(array, [alpha / 2, 1 - alpha / 2])
+                rows.append(
+                    {
+                        **prefix,
+                        "metric": metric,
+                        "delta_ci_lower": float(lower),
+                        "delta_ci_upper": float(upper),
+                        "confidence_level": confidence_level,
+                        "n_resamples": n_resamples,
+                    }
+                )
+    return pd.DataFrame(rows)
+
+
 def write_analysis_outputs(
     queries: pd.DataFrame,
     catalog: list[Item],
@@ -1018,6 +1370,7 @@ def write_analysis_outputs(
     seed: int = 0,
     alpha: float = 0.05,
     rq3_minimum_effect: float = 0.20,
+    opportunity_bootstrap_resamples: int | None = None,
 ) -> dict[str, Path]:
     destination = Path(table_dir)
     destination.mkdir(parents=True, exist_ok=True)
@@ -1026,6 +1379,8 @@ def write_analysis_outputs(
     user_metrics = summarize_user_side(paired)
     item_metrics = compute_condition_item_metrics(queries, catalog, k=k)
     item_deltas = item_metric_deltas(item_metrics)
+    opportunity_metrics = compute_condition_opportunity_metrics(queries, catalog, k=k)
+    opportunity_deltas = opportunity_metric_deltas(opportunity_metrics)
     query_item_outcomes = per_query_item_outcomes(queries, catalog, k=k)
     tables = {
         "condition_diagnostics": condition_diagnostics(queries),
@@ -1035,6 +1390,8 @@ def write_analysis_outputs(
         "per_query_item_outcomes": query_item_outcomes,
         "item_side_metrics": item_metrics,
         "item_side_deltas": item_deltas,
+        "opportunity_adjusted_metrics": opportunity_metrics,
+        "opportunity_adjusted_deltas": opportunity_deltas,
         "group_exposure_diagnostics": group_exposure_diagnostics(queries, catalog, k=k),
         "item_side_bootstrap_cis": bootstrap_condition_item_metrics(
             queries,
@@ -1049,6 +1406,14 @@ def write_analysis_outputs(
             catalog,
             k=k,
             n_resamples=bootstrap_resamples,
+            confidence_level=confidence_level,
+            seed=seed,
+        ),
+        "opportunity_adjusted_delta_bootstrap_cis": bootstrap_opportunity_metric_deltas(
+            queries,
+            catalog,
+            k=k,
+            n_resamples=opportunity_bootstrap_resamples or bootstrap_resamples,
             confidence_level=confidence_level,
             seed=seed,
         ),

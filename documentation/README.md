@@ -29,6 +29,9 @@ individual recommendation lists, aggregate item exposure, and relevance.
    records the clean Python 3.12.5 replay, registered exact-10 and unflagged views, singular-fit
    diagnosis, persona-clustered robust estimates, concordance audit, and remaining publication
    gates.
+8. [Within-candidate-opportunity sensitivity](15_WITHIN_OPPORTUNITY_SENSITIVITY_V3.md) defines
+   the eligibility-adjusted estimands, validates exact reconstruction, reports paired-bootstrap
+   results and robustness, and records the checksummed v3 evidence package.
 
 ## Current status snapshot
 
@@ -40,11 +43,12 @@ Snapshot date: **2026-08-25**. The confirmatory design is
 - Clean-environment primary replays are complete for movie and music at 2,000 bootstrap resamples.
 - Registered exact-10-grounded and exclude-flagged-record sensitivities are complete.
 - All six analysis packages have persona-clustered robust fit diagnostics and SHA-256 inventories.
-- Final within-opportunity metrics, figures, manuscript text, and external DOI deposition remain.
+- Within-opportunity primary, exact-10, and unflagged analyses are complete in both domains.
+- Final figures, manuscript text, bibliography verification, and external DOI deposition remain.
 
 The authoritative evidence is each partition's `run_manifest.json`, its immutable Parquet record
 count, and `data/audits/confirmatory_analysis_v2_reproducibility.json` for the six analysis
-packages.
+packages, plus `data/audits/opportunity_analysis_v3_reproducibility.json` for the v3 sensitivity.
 
 ## Interpretation boundary
 

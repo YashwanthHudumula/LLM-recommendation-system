@@ -23,3 +23,11 @@ append a new manifest entry rather than erasing this historical checksum.
 | `README.md` | 55 | `7d0798a78d1e93ac54f81ffe0c1ce91aa9b6a40b7bb206df56b9e777b09a68bd` |
 | `14_REPRODUCIBILITY_GATE_AND_SENSITIVITY_V2.md` | 161 | `5fb85ee3fe40ad021c7a58083ce0179df44794059cb2f69cd21d4e1f84601036` |
 | `../data/audits/confirmatory_analysis_v2_reproducibility.json` | 1,089 | `b7193059e3c3c7b200863d5a2f084b3b46748a62a8cb36f154e3ae22ad3e65da` |
+
+## 2026-08-25 opportunity-sensitivity addendum
+
+| File | Lines | SHA256 |
+|---|---:|---|
+| `README.md` | 59 | `f44054951895ba228d6b77c002ae4e6c66c958fe985f26cfc305c715d0081708` |
+| `15_WITHIN_OPPORTUNITY_SENSITIVITY_V3.md` | 186 | `1b648a5a21e6df332164ccf190fd7b9108fc2c8b195b1fcd1b46675421fa7716` |
+| `../data/audits/opportunity_analysis_v3_reproducibility.json` | 682 | `2d43b34f566d68432510e959e49d6589b5378dc96d84f91839b13640735570bc` |

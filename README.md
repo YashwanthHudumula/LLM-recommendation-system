@@ -3,9 +3,9 @@
 **Current status:** confirmatory collection is complete with 79,200 immutable records across
 three local model snapshots, two domains, 100 personas per domain, and three repeats. The frozen
 provider-free primary analysis, both registered sensitivity views, and persona-clustered robust
-fit diagnostics are complete and checksummed. Within-opportunity sensitivity metrics, final
-figures, the manuscript, and external archival deposition remain pending before journal
-submission.
+fit diagnostics are complete and checksummed. The within-candidate-opportunity sensitivity is
+also complete across all six domain/views. Final figures, the manuscript, bibliography
+verification, and external archival deposition remain pending before journal submission.
 
 This repository implements the study **Who Gets Seen? Auditing Item-Side Exposure
 Disparities Induced by Personality-Conditioned Prompting in LLM-Based Recommender
@@ -74,6 +74,14 @@ uv run recllm-analyze --config-dir config `
 # Fit remediation over an existing analysis package
 uv run python -m recllm_fairness.pipeline.run_fit_diagnostics `
   outputs/tables/analysis/<analysis-package>
+
+# Opportunity-adjusted replay from a frozen paired-analysis package
+uv run recllm-opportunity-analyze `
+  outputs/tables/analysis/<analysis-package> `
+  --config-dir config `
+  --config-override config/full_run_v2_100_a1.yaml `
+  --analysis-version confirmatory-analysis-v3-opportunity `
+  --bootstrap-resamples 2000
 ```
 
 See `data/DATA_SOURCES.md` before downloading data, and `progress.md` for implementation
@@ -85,6 +93,8 @@ execution workflow, and publication gates are maintained in
 [documentation.md](documentation.md).
 The completed clean-environment replay and sensitivity gate are documented in
 [documentation/14_REPRODUCIBILITY_GATE_AND_SENSITIVITY_V2.md](documentation/14_REPRODUCIBILITY_GATE_AND_SENSITIVITY_V2.md).
+The opportunity-adjusted sensitivity and its results are documented in
+[documentation/15_WITHIN_OPPORTUNITY_SENSITIVITY_V3.md](documentation/15_WITHIN_OPPORTUNITY_SENSITIVITY_V3.md).
 
 The six-persona v1 pilot and 100-persona A1 confirmatory designs are frozen. Collection verifies
 the frozen bundle on disk and refuses incompatible or unfrozen designs before loading a model or

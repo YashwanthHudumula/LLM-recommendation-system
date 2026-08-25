@@ -63,3 +63,34 @@ def exposure_counts(
         .agg(exposure_count=("item_id", "size"), exposure=("exposure_weight", "sum"))
         .reset_index()
     )
+
+
+def candidate_opportunity_counts(
+    queries: pd.DataFrame,
+    *,
+    condition_columns: Sequence[str] = DEFAULT_CONDITION_COLUMNS,
+) -> pd.DataFrame:
+    """Count the queries in which each item was eligible within each condition."""
+    required = {"query_id", "persona_id", "candidate_item_ids", *condition_columns}
+    missing = required - set(queries.columns)
+    if missing:
+        raise ValueError(f"Query table missing opportunity columns: {sorted(missing)}")
+    duplicate_pool = queries["candidate_item_ids"].map(
+        lambda values: len(values) != len(set(values))
+    )
+    if duplicate_pool.any():
+        query_id = queries.loc[duplicate_pool, "query_id"].iloc[0]
+        raise ValueError(f"Candidate pool contains duplicate items for query {query_id}")
+    if queries.empty:
+        return pd.DataFrame(columns=[*condition_columns, "item_id", "opportunity_count"])
+    exploded = (
+        queries[[*condition_columns, "candidate_item_ids"]]
+        .explode("candidate_item_ids")
+        .rename(columns={"candidate_item_ids": "item_id"})
+    )
+    return (
+        exploded.groupby([*condition_columns, "item_id"], dropna=False)
+        .size()
+        .rename("opportunity_count")
+        .reset_index()
+    )

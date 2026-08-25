@@ -1,0 +1,22 @@
+version: within-candidate-opportunity-v1
+status: frozen-before-results
+frozen_on: 2026-08-25
+top_k: 10
+unit_of_opportunity: query
+selection_rate: exposure_count_divided_by_candidate_opportunity_count
+eligible_universe: union_of_candidate_items_with_positive_opportunity
+metrics:
+  - opportunity_gini
+  - opportunity_hhi
+  - opportunity_normalized_hhi
+  - opportunity_coverage
+  - opportunity_long_tail_coverage
+uncertainty:
+  resampling_unit: persona
+  paired_neutral_comparison: true
+  confidence_level: 0.95
+  primary_resamples: 2000
+  sensitivity_resamples: 500
+interpretation: >-
+  This post-collection, protocol-aligned sensitivity distinguishes model selection from unequal
+  candidate eligibility. It is not represented as a prospective preregistration.

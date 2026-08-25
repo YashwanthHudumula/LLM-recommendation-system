@@ -38,6 +38,7 @@ dev = [
 recllm-pilot = "recllm_fairness.pipeline.run_pilot:app"
 recllm-collect = "recllm_fairness.pipeline.run_collection:app"
 recllm-analyze = "recllm_fairness.pipeline.run_analysis:app"
+recllm-opportunity-analyze = "recllm_fairness.pipeline.run_opportunity_analysis:app"
 recllm-mitigate = "recllm_fairness.pipeline.run_mitigation:app"
 recllm-build-labels = "recllm_fairness.pipeline.build_relevance_labels:app"
 recllm-check-ollama = "recllm_fairness.pipeline.check_ollama:app"

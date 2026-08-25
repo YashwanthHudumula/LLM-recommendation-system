@@ -1,0 +1,682 @@
+{
+  "analysis_family": "confirmatory-analysis-v3-opportunity",
+  "base_commit": "4653d910f9465d5f8567a625c054b4f48cb7fa6c",
+  "classification": "post-collection protocol-aligned sensitivity",
+  "domains": [
+    {
+      "bootstrap_intervals_by_model": [
+        {
+          "intervals_excluding_zero": 10,
+          "intervals_total": 40,
+          "metric": "opportunity_coverage",
+          "model": "ollama_gemma3_12b"
+        },
+        {
+          "intervals_excluding_zero": 15,
+          "intervals_total": 40,
+          "metric": "opportunity_gini",
+          "model": "ollama_gemma3_12b"
+        },
+        {
+          "intervals_excluding_zero": 15,
+          "intervals_total": 40,
+          "metric": "opportunity_hhi",
+          "model": "ollama_gemma3_12b"
+        },
+        {
+          "intervals_excluding_zero": 0,
+          "intervals_total": 40,
+          "metric": "opportunity_long_tail_coverage",
+          "model": "ollama_gemma3_12b"
+        },
+        {
+          "intervals_excluding_zero": 15,
+          "intervals_total": 40,
+          "metric": "opportunity_normalized_hhi",
+          "model": "ollama_gemma3_12b"
+        },
+        {
+          "intervals_excluding_zero": 12,
+          "intervals_total": 40,
+          "metric": "opportunity_coverage",
+          "model": "ollama_llama3_1_8b"
+        },
+        {
+          "intervals_excluding_zero": 7,
+          "intervals_total": 40,
+          "metric": "opportunity_gini",
+          "model": "ollama_llama3_1_8b"
+        },
+        {
+          "intervals_excluding_zero": 6,
+          "intervals_total": 40,
+          "metric": "opportunity_hhi",
+          "model": "ollama_llama3_1_8b"
+        },
+        {
+          "intervals_excluding_zero": 1,
+          "intervals_total": 40,
+          "metric": "opportunity_long_tail_coverage",
+          "model": "ollama_llama3_1_8b"
+        },
+        {
+          "intervals_excluding_zero": 6,
+          "intervals_total": 40,
+          "metric": "opportunity_normalized_hhi",
+          "model": "ollama_llama3_1_8b"
+        },
+        {
+          "intervals_excluding_zero": 8,
+          "intervals_total": 40,
+          "metric": "opportunity_coverage",
+          "model": "ollama_qwen3_8b"
+        },
+        {
+          "intervals_excluding_zero": 6,
+          "intervals_total": 40,
+          "metric": "opportunity_gini",
+          "model": "ollama_qwen3_8b"
+        },
+        {
+          "intervals_excluding_zero": 3,
+          "intervals_total": 40,
+          "metric": "opportunity_hhi",
+          "model": "ollama_qwen3_8b"
+        },
+        {
+          "intervals_excluding_zero": 10,
+          "intervals_total": 40,
+          "metric": "opportunity_long_tail_coverage",
+          "model": "ollama_qwen3_8b"
+        },
+        {
+          "intervals_excluding_zero": 3,
+          "intervals_total": 40,
+          "metric": "opportunity_normalized_hhi",
+          "model": "ollama_qwen3_8b"
+        }
+      ],
+      "condition_rows": 132,
+      "delta_magnitude": {
+        "opportunity_coverage": {
+          "maximum_absolute_delta": 0.0598930481283422,
+          "mean_absolute_delta": 0.013983957219251282
+        },
+        "opportunity_gini": {
+          "maximum_absolute_delta": 0.0363191808521243,
+          "mean_absolute_delta": 0.009166993105412184
+        },
+        "opportunity_hhi": {
+          "maximum_absolute_delta": 0.0011732092533579,
+          "mean_absolute_delta": 0.00038209381882394665
+        },
+        "opportunity_long_tail_coverage": {
+          "maximum_absolute_delta": 0.1037735849056603,
+          "mean_absolute_delta": 0.0254716981132075
+        },
+        "opportunity_normalized_hhi": {
+          "maximum_absolute_delta": 0.0011744653660489,
+          "mean_absolute_delta": 0.000382502912848386
+        }
+      },
+      "domain": "movie",
+      "metric_means_by_model": [
+        {
+          "eligible_item_count": 935.0,
+          "model": "ollama_gemma3_12b",
+          "opportunity_coverage": 0.3125425376762275,
+          "opportunity_gini": 0.8356754625939078,
+          "opportunity_long_tail_coverage": 0.14837049742710115,
+          "opportunity_normalized_hhi": 0.005174887738667245
+        },
+        {
+          "eligible_item_count": 935.0,
+          "model": "ollama_llama3_1_8b",
+          "opportunity_coverage": 0.4147058823529411,
+          "opportunity_gini": 0.7711121218362357,
+          "opportunity_long_tail_coverage": 0.4120926243567753,
+          "opportunity_normalized_hhi": 0.003571624187202009
+        },
+        {
+          "eligible_item_count": 935.0,
+          "model": "ollama_qwen3_8b",
+          "opportunity_coverage": 0.2571706368497812,
+          "opportunity_gini": 0.8693188863058275,
+          "opportunity_long_tail_coverage": 0.23070325900514577,
+          "opportunity_normalized_hhi": 0.007290205824452673
+        }
+      ],
+      "primary_vs_sensitivity_concordance": {
+        "exact10": {
+          "opportunity_coverage": {
+            "rows": 120,
+            "sign_agreement": 0.9083333333333333,
+            "spearman_rho": 0.8359850130505402
+          },
+          "opportunity_gini": {
+            "rows": 120,
+            "sign_agreement": 0.875,
+            "spearman_rho": 0.7695603861379262
+          },
+          "opportunity_hhi": {
+            "rows": 120,
+            "sign_agreement": 0.8666666666666667,
+            "spearman_rho": 0.7730884089172858
+          },
+          "opportunity_long_tail_coverage": {
+            "rows": 120,
+            "sign_agreement": 0.8166666666666667,
+            "spearman_rho": 0.7035027302295448
+          },
+          "opportunity_normalized_hhi": {
+            "rows": 120,
+            "sign_agreement": 0.8666666666666667,
+            "spearman_rho": 0.7766094867699145
+          }
+        },
+        "unflagged": {
+          "opportunity_coverage": {
+            "rows": 120,
+            "sign_agreement": 0.975,
+            "spearman_rho": 0.9950287299829678
+          },
+          "opportunity_gini": {
+            "rows": 120,
+            "sign_agreement": 0.9416666666666667,
+            "spearman_rho": 0.9893603722480726
+          },
+          "opportunity_hhi": {
+            "rows": 120,
+            "sign_agreement": 0.9666666666666667,
+            "spearman_rho": 0.9829293700951452
+          },
+          "opportunity_long_tail_coverage": {
+            "rows": 120,
+            "sign_agreement": 0.9583333333333334,
+            "spearman_rho": 0.9895457435070106
+          },
+          "opportunity_normalized_hhi": {
+            "rows": 120,
+            "sign_agreement": 0.9666666666666667,
+            "spearman_rho": 0.9825890686853254
+          }
+        }
+      },
+      "raw_vs_opportunity_delta_concordance": {
+        "catalog_coverage": {
+          "rows": 120,
+          "sign_agreement": 1.0,
+          "spearman_rho": 0.9999617751011088
+        },
+        "gini": {
+          "rows": 120,
+          "sign_agreement": 0.7666666666666667,
+          "spearman_rho": 0.7539065212862003
+        },
+        "hhi": {
+          "rows": 120,
+          "sign_agreement": 0.6416666666666667,
+          "spearman_rho": 0.456219181887631
+        },
+        "long_tail_coverage": {
+          "rows": 120,
+          "sign_agreement": 1.0,
+          "spearman_rho": 0.9978041713466635
+        }
+      },
+      "sensitive_delta_rows": 120
+    },
+    {
+      "bootstrap_intervals_by_model": [
+        {
+          "intervals_excluding_zero": 23,
+          "intervals_total": 40,
+          "metric": "opportunity_coverage",
+          "model": "ollama_gemma3_12b"
+        },
+        {
+          "intervals_excluding_zero": 25,
+          "intervals_total": 40,
+          "metric": "opportunity_gini",
+          "model": "ollama_gemma3_12b"
+        },
+        {
+          "intervals_excluding_zero": 24,
+          "intervals_total": 40,
+          "metric": "opportunity_hhi",
+          "model": "ollama_gemma3_12b"
+        },
+        {
+          "intervals_excluding_zero": 7,
+          "intervals_total": 40,
+          "metric": "opportunity_long_tail_coverage",
+          "model": "ollama_gemma3_12b"
+        },
+        {
+          "intervals_excluding_zero": 24,
+          "intervals_total": 40,
+          "metric": "opportunity_normalized_hhi",
+          "model": "ollama_gemma3_12b"
+        },
+        {
+          "intervals_excluding_zero": 5,
+          "intervals_total": 40,
+          "metric": "opportunity_coverage",
+          "model": "ollama_llama3_1_8b"
+        },
+        {
+          "intervals_excluding_zero": 6,
+          "intervals_total": 40,
+          "metric": "opportunity_gini",
+          "model": "ollama_llama3_1_8b"
+        },
+        {
+          "intervals_excluding_zero": 5,
+          "intervals_total": 40,
+          "metric": "opportunity_hhi",
+          "model": "ollama_llama3_1_8b"
+        },
+        {
+          "intervals_excluding_zero": 2,
+          "intervals_total": 40,
+          "metric": "opportunity_long_tail_coverage",
+          "model": "ollama_llama3_1_8b"
+        },
+        {
+          "intervals_excluding_zero": 5,
+          "intervals_total": 40,
+          "metric": "opportunity_normalized_hhi",
+          "model": "ollama_llama3_1_8b"
+        },
+        {
+          "intervals_excluding_zero": 16,
+          "intervals_total": 40,
+          "metric": "opportunity_coverage",
+          "model": "ollama_qwen3_8b"
+        },
+        {
+          "intervals_excluding_zero": 16,
+          "intervals_total": 40,
+          "metric": "opportunity_gini",
+          "model": "ollama_qwen3_8b"
+        },
+        {
+          "intervals_excluding_zero": 16,
+          "intervals_total": 40,
+          "metric": "opportunity_hhi",
+          "model": "ollama_qwen3_8b"
+        },
+        {
+          "intervals_excluding_zero": 7,
+          "intervals_total": 40,
+          "metric": "opportunity_long_tail_coverage",
+          "model": "ollama_qwen3_8b"
+        },
+        {
+          "intervals_excluding_zero": 16,
+          "intervals_total": 40,
+          "metric": "opportunity_normalized_hhi",
+          "model": "ollama_qwen3_8b"
+        }
+      ],
+      "condition_rows": 132,
+      "delta_magnitude": {
+        "opportunity_coverage": {
+          "maximum_absolute_delta": 0.0306041335453099,
+          "mean_absolute_delta": 0.0106617647058823
+        },
+        "opportunity_gini": {
+          "maximum_absolute_delta": 0.0209998746695083,
+          "mean_absolute_delta": 0.007586749234334426
+        },
+        "opportunity_hhi": {
+          "maximum_absolute_delta": 0.0005178601357181,
+          "mean_absolute_delta": 0.00012771884907542534
+        },
+        "opportunity_long_tail_coverage": {
+          "maximum_absolute_delta": 0.0699588477366254,
+          "mean_absolute_delta": 0.02277091906721531
+        },
+        "opportunity_normalized_hhi": {
+          "maximum_absolute_delta": 0.0005180660443207,
+          "mean_absolute_delta": 0.00012776963191799527
+        }
+      },
+      "domain": "music",
+      "metric_means_by_model": [
+        {
+          "eligible_item_count": 2516.0,
+          "model": "ollama_gemma3_12b",
+          "opportunity_coverage": 0.249954834513658,
+          "opportunity_gini": 0.8519160265697152,
+          "opportunity_long_tail_coverage": 0.2561728395061728,
+          "opportunity_normalized_hhi": 0.0020486825430770976
+        },
+        {
+          "eligible_item_count": 2516.0,
+          "model": "ollama_llama3_1_8b",
+          "opportunity_coverage": 0.3309275184275184,
+          "opportunity_gini": 0.7916839604830713,
+          "opportunity_long_tail_coverage": 0.46090534979423875,
+          "opportunity_normalized_hhi": 0.001426891692748375
+        },
+        {
+          "eligible_item_count": 2516.0,
+          "model": "ollama_qwen3_8b",
+          "opportunity_coverage": 0.21199775979187738,
+          "opportunity_gini": 0.8795193125677585,
+          "opportunity_long_tail_coverage": 0.30443322109988774,
+          "opportunity_normalized_hhi": 0.0026430805313839676
+        }
+      ],
+      "primary_vs_sensitivity_concordance": {
+        "exact10": {
+          "opportunity_coverage": {
+            "rows": 120,
+            "sign_agreement": 0.8333333333333334,
+            "spearman_rho": 0.47571468579020815
+          },
+          "opportunity_gini": {
+            "rows": 120,
+            "sign_agreement": 0.8,
+            "spearman_rho": 0.2607125494826029
+          },
+          "opportunity_hhi": {
+            "rows": 120,
+            "sign_agreement": 0.8166666666666667,
+            "spearman_rho": 0.3701715396902562
+          },
+          "opportunity_long_tail_coverage": {
+            "rows": 120,
+            "sign_agreement": 0.8083333333333333,
+            "spearman_rho": 0.6833338680144444
+          },
+          "opportunity_normalized_hhi": {
+            "rows": 120,
+            "sign_agreement": 0.8166666666666667,
+            "spearman_rho": 0.38275574692686987
+          }
+        },
+        "unflagged": {
+          "opportunity_coverage": {
+            "rows": 120,
+            "sign_agreement": 0.9916666666666667,
+            "spearman_rho": 0.998848656518993
+          },
+          "opportunity_gini": {
+            "rows": 120,
+            "sign_agreement": 0.9833333333333333,
+            "spearman_rho": 0.998215153830127
+          },
+          "opportunity_hhi": {
+            "rows": 120,
+            "sign_agreement": 0.9916666666666667,
+            "spearman_rho": 0.9992221682061252
+          },
+          "opportunity_long_tail_coverage": {
+            "rows": 120,
+            "sign_agreement": 0.9916666666666667,
+            "spearman_rho": 0.9965225472294693
+          },
+          "opportunity_normalized_hhi": {
+            "rows": 120,
+            "sign_agreement": 0.9916666666666667,
+            "spearman_rho": 0.9992221682061252
+          }
+        }
+      },
+      "raw_vs_opportunity_delta_concordance": {
+        "catalog_coverage": {
+          "rows": 120,
+          "sign_agreement": 1.0,
+          "spearman_rho": 0.9999531138075443
+        },
+        "gini": {
+          "rows": 120,
+          "sign_agreement": 0.8166666666666667,
+          "spearman_rho": 0.8304465587888047
+        },
+        "hhi": {
+          "rows": 120,
+          "sign_agreement": 0.6916666666666667,
+          "spearman_rho": 0.6112855059379123
+        },
+        "long_tail_coverage": {
+          "rows": 120,
+          "sign_agreement": 1.0,
+          "spearman_rho": 0.9991394133199614
+        }
+      },
+      "sensitive_delta_rows": 120
+    }
+  ],
+  "inventory": [
+    {
+      "path": "outputs/tables/analysis/design=persona-relevance-v2-100-a1/domain=movie/models=ollama_gemma3_12b+ollama_llama3_1_8b+ollama_qwen3_8b/analysis=confirmatory-analysis-v3-opportunity/analysis_manifest.json",
+      "sha256": "0972ddfc31081d73e22108a4a9f4d0c7b6ac1216147b68a56c6bc97d1382d395",
+      "size_bytes": 717
+    },
+    {
+      "path": "outputs/tables/analysis/design=persona-relevance-v2-100-a1/domain=movie/models=ollama_gemma3_12b+ollama_llama3_1_8b+ollama_qwen3_8b/analysis=confirmatory-analysis-v3-opportunity/condition_diagnostics.csv",
+      "sha256": "f3bf9202287f86e0cf9b40e028c7a16151ab61943ab5bd4ea64a414b6358bbc5",
+      "size_bytes": 13336
+    },
+    {
+      "path": "outputs/tables/analysis/design=persona-relevance-v2-100-a1/domain=movie/models=ollama_gemma3_12b+ollama_llama3_1_8b+ollama_qwen3_8b/analysis=confirmatory-analysis-v3-opportunity/group_exposure_diagnostics.csv",
+      "sha256": "d530dafad993ea0ce795229e9cf9049639e3bb40fa9e98e48fc926aaee410bf5",
+      "size_bytes": 393762
+    },
+    {
+      "path": "outputs/tables/analysis/design=persona-relevance-v2-100-a1/domain=movie/models=ollama_gemma3_12b+ollama_llama3_1_8b+ollama_qwen3_8b/analysis=confirmatory-analysis-v3-opportunity/item_side_bootstrap_cis.csv",
+      "sha256": "7c8ed3ac964ef5e0275afb3e145a255eb909897892c31305e00f27057ac59083",
+      "size_bytes": 40702
+    },
+    {
+      "path": "outputs/tables/analysis/design=persona-relevance-v2-100-a1/domain=movie/models=ollama_gemma3_12b+ollama_llama3_1_8b+ollama_qwen3_8b/analysis=confirmatory-analysis-v3-opportunity/item_side_delta_bootstrap_cis.csv",
+      "sha256": "78a4c2e97f4fc608ccb002609900cdad5fe84bfd7a612c10319c86410b0b2edc",
+      "size_bytes": 38627
+    },
+    {
+      "path": "outputs/tables/analysis/design=persona-relevance-v2-100-a1/domain=movie/models=ollama_gemma3_12b+ollama_llama3_1_8b+ollama_qwen3_8b/analysis=confirmatory-analysis-v3-opportunity/item_side_deltas.csv",
+      "sha256": "6c10fca71e0c16ff07c666da965e09d548c995d139f8af6db49f9651f64bddea",
+      "size_bytes": 74150
+    },
+    {
+      "path": "outputs/tables/analysis/design=persona-relevance-v2-100-a1/domain=movie/models=ollama_gemma3_12b+ollama_llama3_1_8b+ollama_qwen3_8b/analysis=confirmatory-analysis-v3-opportunity/item_side_metrics.csv",
+      "sha256": "43656ae8e5706316bb288e4cf8eb63d8359b45d30afef8f866e238125351bce8",
+      "size_bytes": 31510
+    },
+    {
+      "path": "outputs/tables/analysis/design=persona-relevance-v2-100-a1/domain=movie/models=ollama_gemma3_12b+ollama_llama3_1_8b+ollama_qwen3_8b/analysis=confirmatory-analysis-v3-opportunity/mixed_effects.csv",
+      "sha256": "06873b04538414b0a3d6c1595da7e4085b257f7ee1e880a7cf0cb409010fd743",
+      "size_bytes": 27359
+    },
+    {
+      "path": "outputs/tables/analysis/design=persona-relevance-v2-100-a1/domain=movie/models=ollama_gemma3_12b+ollama_llama3_1_8b+ollama_qwen3_8b/analysis=confirmatory-analysis-v3-opportunity/opportunity_adjusted_delta_bootstrap_cis.csv",
+      "sha256": "f6b7424cecdfe114f8c11628562aff659cfbe1dd85b215bb514e498ec6418459",
+      "size_bytes": 75290
+    },
+    {
+      "path": "outputs/tables/analysis/design=persona-relevance-v2-100-a1/domain=movie/models=ollama_gemma3_12b+ollama_llama3_1_8b+ollama_qwen3_8b/analysis=confirmatory-analysis-v3-opportunity/opportunity_adjusted_deltas.csv",
+      "sha256": "36f306ad435b8acd7d9adfb30388cd9b8c4a198923b8a1b9189c124c07a3a4e9",
+      "size_bytes": 47798
+    },
+    {
+      "path": "outputs/tables/analysis/design=persona-relevance-v2-100-a1/domain=movie/models=ollama_gemma3_12b+ollama_llama3_1_8b+ollama_qwen3_8b/analysis=confirmatory-analysis-v3-opportunity/opportunity_adjusted_metrics.csv",
+      "sha256": "92215af8ae14553baf1ba8ad70c2428a70208d147d77ccf563b1bb0a5c76dbd4",
+      "size_bytes": 24809
+    },
+    {
+      "path": "outputs/tables/analysis/design=persona-relevance-v2-100-a1/domain=movie/models=ollama_gemma3_12b+ollama_llama3_1_8b+ollama_qwen3_8b/analysis=confirmatory-analysis-v3-opportunity/per_query_item_outcomes.csv",
+      "sha256": "591ce3f35027b8095724a5a428334f5572a3cc75dfc60e69bcb24c70e5d91161",
+      "size_bytes": 4208497
+    },
+    {
+      "path": "outputs/tables/analysis/design=persona-relevance-v2-100-a1/domain=movie/models=ollama_gemma3_12b+ollama_llama3_1_8b+ollama_qwen3_8b/analysis=confirmatory-analysis-v3-opportunity/relevance_metrics.csv",
+      "sha256": "502d2b097f4728b8b1e942e2188cb7d045f1d79e904d6fa47e35692ff7e2bf1b",
+      "size_bytes": 4664089
+    },
+    {
+      "path": "outputs/tables/analysis/design=persona-relevance-v2-100-a1/domain=movie/models=ollama_gemma3_12b+ollama_llama3_1_8b+ollama_qwen3_8b/analysis=confirmatory-analysis-v3-opportunity/rq3_correlations.csv",
+      "sha256": "238af9d14bc71fdf858b1c0a1197667deaf4bcdbd9a46d1a7b255859c2f62f85",
+      "size_bytes": 9674
+    },
+    {
+      "path": "outputs/tables/analysis/design=persona-relevance-v2-100-a1/domain=movie/models=ollama_gemma3_12b+ollama_llama3_1_8b+ollama_qwen3_8b/analysis=confirmatory-analysis-v3-opportunity/user_side_metrics.csv",
+      "sha256": "f8662cf221aae9aacfec9d9a80d55c127fcd460c560f34e60920b513e4fd536f",
+      "size_bytes": 34902
+    },
+    {
+      "path": "outputs/tables/analysis/design=persona-relevance-v2-100-a1/domain=movie/models=ollama_gemma3_12b+ollama_llama3_1_8b+ollama_qwen3_8b/analysis=confirmatory-analysis-v3-opportunity/user_side_similarities.csv",
+      "sha256": "dba4f3cd93541e2bc1583546e2b3b1c5f48065f14564b9d69b0b1335c4eb43c9",
+      "size_bytes": 281393610
+    },
+    {
+      "path": "outputs/tables/analysis/design=persona-relevance-v2-100-a1/domain=movie/models=ollama_gemma3_12b+ollama_llama3_1_8b+ollama_qwen3_8b/analysis=confirmatory-analysis-v3-opportunity-exact10/analysis_manifest.json",
+      "sha256": "62254553a55f4bfdc66d5275350cd57b2582a6e8934d2471494eb06f79a4e2cd",
+      "size_bytes": 982
+    },
+    {
+      "path": "outputs/tables/analysis/design=persona-relevance-v2-100-a1/domain=movie/models=ollama_gemma3_12b+ollama_llama3_1_8b+ollama_qwen3_8b/analysis=confirmatory-analysis-v3-opportunity-exact10/opportunity_adjusted_delta_bootstrap_cis.csv",
+      "sha256": "c458a4ceb32c73910da400bbb3a8799454c451bb9931615d4b45aaef3fef52ac",
+      "size_bytes": 74656
+    },
+    {
+      "path": "outputs/tables/analysis/design=persona-relevance-v2-100-a1/domain=movie/models=ollama_gemma3_12b+ollama_llama3_1_8b+ollama_qwen3_8b/analysis=confirmatory-analysis-v3-opportunity-exact10/opportunity_adjusted_deltas.csv",
+      "sha256": "c997a7e3510106bf4637809f8184f6959edbdde0e024627b02a734f0768ffd64",
+      "size_bytes": 47790
+    },
+    {
+      "path": "outputs/tables/analysis/design=persona-relevance-v2-100-a1/domain=movie/models=ollama_gemma3_12b+ollama_llama3_1_8b+ollama_qwen3_8b/analysis=confirmatory-analysis-v3-opportunity-exact10/opportunity_adjusted_metrics.csv",
+      "sha256": "1a7c9aed6bd8cba24f55fd6ff0302100238d348f957ce768e0b30f67820f6224",
+      "size_bytes": 25105
+    },
+    {
+      "path": "outputs/tables/analysis/design=persona-relevance-v2-100-a1/domain=movie/models=ollama_gemma3_12b+ollama_llama3_1_8b+ollama_qwen3_8b/analysis=confirmatory-analysis-v3-opportunity-unflagged/analysis_manifest.json",
+      "sha256": "59c1ac1df37c37320b71313008de88d6237b977f5043d4308ff8c4a056285c60",
+      "size_bytes": 992
+    },
+    {
+      "path": "outputs/tables/analysis/design=persona-relevance-v2-100-a1/domain=movie/models=ollama_gemma3_12b+ollama_llama3_1_8b+ollama_qwen3_8b/analysis=confirmatory-analysis-v3-opportunity-unflagged/opportunity_adjusted_delta_bootstrap_cis.csv",
+      "sha256": "6db2ecc191c402a5cf98cf56c775d29c712e3427f70c0ad705e2ffecc15d284b",
+      "size_bytes": 74718
+    },
+    {
+      "path": "outputs/tables/analysis/design=persona-relevance-v2-100-a1/domain=movie/models=ollama_gemma3_12b+ollama_llama3_1_8b+ollama_qwen3_8b/analysis=confirmatory-analysis-v3-opportunity-unflagged/opportunity_adjusted_deltas.csv",
+      "sha256": "08f97318da5ed132aead689066d915b55dd1b02f47e88b5de626bde25d080527",
+      "size_bytes": 48227
+    },
+    {
+      "path": "outputs/tables/analysis/design=persona-relevance-v2-100-a1/domain=movie/models=ollama_gemma3_12b+ollama_llama3_1_8b+ollama_qwen3_8b/analysis=confirmatory-analysis-v3-opportunity-unflagged/opportunity_adjusted_metrics.csv",
+      "sha256": "d16132ca0ffc467eef06bab0824837c65a2ecd7a1a0b2e28c6af640ca3060c3b",
+      "size_bytes": 25145
+    },
+    {
+      "path": "outputs/tables/analysis/design=persona-relevance-v2-100-a1/domain=music/models=ollama_gemma3_12b+ollama_llama3_1_8b+ollama_qwen3_8b/analysis=confirmatory-analysis-v3-opportunity/analysis_manifest.json",
+      "sha256": "50940f9c7b9e6a7cfa75c2d4e2575f5b5f69e3bac605f15b6e719f997107ad25",
+      "size_bytes": 945
+    },
+    {
+      "path": "outputs/tables/analysis/design=persona-relevance-v2-100-a1/domain=music/models=ollama_gemma3_12b+ollama_llama3_1_8b+ollama_qwen3_8b/analysis=confirmatory-analysis-v3-opportunity/opportunity_adjusted_delta_bootstrap_cis.csv",
+      "sha256": "7a2de699b8186eac173f1f6ebfaa9ebc84c160ce25bc38b5340fe2eaf6b4b990",
+      "size_bytes": 75630
+    },
+    {
+      "path": "outputs/tables/analysis/design=persona-relevance-v2-100-a1/domain=music/models=ollama_gemma3_12b+ollama_llama3_1_8b+ollama_qwen3_8b/analysis=confirmatory-analysis-v3-opportunity/opportunity_adjusted_deltas.csv",
+      "sha256": "4424f6ac117d42cde792fc1af5aa3266a218a668ef6ada7723bc96c246138cd6",
+      "size_bytes": 48553
+    },
+    {
+      "path": "outputs/tables/analysis/design=persona-relevance-v2-100-a1/domain=music/models=ollama_gemma3_12b+ollama_llama3_1_8b+ollama_qwen3_8b/analysis=confirmatory-analysis-v3-opportunity/opportunity_adjusted_metrics.csv",
+      "sha256": "5397d2cc3c73e5d8387afcb7bcaf528e6b67af7cf2611dea8c2595a078cb6df8",
+      "size_bytes": 25375
+    },
+    {
+      "path": "outputs/tables/analysis/design=persona-relevance-v2-100-a1/domain=music/models=ollama_gemma3_12b+ollama_llama3_1_8b+ollama_qwen3_8b/analysis=confirmatory-analysis-v3-opportunity-exact10/analysis_manifest.json",
+      "sha256": "3e5369124519371c9bdeafeda0514f713de98bce88bc7c84480f59ff89653587",
+      "size_bytes": 982
+    },
+    {
+      "path": "outputs/tables/analysis/design=persona-relevance-v2-100-a1/domain=music/models=ollama_gemma3_12b+ollama_llama3_1_8b+ollama_qwen3_8b/analysis=confirmatory-analysis-v3-opportunity-exact10/opportunity_adjusted_delta_bootstrap_cis.csv",
+      "sha256": "dff5b0ddf28b5512bb108128c88c112785541e0d5b9496e83c5be1dc3dbb205f",
+      "size_bytes": 74983
+    },
+    {
+      "path": "outputs/tables/analysis/design=persona-relevance-v2-100-a1/domain=music/models=ollama_gemma3_12b+ollama_llama3_1_8b+ollama_qwen3_8b/analysis=confirmatory-analysis-v3-opportunity-exact10/opportunity_adjusted_deltas.csv",
+      "sha256": "eebb6991088980be209d252f0a7c4ce718004f0f57854c921d820fe8ecb43e0f",
+      "size_bytes": 48547
+    },
+    {
+      "path": "outputs/tables/analysis/design=persona-relevance-v2-100-a1/domain=music/models=ollama_gemma3_12b+ollama_llama3_1_8b+ollama_qwen3_8b/analysis=confirmatory-analysis-v3-opportunity-exact10/opportunity_adjusted_metrics.csv",
+      "sha256": "817ee4e2df8de44f8bee2d7b4b63d61e7cecdf03b7953209683959d7e964c8f1",
+      "size_bytes": 25429
+    },
+    {
+      "path": "outputs/tables/analysis/design=persona-relevance-v2-100-a1/domain=music/models=ollama_gemma3_12b+ollama_llama3_1_8b+ollama_qwen3_8b/analysis=confirmatory-analysis-v3-opportunity-unflagged/analysis_manifest.json",
+      "sha256": "870924444904ba2b7e1e6bcef82bb7b0e80eebc843726e8c31d00404f8913030",
+      "size_bytes": 992
+    },
+    {
+      "path": "outputs/tables/analysis/design=persona-relevance-v2-100-a1/domain=music/models=ollama_gemma3_12b+ollama_llama3_1_8b+ollama_qwen3_8b/analysis=confirmatory-analysis-v3-opportunity-unflagged/opportunity_adjusted_delta_bootstrap_cis.csv",
+      "sha256": "0965970e8776d375ec1870fc4bf71859173449ba03fd6d4cc35f2e07061036f4",
+      "size_bytes": 75014
+    },
+    {
+      "path": "outputs/tables/analysis/design=persona-relevance-v2-100-a1/domain=music/models=ollama_gemma3_12b+ollama_llama3_1_8b+ollama_qwen3_8b/analysis=confirmatory-analysis-v3-opportunity-unflagged/opportunity_adjusted_deltas.csv",
+      "sha256": "2bd95cc3c49a4751514f3c446f431c12213947fafb22c87701d69d77c3d63338",
+      "size_bytes": 48562
+    },
+    {
+      "path": "outputs/tables/analysis/design=persona-relevance-v2-100-a1/domain=music/models=ollama_gemma3_12b+ollama_llama3_1_8b+ollama_qwen3_8b/analysis=confirmatory-analysis-v3-opportunity-unflagged/opportunity_adjusted_metrics.csv",
+      "sha256": "d2990bb2b816690dbc879b6d3c516a7227433cabf21447928391d968776cea78",
+      "size_bytes": 25405
+    }
+  ],
+  "opportunity_protocol": "config/opportunity_sensitivity_v1.yaml",
+  "opportunity_protocol_sha256": "e2de8b15d368ad97f032e686ecb51a15640c78a136d563035ea27088aabfd88c",
+  "packages": [
+    {
+      "analysis_view": "primary",
+      "bootstrap_resamples": 2000,
+      "files": 16,
+      "path": "outputs/tables/analysis/design=persona-relevance-v2-100-a1/domain=movie/models=ollama_gemma3_12b+ollama_llama3_1_8b+ollama_qwen3_8b/analysis=confirmatory-analysis-v3-opportunity",
+      "query_records": 39600
+    },
+    {
+      "analysis_view": "exact-10-grounded",
+      "bootstrap_resamples": 500,
+      "files": 4,
+      "path": "outputs/tables/analysis/design=persona-relevance-v2-100-a1/domain=movie/models=ollama_gemma3_12b+ollama_llama3_1_8b+ollama_qwen3_8b/analysis=confirmatory-analysis-v3-opportunity-exact10",
+      "query_records": 33139
+    },
+    {
+      "analysis_view": "exclude-flagged-records",
+      "bootstrap_resamples": 500,
+      "files": 4,
+      "path": "outputs/tables/analysis/design=persona-relevance-v2-100-a1/domain=movie/models=ollama_gemma3_12b+ollama_llama3_1_8b+ollama_qwen3_8b/analysis=confirmatory-analysis-v3-opportunity-unflagged",
+      "query_records": 38539
+    },
+    {
+      "analysis_view": "primary",
+      "bootstrap_resamples": 2000,
+      "files": 4,
+      "path": "outputs/tables/analysis/design=persona-relevance-v2-100-a1/domain=music/models=ollama_gemma3_12b+ollama_llama3_1_8b+ollama_qwen3_8b/analysis=confirmatory-analysis-v3-opportunity",
+      "query_records": 39600
+    },
+    {
+      "analysis_view": "exact-10-grounded",
+      "bootstrap_resamples": 500,
+      "files": 4,
+      "path": "outputs/tables/analysis/design=persona-relevance-v2-100-a1/domain=music/models=ollama_gemma3_12b+ollama_llama3_1_8b+ollama_qwen3_8b/analysis=confirmatory-analysis-v3-opportunity-exact10",
+      "query_records": 35653
+    },
+    {
+      "analysis_view": "exclude-flagged-records",
+      "bootstrap_resamples": 500,
+      "files": 4,
+      "path": "outputs/tables/analysis/design=persona-relevance-v2-100-a1/domain=music/models=ollama_gemma3_12b+ollama_llama3_1_8b+ollama_qwen3_8b/analysis=confirmatory-analysis-v3-opportunity-unflagged",
+      "query_records": 39556
+    }
+  ],
+  "schema_version": 1
+}

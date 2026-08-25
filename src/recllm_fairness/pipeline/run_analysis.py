@@ -18,7 +18,7 @@ from recllm_fairness.pipeline.services import (
     write_json,
 )
 from recllm_fairness.storage.io import read_records
-from recllm_fairness.storage.manifest import analysis_output_root, query_output_root
+from recllm_fairness.storage.manifest import analysis_output_root, query_output_root, sha256_file
 from recllm_fairness.utils.config import load_config
 
 app = typer.Typer(add_completion=False)
@@ -33,6 +33,9 @@ def main(
     stage: str = typer.Option("pilot", help="pilot or full when query-root is omitted"),
     analysis_version: str | None = None,
     sensitivity: str = "primary",
+    opportunity_bootstrap_resamples: int | None = typer.Option(
+        None, help="Persona-bootstrap draws for opportunity-adjusted deltas"
+    ),
 ) -> None:
     config = load_config(config_dir, config_override)
     valid_views = {"primary", "exact-10-grounded", "exclude-flagged-records"}
@@ -116,7 +119,9 @@ def main(
         seed=int(config["seed"]),
         alpha=float(config["statistics"]["alpha"]),
         rq3_minimum_effect=float(config["statistics"]["rq3_minimum_effect"]),
+        opportunity_bootstrap_resamples=opportunity_bootstrap_resamples,
     )
+    opportunity_protocol = Path(str(config["analysis"]["opportunity_protocol_path"]))
     write_json(
         table_dir / "analysis_manifest.json",
         {
@@ -128,6 +133,11 @@ def main(
             "source_query_root": str(root.resolve()),
             "source_query_records": source_query_records,
             "query_records": len(queries),
+            "opportunity_protocol_path": str(opportunity_protocol.resolve()),
+            "opportunity_protocol_sha256": sha256_file(opportunity_protocol),
+            "opportunity_bootstrap_resamples": (
+                opportunity_bootstrap_resamples or int(config["statistics"]["bootstrap_resamples"])
+            ),
         },
     )
     typer.echo(f"Analysis complete: {outputs}")

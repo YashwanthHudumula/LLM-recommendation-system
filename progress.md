@@ -297,3 +297,22 @@ Last updated: 2026-08-03
   the unflagged view is nearly identical to primary.
 - Remaining gates: within-opportunity sensitivity metrics, figures/manuscript, bibliography
   verification, external archival deposit, and DOI.
+
+## 2026-08-25 within-candidate-opportunity sensitivity
+
+- Froze the post-collection, protocol-aligned `within-candidate-opportunity-v1` definition before
+  inspecting v3 results: exposure per eligible query, adjusted Gini/HHI, and eligible-union
+  coverage.
+- Added pure opportunity metrics, condition aggregation, paired persona-bootstrap intervals,
+  a reconstruction-safe opportunity-only runner, and hand-computed regression tests.
+- Completed primary analyses at 2,000 resamples and exact-10/unflagged views at 500 resamples for
+  movie and music; all six retained counts exactly match their v2 manifests.
+- Verified the paired-table reconstruction against the raw-record movie replay across all 132
+  conditions; maximum numerical difference was below `1e-16`.
+- Candidate opportunity does not explain away the main result: coverage-delta rho versus the
+  full-catalog analysis exceeds 0.999 in both domains, while adjusted Gini remains moderately
+  concordant and has multiple paired intervals excluding zero.
+- Hashed 36 files across the v3 packages in
+  `data/audits/opportunity_analysis_v3_reproducibility.json`.
+- Remaining gates: frozen figures/tables, manuscript and bibliography verification, external
+  archival deposit, and DOI.

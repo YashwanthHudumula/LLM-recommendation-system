@@ -12,6 +12,8 @@ design:
 analysis:
   version: pilot-analysis-v1
   table_root: outputs/tables/analysis
+  opportunity_protocol_path: config/opportunity_sensitivity_v1.yaml
+  opportunity_protocol_path: config/opportunity_sensitivity_v1.yaml
 top_k: 10
 temperature: 0.7
 max_tokens: 500
