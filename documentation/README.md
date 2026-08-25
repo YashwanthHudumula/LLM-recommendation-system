@@ -34,6 +34,9 @@ individual recommendation lists, aggregate item exposure, and relevance.
    results and robustness, and records the checksummed v3 evidence package.
 9. [Manuscript asset freeze v1](16_MANUSCRIPT_ASSET_FREEZE_V1.md) records the deterministic
    five-figure/five-table package, visual QA, byte-identical rerender, and checksum inventory.
+10. [Journal target and reference audit](17_JOURNAL_TARGET_AND_REFERENCE_AUDIT.md) records the
+    IP&M fit assessment, verified identifiers, excluded unverified citations, manuscript-format
+    decisions, and final document quality gate.
 
 ## Current status snapshot
 
@@ -47,7 +50,10 @@ Snapshot date: **2026-08-25**. The confirmatory design is
 - All six analysis packages have persona-clustered robust fit diagnostics and SHA-256 inventories.
 - Within-opportunity primary, exact-10, and unflagged analyses are complete in both domains.
 - Five figure sets and five manuscript tables are frozen and independently checksummed.
-- Manuscript text, bibliography verification, journal formatting, and external DOI deposition remain.
+- An anonymized IP&M-oriented manuscript, highlights, verified bibliography, and title-page
+  completion checklist are prepared under `manuscript/`.
+- Author metadata, declarations, repository release DOI, reporting checklists, and submission
+  portal upload remain.
 
 The authoritative evidence is each partition's `run_manifest.json`, its immutable Parquet record
 count, and `data/audits/confirmatory_analysis_v2_reproducibility.json` for the six analysis

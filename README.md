@@ -4,9 +4,10 @@
 three local model snapshots, two domains, 100 personas per domain, and three repeats. The frozen
 provider-free primary analysis, both registered sensitivity views, and persona-clustered robust
 fit diagnostics are complete and checksummed. The within-candidate-opportunity sensitivity is
-also complete across all six domain/views. Five manuscript figure sets and five tables are now
-frozen, visually verified, and reproducible byte-for-byte. Manuscript text, bibliography
-verification, journal formatting, and external archival deposition remain pending.
+also complete across all six domain/views. Five manuscript figure sets and five tables are
+frozen, visually verified, and reproducible byte-for-byte. An anonymized IP&M-oriented Word
+manuscript, highlights, verified bibliography, and title-page checklist are complete. Author
+metadata, final declarations, archival DOI deposition, and editorial submission remain pending.
 
 This repository implements the study **Who Gets Seen? Auditing Item-Side Exposure
 Disparities Induced by Personality-Conditioned Prompting in LLM-Based Recommender
@@ -101,6 +102,8 @@ The opportunity-adjusted sensitivity and its results are documented in
 [documentation/15_WITHIN_OPPORTUNITY_SENSITIVITY_V3.md](documentation/15_WITHIN_OPPORTUNITY_SENSITIVITY_V3.md).
 The frozen publication figures/tables and integrity checks are documented in
 [documentation/16_MANUSCRIPT_ASSET_FREEZE_V1.md](documentation/16_MANUSCRIPT_ASSET_FREEZE_V1.md).
+The journal fit, reference verification, and manuscript quality gate are documented in
+[documentation/17_JOURNAL_TARGET_AND_REFERENCE_AUDIT.md](documentation/17_JOURNAL_TARGET_AND_REFERENCE_AUDIT.md).
 
 The six-persona v1 pilot and 100-persona A1 confirmatory designs are frozen. Collection verifies
 the frozen bundle on disk and refuses incompatible or unfrozen designs before loading a model or

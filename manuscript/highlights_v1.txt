@@ -1,0 +1,5 @@
+Personality cues shift aggregate item exposure while preferences remain fixed.
+Three local LLMs were audited across 79,200 movie and music queries.
+User-side list change often diverges from item-side exposure fairness.
+Opportunity adjustment preserves coverage findings but changes concentration ranks.
+Unflagged-response results are stable; exact-length filtering is less stable.
